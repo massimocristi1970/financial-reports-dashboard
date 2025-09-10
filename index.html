@@ -5,322 +5,151 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Financial Reports Dashboard</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* --- same CSS as before, unchanged --- */
+    /* Keep your existing CSS */
+    body { font-family: Arial, sans-serif; margin:0; }
+    .app-container { display:flex; }
+    .sidebar { width:250px; background:#fff; border-right:1px solid #ddd; }
+    .main-content { flex:1; padding:20px; }
+    .hidden { display:none; }
+    .nav-link { cursor:pointer; padding:12px; display:flex; align-items:center; }
+    .nav-link.active { background:#eef6ff; border-left:3px solid #3b82f6; color:#3b82f6; }
+    .page-header { margin-bottom:20px; }
+    .page-title { font-size:24px; font-weight:bold; }
+    .data-table { background:#fff; border:1px solid #ddd; border-radius:8px; margin-top:20px; }
+    table { width:100%; border-collapse:collapse; }
+    th,td { padding:10px; border-bottom:1px solid #eee; }
+    tr:hover { background:#f9f9f9; }
+    .chart-card, .kpi-grid { background:#fff; border:1px solid #ddd; border-radius:8px; padding:20px; margin-bottom:20px; }
+    .kpi-grid { display:flex; gap:20px; }
+    .kpi-card { flex:1; text-align:center; background:#f9fafb; border-radius:8px; padding:15px; }
+    .kpi-title { font-size:14px; color:#666; }
+    .kpi-value { font-size:22px; font-weight:bold; margin-top:5px; }
   </style>
 </head>
 <body>
   <div class="app-container">
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <h1><i class="fas fa-chart-line"></i> Financial Reports</h1>
-      </div>
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title">Dashboard</div>
-          <div class="nav-link active" onclick="showPage(event, 'overview')">
-            <i class="fas fa-tachometer-alt"></i> Overview
-          </div>
-          <div class="nav-link" onclick="showPage(event, 'data-management')">
-            <i class="fas fa-upload"></i> Data Management
-          </div>
-        </div>
-        <div class="nav-section">
-          <div class="nav-section-title">Reports</div>
-          <div class="nav-link" onclick="showPage(event, 'lending-volume')">
-            <i class="fas fa-coins"></i> Lending Volume
-            <span class="data-count" id="lending-volume-count">0</span>
-          </div>
-          <div class="nav-link" onclick="showPage(event, 'arrears')">
-            <i class="fas fa-exclamation-triangle"></i> Arrears Analysis
-            <span class="data-count" id="arrears-count">0</span>
-          </div>
-          <div class="nav-link" onclick="showPage(event, 'liquidations')">
-            <i class="fas fa-sync"></i> Liquidations
-            <span class="data-count" id="liquidations-count">0</span>
-          </div>
-          <div class="nav-link" onclick="showPage(event, 'call-center')">
-            <i class="fas fa-phone"></i> Call Center
-            <span class="data-count" id="call-center-count">0</span>
-          </div>
-          <div class="nav-link" onclick="showPage(event, 'complaints')">
-            <i class="fas fa-clipboard-list"></i> Complaints
-            <span class="data-count" id="complaints-count">0</span>
-          </div>
-        </div>
+      <div class="sidebar-header"><h1>Financial Reports</h1></div>
+      <nav>
+        <div class="nav-link active" onclick="showPage(event,'overview')"><i class="fas fa-home"></i> Overview</div>
+        <div class="nav-link" onclick="showPage(event,'data-management')"><i class="fas fa-upload"></i> Data Management</div>
+        <div class="nav-link" onclick="showPage(event,'lending-volume')"><i class="fas fa-coins"></i> Lending Volume</div>
       </nav>
     </aside>
 
     <main class="main-content">
-      <!-- Overview -->
       <div id="overview-page">
-        <div class="welcome-section">
-          <h2>Welcome to Financial Reports Dashboard</h2>
-          <p>Your comprehensive financial reporting and analytics platform</p>
-        </div>
-        <div class="chart-card">
-          <h3>Getting Started</h3>
-          <p>Click "Data Management" to upload your CSV files, then view your reports using the sidebar navigation.</p>
-        </div>
+        <div class="page-header"><h1 class="page-title">Welcome</h1></div>
+        <p>Upload data and view reports using the sidebar.</p>
       </div>
 
-      <!-- Data Management -->
       <div id="data-management-page" class="hidden">
-        <div class="page-header">
-          <h1 class="page-title">Data Management</h1>
-          <p class="page-subtitle">Upload and manage CSV data for all report types</p>
-        </div>
-        <div class="upload-section">
-          <div class="upload-grid">
-            <div class="upload-card" id="lending-volume-card">
-              <i class="fas fa-coins fa-3x" style="color: var(--primary-color);"></i>
-              <h3>Lending Volume</h3>
-              <p>Track loan origination volumes and customer activity trends</p>
-              <input type="file" accept=".csv" style="display: none;" id="lending-volume-file"
-                     onchange="uploadFile(this, 'lending-volume')">
-              <button class="btn btn-primary" onclick="document.getElementById('lending-volume-file').click()">
-                <i class="fas fa-upload"></i> Upload CSV
-              </button>
-              <div id="lending-volume-status"></div>
-            </div>
-
-            <div class="upload-card" id="arrears-card">
-              <i class="fas fa-exclamation-triangle fa-3x" style="color: var(--warning-color);"></i>
-              <h3>Arrears Analysis</h3>
-              <p>Monitor overdue accounts and payment behavior patterns</p>
-              <input type="file" accept=".csv" style="display: none;" id="arrears-file"
-                     onchange="uploadFile(this, 'arrears')">
-              <button class="btn btn-primary" onclick="document.getElementById('arrears-file').click()">
-                <i class="fas fa-upload"></i> Upload CSV
-              </button>
-              <div id="arrears-status"></div>
-            </div>
-
-            <div class="upload-card" id="liquidations-card">
-              <i class="fas fa-sync fa-3x" style="color: var(--info-color);"></i>
-              <h3>Liquidations</h3>
-              <p>Track liquidation activities and recovery rate performance</p>
-              <input type="file" accept=".csv" style="display: none;" id="liquidations-file"
-                     onchange="uploadFile(this, 'liquidations')">
-              <button class="btn btn-primary" onclick="document.getElementById('liquidations-file').click()">
-                <i class="fas fa-upload"></i> Upload CSV
-              </button>
-              <div id="liquidations-status"></div>
-            </div>
-
-            <div class="upload-card" id="call-center-card">
-              <i class="fas fa-phone fa-3x" style="color: var(--success-color);"></i>
-              <h3>Call Center Performance</h3>
-              <p>Monitor call center metrics and service level analytics</p>
-              <input type="file" accept=".csv" style="display: none;" id="call-center-file"
-                     onchange="uploadFile(this, 'call-center')">
-              <button class="btn btn-primary" onclick="document.getElementById('call-center-file').click()">
-                <i class="fas fa-upload"></i> Upload CSV
-              </button>
-              <div id="call-center-status"></div>
-            </div>
-
-            <div class="upload-card" id="complaints-card">
-              <i class="fas fa-clipboard-list fa-3x" style="color: var(--danger-color);"></i>
-              <h3>Customer Complaints</h3>
-              <p>Track customer complaints and resolution performance metrics</p>
-              <input type="file" accept=".csv" style="display: none;" id="complaints-file"
-                     onchange="uploadFile(this, 'complaints')">
-              <button class="btn btn-primary" onclick="document.getElementById('complaints-file').click()">
-                <i class="fas fa-upload"></i> Upload CSV
-              </button>
-              <div id="complaints-status"></div>
-            </div>
-          </div>
+        <div class="page-header"><h1 class="page-title">Data Management</h1></div>
+        <div>
+          <h3>Lending Volume</h3>
+          <input type="file" accept=".csv" id="lending-file"
+                 onchange="uploadFile(this,'lending-volume')">
+          <div id="lending-status"></div>
         </div>
       </div>
 
-      <!-- Report Pages -->
       <div id="lending-volume-page" class="hidden">
-        <div class="page-header">
-          <h1 class="page-title">Lending Volume Analysis</h1>
-          <p class="page-subtitle">Track loan origination volumes and customer activity</p>
-        </div>
+        <div class="page-header"><h1 class="page-title">Lending Volume Analysis</h1></div>
         <div id="lending-content"></div>
-      </div>
-
-      <div id="arrears-page" class="hidden">
-        <div class="page-header">
-          <h1 class="page-title">Arrears Analysis</h1>
-          <p class="page-subtitle">Monitor overdue accounts and payment behavior</p>
-        </div>
-        <div id="arrears-content"></div>
-      </div>
-
-      <div id="liquidations-page" class="hidden">
-        <div class="page-header">
-          <h1 class="page-title">Liquidations Analysis</h1>
-          <p class="page-subtitle">Track liquidation activities and recovery rates</p>
-        </div>
-        <div id="liquidations-content"></div>
-      </div>
-
-      <div id="call-center-page" class="hidden">
-        <div class="page-header">
-          <h1 class="page-title">Call Center Performance</h1>
-          <p class="page-subtitle">Monitor call center metrics and service levels</p>
-        </div>
-        <div id="call-center-content"></div>
-      </div>
-
-      <div id="complaints-page" class="hidden">
-        <div class="page-header">
-          <h1 class="page-title">Customer Complaints</h1>
-          <p class="page-subtitle">Track customer complaints and resolution performance</p>
-        </div>
-        <div id="complaints-content"></div>
       </div>
     </main>
   </div>
 
   <script>
-    // Data storage
-    let reportData = {
-      'lending-volume': [],
-      'arrears': [],
-      'liquidations': [],
-      'call-center': [],
-      'complaints': []
-    };
+    let reportData = { 'lending-volume': [] };
 
-    // Show page
     function showPage(event, pageId) {
-      const pages = document.querySelectorAll('[id$="-page"]');
-      pages.forEach(p => p.classList.add('hidden'));
-
+      document.querySelectorAll('[id$="-page"]').forEach(p => p.classList.add('hidden'));
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-
-      const targetPage = document.getElementById(pageId + '-page');
-      if (targetPage) targetPage.classList.remove('hidden');
-
+      document.getElementById(pageId + '-page').classList.remove('hidden');
       event.currentTarget.classList.add('active');
-
-      if (pageId !== 'overview' && pageId !== 'data-management') {
-        renderReport(pageId);
-      }
+      if (pageId === 'lending-volume') renderReport('lending-volume');
     }
 
-    // Upload CSV
     function uploadFile(fileInput, reportType) {
       const file = fileInput.files[0];
       if (!file) return;
-
-      const statusId = reportType + '-status';
-      const cardId = reportType + '-card';
-      const countId = reportType + '-count';
-
-      const statusElement = document.getElementById(statusId);
-      const uploadCard = document.getElementById(cardId);
-      const countElement = document.getElementById(countId);
-
-      statusElement.innerHTML = '<div class="status status-info">Processing CSV file...</div>';
-      uploadCard.classList.add('loading');
-
       const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const csvText = e.target.result;
-          const data = parseCSV(csvText);
-          reportData[reportType] = data;
-
-          statusElement.innerHTML = '<div class="status status-success">Loaded ' + data.length + ' records</div>';
-          uploadCard.classList.add('has-data');
-          uploadCard.classList.remove('loading');
-
-          if (countElement) {
-            countElement.textContent = data.length;
-            countElement.classList.add('has-data');
-          }
-        } catch (err) {
-          statusElement.innerHTML = '<div class="status status-error">Error: ' + err.message + '</div>';
-          uploadCard.classList.remove('loading');
-        }
+      reader.onload = e => {
+        const data = parseCSV(e.target.result);
+        reportData[reportType] = data;
+        document.getElementById(reportType + '-status').innerText =
+          `Loaded ${data.length} records`;
       };
       reader.readAsText(file);
     }
 
-    // Parse CSV
     function parseCSV(csvText) {
       const lines = csvText.split('\n').filter(l => l.trim());
-      if (!lines.length) throw new Error('Empty CSV');
-
-      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-      const data = [];
-
-      for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
-        const record = {};
-        headers.forEach((h, idx) => {
-          let val = values[idx] || '';
-          if (val.includes('£')) {
-            val = val.replace(/[£,]/g, '');
-            if (!isNaN(parseFloat(val))) val = parseFloat(val);
-          } else if (!isNaN(parseFloat(val))) {
-            val = parseFloat(val);
-          }
-          record[h] = val;
-        });
-        if (Object.values(record).some(v => v !== '')) data.push(record);
-      }
-      return data;
+      if (!lines.length) return [];
+      const headers = lines[0].split(',').map(h => h.trim());
+      return lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        const rec = {};
+        headers.forEach((h,i)=> rec[h]=values[i]);
+        return rec;
+      });
     }
 
-    // Render report
     function renderReport(reportType) {
-      let contentId = reportType === 'lending-volume'
-        ? 'lending-content'
-        : reportType === 'call-center'
-        ? 'call-center-content'
-        : reportType + '-content';
-
-      const contentElement = document.getElementById(contentId);
+      const content = document.getElementById(reportType + '-content');
       const data = reportData[reportType];
-
-      if (!data || !data.length) {
-        contentElement.innerHTML =
-          '<div class="chart-card">' +
-          '<h3>No Data Available</h3>' +
-          '<p>Upload a CSV file to view analytics.</p>' +
-          '<button class="btn btn-primary" onclick="showPage(event, \'data-management\')">Upload Data</button>' +
-          '</div>';
+      if (!data.length) {
+        content.innerHTML = `<div class="chart-card"><p>No data available</p></div>`;
         return;
       }
 
-      const headers = Object.keys(data[0]).slice(0, 8);
-      const displayData = data.slice(0, 100);
+      // --- Summary KPIs ---
+      let total = data.length;
+      let avg = 0;
+      if (data[0].amount) {
+        avg = (data.reduce((s,r)=> s+(parseFloat(r.amount)||0),0)/total).toFixed(2);
+      }
+      const summaryHTML = `
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-title">Total Loans</div><div class="kpi-value">${total}</div></div>
+          <div class="kpi-card"><div class="kpi-title">Average Amount</div><div class="kpi-value">£${avg}</div></div>
+        </div>
+      `;
 
-      let html = '<div class="data-table">';
-      html += '<div class="table-header"><h3>Data Records (' + data.length + ' total)</h3></div>';
-      html += '<div class="table-container"><table><thead><tr>';
+      // --- Chart ---
+      const chartId = reportType + '-chart';
+      const chartHTML = `
+        <div class="chart-card"><h3>Lending by Stage</h3>
+        <canvas id="${chartId}" height="120"></canvas></div>
+      `;
 
-      headers.forEach(h => {
-        const label = h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        html += '<th>' + label + '</th>';
+      // --- Table ---
+      const headers = Object.keys(data[0]);
+      let tableHTML = `<div class="data-table"><table><thead><tr>`;
+      headers.forEach(h => tableHTML += `<th>${h}</th>`);
+      tableHTML += `</tr></thead><tbody>`;
+      data.slice(0,100).forEach(row=>{
+        tableHTML += `<tr>`+headers.map(h=>`<td>${row[h]||''}</td>`).join('')+`</tr>`;
       });
-      html += '</tr></thead><tbody>';
+      tableHTML += `</tbody></table></div>`;
 
-      displayData.forEach(r => {
-        html += '<tr>';
-        headers.forEach(h => {
-          let val = r[h];
-          if (typeof val === 'number' && (h.toLowerCase().includes('amount') || h.toLowerCase().includes('payment'))) {
-            val = '<span class="currency">£' + val.toLocaleString() + '</span>';
-          }
-          html += '<td>' + (val || '-') + '</td>';
+      content.innerHTML = summaryHTML + chartHTML + tableHTML;
+
+      // --- Draw chart ---
+      setTimeout(()=>{
+        const ctx = document.getElementById(chartId).getContext('2d');
+        const labels = [...new Set(data.map(r=>r.stage||'Unknown'))];
+        const values = labels.map(l=> data.filter(r=>(r.stage||'Unknown')===l).length);
+        new Chart(ctx,{
+          type:'bar',
+          data:{ labels, datasets:[{label:'Loans',data:values,
+            backgroundColor:'rgba(59,130,246,0.6)',borderColor:'rgba(59,130,246,1)',borderWidth:1}]},
+          options:{ responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
         });
-        html += '</tr>';
-      });
-
-      html += '</tbody></table></div>';
-      html += '<div style="padding:15px;color:#64748b;">Showing ' + displayData.length + ' of ' + data.length + ' records</div>';
-      html += '</div>';
-
-      contentElement.innerHTML = html;
+      },50);
     }
   </script>
 </body>
