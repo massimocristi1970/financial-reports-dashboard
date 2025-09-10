@@ -559,31 +559,23 @@
             }
         }
 
-        // Setup file uploads
-        function setupUploads() {
-            const reportTypes = ['lending-volume', 'arrears', 'liquidations', 'call-center', 'complaints'];
-            
-            reportTypes.forEach(reportType => {
-                const fileInput = document.getElementById(reportType.replace('-', '') + '-file');
-                if (fileInput) {
-                    fileInput.addEventListener('change', function(e) {
-                        handleFileUpload(e, reportType);
-                    });
-                }
-            });
-        }
-
-        // Handle file upload
-        function handleFileUpload(event, reportType) {
-            const file = event.target.files[0];
+        // Simple upload function
+        function uploadFile(fileInput, reportType) {
+            const file = fileInput.files[0];
             if (!file) return;
 
-            console.log('Processing file:', file.name, 'for report:', reportType);
+            console.log('Upload started for:', reportType, 'File:', file.name);
 
             const statusId = reportType.replace('-', '') + '-status';
             const cardId = reportType.replace('-', '') + '-card';
+            const countId = reportType.replace('-', '') + '-count';
+            
             const statusElement = document.getElementById(statusId);
             const uploadCard = document.getElementById(cardId);
+            const countElement = document.getElementById(countId);
+            
+            console.log('Status element:', statusElement);
+            console.log('Card element:', uploadCard);
             
             // Show processing status
             statusElement.innerHTML = '<div class="status status-info">Processing CSV file...</div>';
@@ -593,8 +585,11 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
+                    console.log('File read successfully, parsing CSV...');
                     const csvText = e.target.result;
                     const data = parseCSV(csvText);
+                    
+                    console.log('CSV parsed, got', data.length, 'records');
                     
                     // Store data
                     reportData[reportType] = data;
@@ -605,13 +600,12 @@
                     uploadCard.classList.remove('loading');
                     
                     // Update counter
-                    const countElement = document.getElementById(reportType.replace('-', '') + '-count');
                     if (countElement) {
                         countElement.textContent = data.length;
                         countElement.classList.add('has-data');
                     }
                     
-                    console.log('Successfully loaded', data.length, 'records for', reportType);
+                    console.log('Upload completed successfully for:', reportType);
                     
                 } catch (error) {
                     console.error('Error processing file:', error);
@@ -621,11 +615,18 @@
             };
             
             reader.onerror = function() {
+                console.error('File read failed');
                 statusElement.innerHTML = '<div class="status status-error">Failed to read file</div>';
                 uploadCard.classList.remove('loading');
             };
             
             reader.readAsText(file);
+        }
+
+        // Setup file uploads - remove this function since we're using inline handlers
+        function setupUploads() {
+            // Not needed anymore - using inline onchange handlers
+            console.log('Using inline upload handlers');
         }
 
         // Parse CSV
