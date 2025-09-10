@@ -666,7 +666,29 @@
 
         // Render report
         function renderReport(reportType) {
-            const contentElement = document.getElementById(reportType.replace('-', '') + '-content');
+            console.log('Rendering report for:', reportType);
+            
+            // Fix ID mapping - some have hyphens, some don't
+            let contentId;
+            switch(reportType) {
+                case 'lending-volume':
+                    contentId = 'lending-content';
+                    break;
+                case 'call-center':
+                    contentId = 'call-center-content';
+                    break;
+                default:
+                    contentId = reportType + '-content';
+            }
+            
+            const contentElement = document.getElementById(contentId);
+            console.log('Looking for element:', contentId, 'Found:', contentElement);
+            
+            if (!contentElement) {
+                console.error('Content element not found for ID:', contentId);
+                return;
+            }
+            
             const data = reportData[reportType];
             
             if (!data || data.length === 0) {
