@@ -48,7 +48,7 @@
         <div class="page-header"><h1 class="page-title">Data Management</h1></div>
         <div>
           <h3>Lending Volume</h3>
-          <input type="file" accept=".csv" id="lending-file"
+          <input type="file" accept=".csv,.tsv" id="lending-file"
                  onchange="uploadFile(this,'lending-volume')">
           <div id="lending-volume-status"></div>
         </div>
@@ -89,13 +89,23 @@
     function parseCSV(csvText) {
       const lines = csvText.split('\n').filter(l => l.trim());
       if (!lines.length) return [];
-      const headers = lines[0].split(/,|\t/).map(h => h.trim()); // handles CSV or TSV
+      const headers = lines[0].split(/,|\t/).map(h => h.trim());
       return lines.slice(1).map(line => {
         const values = line.split(/,|\t/).map(v => v.trim());
         const rec = {};
         headers.forEach((h,i)=> rec[h]=values[i]);
         return rec;
       });
+    }
+
+    function groupBy(data, field, formatter) {
+      const map = {};
+      data.forEach(r => {
+        let key = r[field] || 'Unknown';
+        if (formatter) key = formatter(key);
+        map[key] = (map[key] || 0) + 1;
+      });
+      return map;
     }
 
     function renderReport(reportType) {
@@ -108,7 +118,10 @@
 
       // --- KPIs ---
       let total = data.length;
-      let totalIssued = data.reduce((s,r)=> s + (parseFloat(r['IssuedAmount']) || 0), 0);
+      let totalIssued = data.reduce((s,r)=> {
+        let val = (r['IssuedAmount'] || '').toString().replace(/[^0-9.-]/g,'');
+        return s + (parseFloat(val) || 0);
+      }, 0);
       let avgIssued = (totalIssued / total).toFixed(2);
 
       const summaryHTML = `
@@ -119,11 +132,37 @@
         </div>
       `;
 
-      // --- Chart ---
+      // --- Chart by Stage ---
       const chartId = reportType + '-chart';
       const chartHTML = `
         <div class="chart-card"><h3>Lending by Stage</h3>
           <canvas id="${chartId}" height="120"></canvas>
+        </div>
+      `;
+
+      // --- Breakdowns ---
+      const monthly = groupBy(data, 'FundedDate', d => {
+        if (!d) return 'Unknown';
+        const dt = new Date(d);
+        if (isNaN(dt)) return 'Invalid';
+        return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+      });
+      const yearly = groupBy(data, 'FundedDate', d => {
+        if (!d) return 'Unknown';
+        const dt = new Date(d);
+        if (isNaN(dt)) return 'Invalid';
+        return `${dt.getFullYear()}`;
+      });
+      const byTier = groupBy(data, 'TierName');
+
+      const breakdownHTML = `
+        <div class="chart-card">
+          <h3>Breakdowns</h3>
+          <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div><h4>By Month</h4><ul>${Object.entries(monthly).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul></div>
+            <div><h4>By Year</h4><ul>${Object.entries(yearly).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul></div>
+            <div><h4>By Tier</h4><ul>${Object.entries(byTier).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul></div>
+          </div>
         </div>
       `;
 
@@ -137,7 +176,8 @@
       });
       tableHTML += `</tbody></table></div>`;
 
-      content.innerHTML = summaryHTML + chartHTML + tableHTML;
+      // --- Render ---
+      content.innerHTML = summaryHTML + chartHTML + breakdownHTML + tableHTML;
 
       // --- Draw Chart ---
       setTimeout(()=>{
