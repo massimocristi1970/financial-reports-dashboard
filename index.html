@@ -7,10 +7,9 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Keep your existing CSS */
     body { font-family: Arial, sans-serif; margin:0; }
     .app-container { display:flex; }
-    .sidebar { width:250px; background:#fff; border-right:1px solid #ddd; }
+    .sidebar { width:250px; background:#fff; border-right:1px solid #ddd; min-height:100vh; }
     .main-content { flex:1; padding:20px; }
     .hidden { display:none; }
     .nav-link { cursor:pointer; padding:12px; display:flex; align-items:center; }
@@ -19,7 +18,7 @@
     .page-title { font-size:24px; font-weight:bold; }
     .data-table { background:#fff; border:1px solid #ddd; border-radius:8px; margin-top:20px; }
     table { width:100%; border-collapse:collapse; }
-    th,td { padding:10px; border-bottom:1px solid #eee; }
+    th,td { padding:10px; border-bottom:1px solid #eee; text-align:left; }
     tr:hover { background:#f9f9f9; }
     .chart-card, .kpi-grid { background:#fff; border:1px solid #ddd; border-radius:8px; padding:20px; margin-bottom:20px; }
     .kpi-grid { display:flex; gap:20px; }
@@ -31,7 +30,7 @@
 <body>
   <div class="app-container">
     <aside class="sidebar">
-      <div class="sidebar-header"><h1>Financial Reports</h1></div>
+      <div class="sidebar-header" style="padding:20px; font-weight:bold;">Financial Reports</div>
       <nav>
         <div class="nav-link active" onclick="showPage(event,'overview')"><i class="fas fa-home"></i> Overview</div>
         <div class="nav-link" onclick="showPage(event,'data-management')"><i class="fas fa-upload"></i> Data Management</div>
@@ -51,19 +50,20 @@
           <h3>Lending Volume</h3>
           <input type="file" accept=".csv" id="lending-file"
                  onchange="uploadFile(this,'lending-volume')">
-          <div id="lending-status"></div>
+          <div id="lending-volume-status"></div>
         </div>
       </div>
 
       <div id="lending-volume-page" class="hidden">
         <div class="page-header"><h1 class="page-title">Lending Volume Analysis</h1></div>
-        <div id="lending-content"></div>
+        <div id="lending-volume-content"></div>
       </div>
     </main>
   </div>
 
   <script>
     let reportData = { 'lending-volume': [] };
+    let charts = {};
 
     function showPage(event, pageId) {
       document.querySelectorAll('[id$="-page"]').forEach(p => p.classList.add('hidden'));
@@ -89,9 +89,9 @@
     function parseCSV(csvText) {
       const lines = csvText.split('\n').filter(l => l.trim());
       if (!lines.length) return [];
-      const headers = lines[0].split(',').map(h => h.trim());
+      const headers = lines[0].split(/,|\t/).map(h => h.trim()); // handles CSV or TSV
       return lines.slice(1).map(line => {
-        const values = line.split(',').map(v => v.trim());
+        const values = line.split(/,|\t/).map(v => v.trim());
         const rec = {};
         headers.forEach((h,i)=> rec[h]=values[i]);
         return rec;
@@ -106,16 +106,16 @@
         return;
       }
 
-      // --- Summary KPIs ---
+      // --- KPIs ---
       let total = data.length;
-      let avg = 0;
-      if (data[0].amount) {
-        avg = (data.reduce((s,r)=> s+(parseFloat(r.amount)||0),0)/total).toFixed(2);
-      }
+      let totalIssued = data.reduce((s,r)=> s + (parseFloat(r['IssuedAmount']) || 0), 0);
+      let avgIssued = (totalIssued / total).toFixed(2);
+
       const summaryHTML = `
         <div class="kpi-grid">
           <div class="kpi-card"><div class="kpi-title">Total Loans</div><div class="kpi-value">${total}</div></div>
-          <div class="kpi-card"><div class="kpi-title">Average Amount</div><div class="kpi-value">£${avg}</div></div>
+          <div class="kpi-card"><div class="kpi-title">Total Issued</div><div class="kpi-value">£${totalIssued.toLocaleString()}</div></div>
+          <div class="kpi-card"><div class="kpi-title">Average Issued</div><div class="kpi-value">£${avgIssued}</div></div>
         </div>
       `;
 
@@ -123,7 +123,8 @@
       const chartId = reportType + '-chart';
       const chartHTML = `
         <div class="chart-card"><h3>Lending by Stage</h3>
-        <canvas id="${chartId}" height="120"></canvas></div>
+          <canvas id="${chartId}" height="120"></canvas>
+        </div>
       `;
 
       // --- Table ---
@@ -138,15 +139,18 @@
 
       content.innerHTML = summaryHTML + chartHTML + tableHTML;
 
-      // --- Draw chart ---
+      // --- Draw Chart ---
       setTimeout(()=>{
         const ctx = document.getElementById(chartId).getContext('2d');
-        const labels = [...new Set(data.map(r=>r.stage||'Unknown'))];
-        const values = labels.map(l=> data.filter(r=>(r.stage||'Unknown')===l).length);
-        new Chart(ctx,{
+        if (charts[reportType]) charts[reportType].destroy();
+        const labels = [...new Set(data.map(r => r['Stage'] || 'Unknown'))];
+        const values = labels.map(l => data.filter(r => (r['Stage'] || 'Unknown') === l).length);
+
+        charts[reportType] = new Chart(ctx,{
           type:'bar',
-          data:{ labels, datasets:[{label:'Loans',data:values,
-            backgroundColor:'rgba(59,130,246,0.6)',borderColor:'rgba(59,130,246,1)',borderWidth:1}]},
+          data:{ labels, datasets:[{label:'Loans', data:values,
+            backgroundColor:'rgba(59,130,246,0.6)',
+            borderColor:'rgba(59,130,246,1)', borderWidth:1 }]},
           options:{ responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
         });
       },50);
