@@ -789,40 +789,31 @@
                 const file = event.target.files[0];
                 if (!file) return;
 
+                console.log('File selected:', file.name, file.size);
+
                 const statusElement = document.getElementById(reportType + '-status');
                 const uploadCard = document.querySelector('[data-report="' + reportType + '"]');
                 
                 try {
                     this.showStatus(statusElement, 'Processing CSV file...', 'info');
                     uploadCard.classList.add('loading');
+                    console.log('Starting file processing...');
                     
                     const csvData = await this.parseCSV(file);
+                    console.log('CSV parsed successfully, rows:', csvData.length);
                     
-                    const existingData = await this.db.getData(reportType);
-                    let shouldAppend = false;
-                    
-                    if (existingData.length > 0) {
-                        shouldAppend = confirm(
-                            'You have ' + existingData.length + ' existing records for ' + reportType + 
-                            '\n\nClick OK to ADD new data to existing records.\nClick Cancel to REPLACE all existing data.'
-                        );
-                    }
-                    
-                    await this.db.saveData(reportType, csvData, shouldAppend);
-                    
-                    const allData = await this.db.getData(reportType);
-                    this.data[reportType] = allData;
-                    
-                    const totalRecords = allData.length;
-                    const action = shouldAppend ? 'added to' : 'loaded into';
+                    // Skip database for now - just store in memory
+                    this.data[reportType] = csvData;
+                    console.log('Data stored in memory');
                     
                     this.showStatus(statusElement, 
-                        'Successfully ' + action + ' database: ' + csvData.length + ' new records (' + totalRecords + ' total)', 
+                        'Successfully loaded ' + csvData.length + ' records', 
                         'success'
                     );
                     uploadCard.classList.add('has-data');
                     
                     this.updateUI();
+                    console.log('Upload completed successfully');
                     
                 } catch (error) {
                     console.error('Upload error:', error);
