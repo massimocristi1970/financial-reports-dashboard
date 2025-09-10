@@ -31,7 +31,6 @@
             line-height: 1.6;
         }
 
-        /* Layout */
         .app-container {
             display: flex;
             min-height: 100vh;
@@ -54,7 +53,6 @@
             max-width: calc(100% - var(--sidebar-width));
         }
 
-        /* Sidebar */
         .sidebar-header {
             padding: 30px 20px;
             border-bottom: 1px solid #e2e8f0;
@@ -128,7 +126,6 @@
             color: white;
         }
 
-        /* Main Content */
         .page-header {
             background: white;
             padding: 30px;
@@ -153,7 +150,6 @@
             font-size: 16px;
         }
 
-        /* KPI Cards */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -170,22 +166,6 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-        }
-
-        .kpi-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         .kpi-card:hover {
@@ -221,7 +201,6 @@
             margin-top: 8px;
         }
 
-        /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -244,7 +223,6 @@
             color: var(--dark-color);
         }
 
-        /* Data Upload */
         .upload-section {
             background: white;
             padding: 30px;
@@ -307,23 +285,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
         }
 
         .btn-primary {
@@ -334,11 +295,6 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success-color), #059669);
-            color: white;
         }
 
         .btn-outline {
@@ -353,7 +309,6 @@
             color: var(--primary-color);
         }
 
-        /* Data Table */
         .data-table {
             background: white;
             border-radius: 16px;
@@ -419,11 +374,7 @@
         }
 
         .badge-primary { background: #dbeafe; color: var(--primary-color); }
-        .badge-success { background: #d1fae5; color: var(--success-color); }
-        .badge-warning { background: #fef3c7; color: var(--warning-color); }
-        .badge-danger { background: #fee2e2; color: var(--danger-color); }
 
-        /* Progress Bar */
         .progress-bar {
             background: #e5e7eb;
             height: 8px;
@@ -439,7 +390,6 @@
             border-radius: 4px;
         }
 
-        /* Status Messages */
         .status {
             padding: 15px;
             border-radius: 12px;
@@ -463,70 +413,19 @@
             border-color: #fca5a5;
         }
 
-        .status-warning {
-            background: linear-gradient(135deg, #fef3c7, #fcd34d);
-            color: #92400e;
-            border-color: #fcd34d;
-        }
-
         .status-info {
             background: linear-gradient(135deg, #dbeafe, #93c5fd);
             color: #1e40af;
             border-color: #93c5fd;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                max-width: 100%;
-            }
-
-            .kpi-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .upload-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Hidden class */
         .hidden {
             display: none !important;
         }
 
-        /* Loading states */
         .loading {
             opacity: 0.6;
             pointer-events: none;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #e5e7eb;
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         .welcome-section {
@@ -547,11 +446,30 @@
             opacity: 0.9;
             font-size: 16px;
         }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1><i class="fas fa-chart-line"></i> Financial Reports</h1>
@@ -601,9 +519,7 @@
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Overview Page -->
             <div id="overview-page" class="page">
                 <div class="welcome-section">
                     <h2>Welcome to Financial Reports Dashboard</h2>
@@ -642,7 +558,6 @@
                 </div>
             </div>
 
-            <!-- Data Management Page -->
             <div id="data-management-page" class="page hidden">
                 <div class="page-header">
                     <h1 class="page-title">Data Management</h1>
@@ -651,7 +566,6 @@
 
                 <div class="upload-section">
                     <div class="upload-grid">
-                        <!-- Lending Volume Upload -->
                         <div class="upload-card" data-report="lending-volume">
                             <i class="fas fa-coins fa-3x" style="color: var(--primary-color);"></i>
                             <h3>Lending Volume</h3>
@@ -663,7 +577,6 @@
                             <div class="upload-status" id="lending-status"></div>
                         </div>
 
-                        <!-- Arrears Upload -->
                         <div class="upload-card" data-report="arrears">
                             <i class="fas fa-exclamation-triangle fa-3x" style="color: var(--warning-color);"></i>
                             <h3>Arrears Analysis</h3>
@@ -675,7 +588,6 @@
                             <div class="upload-status" id="arrears-status"></div>
                         </div>
 
-                        <!-- Liquidations Upload -->
                         <div class="upload-card" data-report="liquidations">
                             <i class="fas fa-sync fa-3x" style="color: var(--info-color);"></i>
                             <h3>Liquidations</h3>
@@ -687,7 +599,6 @@
                             <div class="upload-status" id="liquidations-status"></div>
                         </div>
 
-                        <!-- Call Center Upload -->
                         <div class="upload-card" data-report="call-center">
                             <i class="fas fa-phone fa-3x" style="color: var(--success-color);"></i>
                             <h3>Call Center Performance</h3>
@@ -699,7 +610,6 @@
                             <div class="upload-status" id="call-center-status"></div>
                         </div>
 
-                        <!-- Complaints Upload -->
                         <div class="upload-card" data-report="complaints">
                             <i class="fas fa-clipboard-list fa-3x" style="color: var(--danger-color);"></i>
                             <h3>Customer Complaints</h3>
@@ -712,42 +622,11 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="chart-card">
-                    <h3 class="chart-title">Data Processing Guidelines</h3>
-                    <div style="line-height: 1.8; color: #4b5563;">
-                        <h4 style="margin-bottom: 15px; color: var(--dark-color);">Supported File Formats:</h4>
-                        <ul style="margin-left: 20px; margin-bottom: 25px;">
-                            <li><strong>CSV files (.csv)</strong> - Comma-separated values</li>
-                            <li><strong>Maximum file size:</strong> 50MB per file</li>
-                            <li><strong>Maximum rows:</strong> 100,000 records per upload</li>
-                            <li><strong>Encoding:</strong> UTF-8 recommended</li>
-                        </ul>
-                        
-                        <h4 style="margin-bottom: 15px; color: var(--dark-color);">Data Format Requirements:</h4>
-                        <ul style="margin-left: 20px;">
-                            <li><strong>Dates:</strong> DD/MM/YYYY, YYYY-MM-DD, or MM/DD/YYYY format</li>
-                            <li><strong>Currency:</strong> Numbers only (e.g., 1000.50) - currency symbols will be stripped</li>
-                            <li><strong>Percentages:</strong> Numbers only (e.g., 85.5 for 85.5%)</li>
-                            <li><strong>Customer IDs:</strong> Text or numbers are both supported</li>
-                            <li><strong>Headers:</strong> First row should contain column headers</li>
-                        </ul>
-                        
-                        <h4 style="margin-bottom: 15px; color: var(--dark-color);">Data Storage:</h4>
-                        <ul style="margin-left: 20px;">
-                            <li><strong>IndexedDB:</strong> Unlimited storage capacity</li>
-                            <li><strong>Append Mode:</strong> Add new data to existing records</li>
-                            <li><strong>Replace Mode:</strong> Replace all existing data</li>
-                            <li><strong>Data Persistence:</strong> Survives browser restarts</li>
-                        </ul>
-                    </div>
-                </div>
             </div>
 
-            <!-- Report Pages -->
             <div id="lending-volume-page" class="page hidden">
                 <div class="page-header">
-                    <h1 class="page-title">💰 Lending Volume Analysis</h1>
+                    <h1 class="page-title">Lending Volume Analysis</h1>
                     <p class="page-subtitle">Track loan origination volumes and customer activity</p>
                 </div>
                 <div class="report-content" data-report="lending-volume"></div>
@@ -755,7 +634,7 @@
 
             <div id="arrears-page" class="page hidden">
                 <div class="page-header">
-                    <h1 class="page-title">⚠️ Arrears Analysis</h1>
+                    <h1 class="page-title">Arrears Analysis</h1>
                     <p class="page-subtitle">Monitor overdue accounts and payment behavior</p>
                 </div>
                 <div class="report-content" data-report="arrears"></div>
@@ -763,7 +642,7 @@
 
             <div id="liquidations-page" class="page hidden">
                 <div class="page-header">
-                    <h1 class="page-title">🔄 Liquidations Analysis</h1>
+                    <h1 class="page-title">Liquidations Analysis</h1>
                     <p class="page-subtitle">Track liquidation activities and recovery rates</p>
                 </div>
                 <div class="report-content" data-report="liquidations"></div>
@@ -771,7 +650,7 @@
 
             <div id="call-center-page" class="page hidden">
                 <div class="page-header">
-                    <h1 class="page-title">📞 Call Center Performance</h1>
+                    <h1 class="page-title">Call Center Performance</h1>
                     <p class="page-subtitle">Monitor call center metrics and service levels</p>
                 </div>
                 <div class="report-content" data-report="call-center"></div>
@@ -779,7 +658,7 @@
 
             <div id="complaints-page" class="page hidden">
                 <div class="page-header">
-                    <h1 class="page-title">📋 Customer Complaints</h1>
+                    <h1 class="page-title">Customer Complaints</h1>
                     <p class="page-subtitle">Track customer complaints and resolution performance</p>
                 </div>
                 <div class="report-content" data-report="complaints"></div>
@@ -788,7 +667,6 @@
     </div>
 
     <script>
-        // IndexedDB Configuration
         const DB_CONFIG = {
             NAME: 'FinancialReportsDB',
             VERSION: 1,
@@ -797,12 +675,10 @@
                 ARREARS: 'arrears',
                 LIQUIDATIONS: 'liquidations',
                 CALL_CENTER: 'call-center',
-                COMPLAINTS: 'complaints',
-                METADATA: 'metadata'
+                COMPLAINTS: 'complaints'
             }
         };
 
-        // IndexedDB Helper Class
         class IndexedDBHelper {
             constructor() {
                 this.db = null;
@@ -830,7 +706,6 @@
                                     autoIncrement: false 
                                 });
                                 store.createIndex('_processed_date', '_processed_date', { unique: false });
-                                store.createIndex('customer_id', 'customer_id', { unique: false });
                             }
                         });
                     };
@@ -843,17 +718,14 @@
                 const store = transaction.objectStore(storeName);
 
                 if (!append) {
-                    await this.clearStore(storeName);
+                    await store.clear();
                 }
 
-                const savePromises = data.map(record => {
-                    record._id = record.id || `${storeName}_${Date.now()}_${Math.random()}`;
+                for (let record of data) {
+                    record._id = record.id || Math.random().toString(36) + Date.now();
                     record._processed_date = new Date().toISOString();
-                    return store.put(record);
-                });
-
-                await Promise.all(savePromises);
-                return transaction.complete;
+                    await store.put(record);
+                }
             }
 
             async getData(storeName) {
@@ -867,33 +739,8 @@
                     request.onerror = () => reject(request.error);
                 });
             }
-
-            async clearStore(storeName) {
-                await this.init();
-                const transaction = this.db.transaction([storeName], 'readwrite');
-                const store = transaction.objectStore(storeName);
-                return store.clear();
-            }
-
-            async getStats() {
-                await this.init();
-                const stats = {};
-                
-                for (const [key, storeName] of Object.entries(DB_CONFIG.STORES)) {
-                    if (storeName === 'metadata') continue;
-                    try {
-                        const data = await this.getData(storeName);
-                        stats[storeName] = data.length;
-                    } catch (error) {
-                        stats[storeName] = 0;
-                    }
-                }
-                
-                return stats;
-            }
         }
 
-        // Global Application State
         const FinancialDashboard = {
             db: new IndexedDBHelper(),
             data: {
@@ -902,59 +749,6 @@
                 'liquidations': [],
                 'call-center': [],
                 'complaints': []
-            },
-
-            reportConfigs: {
-                'lending-volume': {
-                    title: 'Lending Volume',
-                    fields: ['customer_id', 'funded_app_count', 'tier_name', 'stage', 'stage_date', 'payment_status', 'funded_date', 'last_payment_date', 'issued_amount', 'total_due', 'payment'],
-                    kpis: [
-                        { key: 'total_issued', label: 'Total Issued Amount', format: 'currency' },
-                        { key: 'avg_loan_size', label: 'Average Loan Size', format: 'currency' },
-                        { key: 'funded_count', label: 'Funded Applications', format: 'number' },
-                        { key: 'active_customers', label: 'Active Customers', format: 'number' }
-                    ]
-                },
-                'arrears': {
-                    title: 'Arrears Analysis',
-                    fields: ['customer_id', 'funded_app_count', 'tier_name', 'stage', 'stage_date', 'payment_status', 'funded_date', 'last_payment_date', 'issued_amount', 'total_due', 'payment'],
-                    kpis: [
-                        { key: 'total_arrears', label: 'Total Arrears Amount', format: 'currency' },
-                        { key: 'arrears_accounts', label: 'Accounts in Arrears', format: 'number' },
-                        { key: 'avg_arrears', label: 'Avg Arrears per Account', format: 'currency' },
-                        { key: 'arrears_rate', label: 'Arrears Rate', format: 'percentage' }
-                    ]
-                },
-                'liquidations': {
-                    title: 'Liquidations',
-                    fields: ['funded_year', 'funded_month', 'funded', 'collected', 'actual_liquidation_rate', 'future_scheduled', 'dmp_iva_collected', 'all_together', 'forecast_liquidation_rate', 'total_due_not_scheduled'],
-                    kpis: [
-                        { key: 'total_funded', label: 'Total Funded', format: 'currency' },
-                        { key: 'total_collected', label: 'Total Collected', format: 'currency' },
-                        { key: 'avg_liquidation_rate', label: 'Avg Liquidation Rate', format: 'percentage' },
-                        { key: 'recovery_rate', label: 'Recovery Rate', format: 'percentage' }
-                    ]
-                },
-                'call-center': {
-                    title: 'Call Center',
-                    fields: ['call_id', 'date_time', 'agent_name', 'answered_date_time', 'from_number', 'disposition', 'talk_time'],
-                    kpis: [
-                        { key: 'total_calls', label: 'Total Calls', format: 'number' },
-                        { key: 'avg_talk_time', label: 'Avg Talk Time (mins)', format: 'decimal' },
-                        { key: 'answer_rate', label: 'Answer Rate', format: 'percentage' },
-                        { key: 'resolution_rate', label: 'Resolution Rate', format: 'percentage' }
-                    ]
-                },
-                'complaints': {
-                    title: 'Complaints',
-                    fields: ['customer_id', 'count', 'received_date', 'resolved_date', 'days_to_resolve', 'category', 'decision'],
-                    kpis: [
-                        { key: 'total_complaints', label: 'Total Complaints', format: 'number' },
-                        { key: 'avg_resolution_time', label: 'Avg Resolution Time (days)', format: 'decimal' },
-                        { key: 'resolution_rate', label: 'Resolution Rate', format: 'percentage' },
-                        { key: 'repeat_customers', label: 'Unique Customers', format: 'number' }
-                    ]
-                }
             },
 
             init() {
@@ -982,7 +776,7 @@
                 const reportTypes = ['lending-volume', 'arrears', 'liquidations', 'call-center', 'complaints'];
                 
                 reportTypes.forEach(reportType => {
-                    const fileInput = document.getElementById(`${reportType}-upload`);
+                    const fileInput = document.getElementById(reportType + '-upload');
                     if (fileInput) {
                         fileInput.addEventListener('change', (e) => {
                             this.handleFileUpload(e, reportType);
@@ -995,32 +789,27 @@
                 const file = event.target.files[0];
                 if (!file) return;
 
-                const statusElement = document.getElementById(`${reportType}-status`);
-                const uploadCard = document.querySelector(`[data-report="${reportType}"]`);
+                const statusElement = document.getElementById(reportType + '-status');
+                const uploadCard = document.querySelector('[data-report="' + reportType + '"]');
                 
                 try {
-                    this.showStatus(statusElement, '<i class="fas fa-spinner fa-spin"></i> Processing CSV file...', 'info');
+                    this.showStatus(statusElement, 'Processing CSV file...', 'info');
                     uploadCard.classList.add('loading');
                     
                     const csvData = await this.parseCSV(file);
-                    const processedData = this.processData(csvData, reportType);
                     
-                    // Ask user if they want to append or replace data
                     const existingData = await this.db.getData(reportType);
                     let shouldAppend = false;
                     
                     if (existingData.length > 0) {
                         shouldAppend = confirm(
-                            `You have ${existingData.length} existing records for ${reportType}.\n\n` +
-                            `Click OK to ADD new data to existing records.\n` +
-                            `Click Cancel to REPLACE all existing data.`
+                            'You have ' + existingData.length + ' existing records for ' + reportType + 
+                            '\n\nClick OK to ADD new data to existing records.\nClick Cancel to REPLACE all existing data.'
                         );
                     }
                     
-                    // Save to IndexedDB
-                    await this.db.saveData(reportType, processedData, shouldAppend);
+                    await this.db.saveData(reportType, csvData, shouldAppend);
                     
-                    // Update in-memory data
                     const allData = await this.db.getData(reportType);
                     this.data[reportType] = allData;
                     
@@ -1028,7 +817,7 @@
                     const action = shouldAppend ? 'added to' : 'loaded into';
                     
                     this.showStatus(statusElement, 
-                        `<i class="fas fa-check-circle"></i> Successfully ${action} database: ${processedData.length} new records (${totalRecords} total)`, 
+                        'Successfully ' + action + ' database: ' + csvData.length + ' new records (' + totalRecords + ' total)', 
                         'success'
                     );
                     uploadCard.classList.add('has-data');
@@ -1037,7 +826,7 @@
                     
                 } catch (error) {
                     console.error('Upload error:', error);
-                    this.showStatus(statusElement, `<i class="fas fa-exclamation-circle"></i> Error: ${error.message}`, 'error');
+                    this.showStatus(statusElement, 'Error: ' + error.message, 'error');
                 } finally {
                     uploadCard.classList.remove('loading');
                     event.target.value = '';
@@ -1095,8 +884,8 @@
                     headers.forEach((header, idx) => {
                         let value = values[idx] || '';
                         
-                        if (typeof value === 'string' && (value.includes('£') || value.includes('€') || value.includes('))) {
-                            const cleaned = value.replace(/[£€$,]/g, '');
+                        if (typeof value === 'string' && value.includes('£')) {
+                            const cleaned = value.replace(/[£,]/g, '');
                             if (!isNaN(parseFloat(cleaned))) {
                                 value = parseFloat(cleaned);
                             }
@@ -1115,17 +904,8 @@
                 return data;
             },
 
-            processData(rawData, reportType) {
-                return rawData.map((record, index) => {
-                    const processedRecord = { ...record };
-                    processedRecord.id = `${reportType}_${Date.now()}_${index}`;
-                    processedRecord._processed_date = new Date().toISOString();
-                    return processedRecord;
-                });
-            },
-
             showStatus(element, message, type) {
-                element.innerHTML = `<div class="status status-${type}">${message}</div>`;
+                element.innerHTML = '<div class="status status-' + type + '">' + message + '</div>';
             },
 
             showPage(pageId) {
@@ -1133,7 +913,7 @@
                     page.classList.add('hidden');
                 });
                 
-                const page = document.getElementById(`${pageId}-page`);
+                const page = document.getElementById(pageId + '-page');
                 if (page) {
                     page.classList.remove('hidden');
                     
@@ -1144,163 +924,44 @@
             },
 
             renderReport(reportType) {
-                const reportContent = document.querySelector(`[data-report="${reportType}"]`);
+                const reportContent = document.querySelector('[data-report="' + reportType + '"]');
                 const data = this.data[reportType];
-                const config = this.reportConfigs[reportType];
                 
                 if (!reportContent || !data.length) {
                     if (reportContent) {
-                        reportContent.innerHTML = `
-                            <div class="chart-card" style="text-align: center; padding: 60px;">
-                                <i class="fas fa-database fa-3x" style="color: #cbd5e1; margin-bottom: 20px;"></i>
-                                <h3 style="color: #64748b; margin-bottom: 10px;">No Data Available</h3>
-                                <p style="color: #9ca3af;">Upload a CSV file to view ${config.title} analytics</p>
-                                <button class="btn btn-primary" onclick="FinancialDashboard.showPage('data-management')">
-                                    <i class="fas fa-upload"></i> Upload Data
-                                </button>
-                            </div>
-                        `;
+                        reportContent.innerHTML = 
+                            '<div class="chart-card" style="text-align: center; padding: 60px;">' +
+                                '<i class="fas fa-database fa-3x" style="color: #cbd5e1; margin-bottom: 20px;"></i>' +
+                                '<h3 style="color: #64748b; margin-bottom: 10px;">No Data Available</h3>' +
+                                '<p style="color: #9ca3af;">Upload a CSV file to view analytics</p>' +
+                                '<button class="btn btn-primary" onclick="FinancialDashboard.showPage(\'data-management\')">' +
+                                    '<i class="fas fa-upload"></i> Upload Data' +
+                                '</button>' +
+                            '</div>';
                     }
                     return;
                 }
                 
-                const kpiData = this.calculateKPIs(data, reportType);
-                
-                const kpiHTML = config.kpis.map(kpi => {
-                    const value = kpiData[kpi.key];
-                    const formattedValue = this.formatValue(value, kpi.format);
-                    const colorClass = this.getKPIColorClass(kpi.key);
-                    
-                    return `
-                        <div class="kpi-card ${colorClass}">
-                            <div class="kpi-title">${kpi.label}</div>
-                            <div class="kpi-value">${formattedValue}</div>
-                            <div class="kpi-change">Based on ${data.length} records</div>
-                        </div>
-                    `;
-                }).join('');
-                
                 const tableHTML = this.renderDataTable(data, reportType);
                 
-                reportContent.innerHTML = `
-                    <div class="kpi-grid">
-                        ${kpiHTML}
-                    </div>
-                    
-                    <div class="dashboard-grid">
-                        <div class="chart-card">
-                            <h3 class="chart-title">Data Visualization</h3>
-                            ${this.renderChart(data, reportType)}
-                        </div>
-                        
-                        <div class="chart-card">
-                            <h3 class="chart-title">Key Insights</h3>
-                            ${this.renderInsights(data, reportType)}
-                        </div>
-                    </div>
-                    
-                    <div class="data-table">
-                        <div class="table-header">
-                            <h3 class="chart-title">Data Records (${data.length} total)</h3>
-                            <div>
-                                <button class="btn btn-outline" onclick="FinancialDashboard.exportData('${reportType}')">
-                                    <i class="fas fa-download"></i> Export CSV
-                                </button>
-                            </div>
-                        </div>
-                        ${tableHTML}
-                    </div>
-                `;
+                reportContent.innerHTML = 
+                    '<div class="data-table">' +
+                        '<div class="table-header">' +
+                            '<h3 class="chart-title">Data Records (' + data.length + ' total)</h3>' +
+                        '</div>' +
+                        tableHTML +
+                    '</div>';
             },
 
-            calculateKPIs(data, reportType) {
-                const kpis = {};
+            renderDataTable(data) {
+                if (!data.length) return '<p>No data available</p>';
                 
-                switch (reportType) {
-                    case 'lending-volume':
-                        const issuedAmounts = data.map(r => parseFloat(r.issued_amount) || 0).filter(v => v > 0);
-                        kpis.total_issued = issuedAmounts.reduce((sum, val) => sum + val, 0);
-                        kpis.avg_loan_size = issuedAmounts.length ? kpis.total_issued / issuedAmounts.length : 0;
-                        kpis.funded_count = data.filter(r => r.stage && r.stage.toString().toLowerCase().includes('fund')).length;
-                        kpis.active_customers = [...new Set(data.map(r => r.customer_id).filter(Boolean))].length;
-                        break;
-                        
-                    case 'arrears':
-                        const arrearsData = data.filter(r => r.stage && !['Funded', 'Repaid', 'Closed'].includes(r.stage));
-                        const arrearAmounts = arrearsData.map(r => parseFloat(r.total_due) || 0).filter(v => v > 0);
-                        kpis.total_arrears = arrearAmounts.reduce((sum, val) => sum + val, 0);
-                        kpis.arrears_accounts = arrearsData.length;
-                        kpis.avg_arrears = arrearAmounts.length ? kpis.total_arrears / arrearAmounts.length : 0;
-                        kpis.arrears_rate = data.length ? (arrearsData.length / data.length) * 100 : 0;
-                        break;
-                        
-                    case 'liquidations':
-                        const fundedAmounts = data.map(r => parseFloat(r.funded) || 0);
-                        const collectedAmounts = data.map(r => parseFloat(r.collected) || 0);
-                        kpis.total_funded = fundedAmounts.reduce((sum, val) => sum + val, 0);
-                        kpis.total_collected = collectedAmounts.reduce((sum, val) => sum + val, 0);
-                        const liquidationRates = data.map(r => parseFloat(r.actual_liquidation_rate) || 0).filter(v => v > 0);
-                        kpis.avg_liquidation_rate = liquidationRates.length ? liquidationRates.reduce((sum, val) => sum + val, 0) / liquidationRates.length : 0;
-                        kpis.recovery_rate = kpis.total_funded > 0 ? (kpis.total_collected / kpis.total_funded) * 100 : 0;
-                        break;
-                        
-                    case 'call-center':
-                        kpis.total_calls = data.length;
-                        const talkTimes = data.map(r => parseFloat(r.talk_time) || 0).filter(v => v > 0);
-                        kpis.avg_talk_time = talkTimes.length ? talkTimes.reduce((sum, val) => sum + val, 0) / talkTimes.length : 0;
-                        kpis.answer_rate = data.filter(r => r.answered_date_time && r.answered_date_time !== '').length / data.length * 100;
-                        kpis.resolution_rate = data.filter(r => r.disposition && r.disposition.toString().toLowerCase().includes('resolved')).length / data.length * 100;
-                        break;
-                        
-                    case 'complaints':
-                        kpis.total_complaints = data.length;
-                        const resolutionTimes = data.map(r => parseFloat(r.days_to_resolve) || 0).filter(v => v > 0);
-                        kpis.avg_resolution_time = resolutionTimes.length ? resolutionTimes.reduce((sum, val) => sum + val, 0) / resolutionTimes.length : 0;
-                        kpis.resolution_rate = data.filter(r => r.resolved_date && r.resolved_date !== '').length / data.length * 100;
-                        kpis.repeat_customers = [...new Set(data.map(r => r.customer_id).filter(Boolean))].length;
-                        break;
-                }
-                
-                return kpis;
-            },
-
-            formatValue(value, format) {
-                if (value === null || value === undefined || isNaN(value)) return '0';
-                
-                switch (format) {
-                    case 'currency':
-                        return `£${Math.round(value).toLocaleString()}`;
-                    case 'percentage':
-                        return `${Math.round(value * 100) / 100}%`;
-                    case 'decimal':
-                        return Math.round(value * 100) / 100;
-                    case 'number':
-                        return Math.round(value).toLocaleString();
-                    default:
-                        return value.toString();
-                }
-            },
-
-            getKPIColorClass(key) {
-                const colorMap = {
-                    'total_issued': 'primary', 'avg_loan_size': 'success', 'funded_count': 'warning', 'active_customers': 'info',
-                    'total_arrears': 'danger', 'arrears_accounts': 'warning', 'avg_arrears': 'danger', 'arrears_rate': 'warning',
-                    'total_funded': 'primary', 'total_collected': 'success', 'avg_liquidation_rate': 'info', 'recovery_rate': 'success',
-                    'total_calls': 'primary', 'avg_talk_time': 'info', 'answer_rate': 'success', 'resolution_rate': 'success',
-                    'total_complaints': 'danger', 'avg_resolution_time': 'warning', 'resolution_rate': 'success', 'repeat_customers': 'info'
-                };
-                return colorMap[key] || 'primary';
-            },
-
-            renderDataTable(data, reportType) {
-                const config = this.reportConfigs[reportType];
-                const availableFields = Object.keys(data[0] || {}).filter(field => !field.startsWith('_'));
-                const headers = config.fields.filter(field => availableFields.includes(field)).slice(0, 8);
+                const headers = Object.keys(data[0]).filter(field => !field.startsWith('_')).slice(0, 8);
                 const displayData = data.slice(0, 50);
                 
                 const headerHTML = headers.map(field => {
                     const label = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    return `<th>${label}</th>`;
+                    return '<th>' + label + '</th>';
                 }).join('');
                 
                 const rowsHTML = displayData.map(record => {
@@ -1308,148 +969,28 @@
                         let value = record[field];
                         if (value === null || value === undefined) value = '-';
                         
-                        if (typeof value === 'number' && (field.includes('amount') || field.includes('due') || field.includes('payment') || field === 'funded' || field === 'collected')) {
-                            value = `<span class="currency">£${value.toLocaleString()}</span>`;
-                        } else if (field === 'stage' || field === 'payment_status' || field === 'disposition') {
-                            value = `<span class="badge badge-primary">${value}</span>`;
+                        if (typeof value === 'number' && (field.includes('amount') || field.includes('due') || field.includes('payment'))) {
+                            value = '<span class="currency">£' + value.toLocaleString() + '</span>';
+                        } else if (field === 'stage' || field === 'payment_status') {
+                            value = '<span class="badge badge-primary">' + value + '</span>';
                         }
                         
-                        return `<td>${value}</td>`;
+                        return '<td>' + value + '</td>';
                     }).join('');
                     
-                    return `<tr>${cellsHTML}</tr>`;
+                    return '<tr>' + cellsHTML + '</tr>';
                 }).join('');
                 
-                return `
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>${headerHTML}</tr>
-                            </thead>
-                            <tbody>
-                                ${rowsHTML}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="padding: 15px 25px; color: #64748b; font-style: italic;">
-                        Showing ${displayData.length} of ${data.length} records
-                    </div>
-                `;
-            },
-
-            renderChart(data, reportType) {
-                let chartData = {};
-                
-                switch (reportType) {
-                    case 'lending-volume':
-                    case 'arrears':
-                        chartData = data.reduce((acc, record) => {
-                            const stage = record.stage || 'Unknown';
-                            acc[stage] = (acc[stage] || 0) + 1;
-                            return acc;
-                        }, {});
-                        break;
-                        
-                    case 'liquidations':
-                        chartData = data.reduce((acc, record) => {
-                            const month = record.funded_month ? `Month ${record.funded_month}` : 'Unknown';
-                            const amount = parseFloat(record.funded) || 0;
-                            acc[month] = (acc[month] || 0) + amount;
-                            return acc;
-                        }, {});
-                        break;
-                        
-                    case 'call-center':
-                        chartData = data.reduce((acc, record) => {
-                            const disposition = record.disposition || 'Unknown';
-                            acc[disposition] = (acc[disposition] || 0) + 1;
-                            return acc;
-                        }, {});
-                        break;
-                        
-                    case 'complaints':
-                        chartData = data.reduce((acc, record) => {
-                            const category = record.category || 'Unknown';
-                            acc[category] = (acc[category] || 0) + 1;
-                            return acc;
-                        }, {});
-                        break;
-                }
-                
-                const maxValue = Math.max(...Object.values(chartData));
-                if (maxValue === 0) return '<p style="color: #9ca3af;">No chart data available</p>';
-                
-                const chartHTML = Object.entries(chartData)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 10)
-                    .map(([label, value]) => {
-                        const percentage = (value / maxValue) * 100;
-                        const displayValue = typeof value === 'number' && value > 1000 ? 
-                            `£${Math.round(value).toLocaleString()}` : 
-                            value.toString();
-                        
-                        return `
-                            <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                                <div style="width: 140px; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis;">${label}</div>
-                                <div style="flex: 1; margin: 0 15px;">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: ${percentage}%"></div>
-                                    </div>
-                                </div>
-                                <div style="width: 80px; text-align: right; font-weight: 600;">${displayValue}</div>
-                            </div>
-                        `;
-                    }).join('');
-                
-                return chartHTML;
-            },
-
-            renderInsights(data, reportType) {
-                const totalRecords = data.length;
-                const latestDate = new Date().toLocaleDateString();
-                
-                let insights = [
-                    `<strong>Total Records:</strong> ${totalRecords.toLocaleString()}`,
-                    `<strong>Last Updated:</strong> ${latestDate}`,
-                    `<strong>Data Quality:</strong> ${totalRecords > 100 ? 'Excellent' : 'Good'}`,
-                    `<strong>Processing Time:</strong> < 1 second`
-                ];
-                
-                switch (reportType) {
-                    case 'lending-volume':
-                        const amounts = data.map(r => parseFloat(r.issued_amount) || 0).filter(v => v > 0);
-                        if (amounts.length) {
-                            const avgAmount = amounts.reduce((sum, v) => sum + v, 0) / amounts.length;
-                            const maxAmount = Math.max(...amounts);
-                            insights.push(`<strong>Average Loan:</strong> £${Math.round(avgAmount).toLocaleString()}`);
-                            insights.push(`<strong>Largest Loan:</strong> £${Math.round(maxAmount).toLocaleString()}`);
-                        }
-                        break;
-                        
-                    case 'arrears':
-                        const arrearsCount = data.filter(r => r.stage && !['Funded', 'Repaid', 'Closed'].includes(r.stage)).length;
-                        const arrearsRate = totalRecords ? (arrearsCount / totalRecords) * 100 : 0;
-                        insights.push(`<strong>Arrears Rate:</strong> ${arrearsRate.toFixed(1)}%`);
-                        insights.push(`<strong>Arrears Accounts:</strong> ${arrearsCount}`);
-                        break;
-                        
-                    case 'liquidations':
-                        const avgLiquidation = data.reduce((sum, r) => sum + (parseFloat(r.actual_liquidation_rate) || 0), 0) / totalRecords;
-                        insights.push(`<strong>Avg Liquidation:</strong> ${avgLiquidation.toFixed(1)}%`);
-                        break;
-                        
-                    case 'call-center':
-                        const answeredCalls = data.filter(r => r.answered_date_time && r.answered_date_time !== '').length;
-                        insights.push(`<strong>Answered Calls:</strong> ${answeredCalls} (${((answeredCalls/totalRecords)*100).toFixed(1)}%)`);
-                        break;
-                        
-                    case 'complaints':
-                        const resolvedComplaints = data.filter(r => r.resolved_date && r.resolved_date !== '').length;
-                        insights.push(`<strong>Resolved:</strong> ${resolvedComplaints} (${((resolvedComplaints/totalRecords)*100).toFixed(1)}%)`);
-                        break;
-                }
-                
-                return `<div style="line-height: 2;">${insights.map(insight => `<div>${insight}</div>`).join('')}</div>`;
+                return 
+                    '<div class="table-container">' +
+                        '<table>' +
+                            '<thead><tr>' + headerHTML + '</tr></thead>' +
+                            '<tbody>' + rowsHTML + '</tbody>' +
+                        '</table>' +
+                    '</div>' +
+                    '<div style="padding: 15px 25px; color: #64748b; font-style: italic;">' +
+                        'Showing ' + displayData.length + ' of ' + data.length + ' records' +
+                    '</div>';
             },
 
             async loadStoredData() {
@@ -1460,8 +1001,9 @@
                     for (const reportType of reportTypes) {
                         try {
                             const data = await this.db.getData(reportType);
+                            this.data[reportType] = data || [];
                         } catch (error) {
-                            console.error(`Error loading ${reportType} data:`, error);
+                            console.error('Error loading ' + reportType + ' data:', error);
                             this.data[reportType] = [];
                         }
                     }
@@ -1472,13 +1014,13 @@
 
             async updateUI() {
                 Object.entries(this.data).forEach(([reportType, data]) => {
-                    const countElement = document.getElementById(`${reportType}-count`);
+                    const countElement = document.getElementById(reportType + '-count');
                     if (countElement) {
                         countElement.textContent = data.length;
                         countElement.classList.toggle('has-data', data.length > 0);
                     }
                     
-                    const uploadCard = document.querySelector(`[data-report="${reportType}"]`);
+                    const uploadCard = document.querySelector('[data-report="' + reportType + '"]');
                     if (uploadCard) {
                         uploadCard.classList.toggle('has-data', data.length > 0);
                     }
@@ -1486,14 +1028,12 @@
                 
                 const totalRecords = Object.values(this.data).reduce((sum, data) => sum + data.length, 0);
                 const activeReports = Object.values(this.data).filter(data => data.length > 0).length;
-                const lastUpload = await this.getLastUploadDate();
-                const storageUsed = await this.calculateStorageUsed();
                 
                 const elements = {
                     'total-records': totalRecords.toLocaleString(),
                     'active-reports': activeReports,
-                    'last-upload': lastUpload,
-                    'storage-used': storageUsed
+                    'last-upload': 'Never',
+                    'storage-used': '0 MB'
                 };
                 
                 Object.entries(elements).forEach(([id, value]) => {
@@ -1504,128 +1044,39 @@
                 this.updateOverviewChart();
             },
 
-            async getLastUploadDate() {
-                try {
-                    let latestDate = null;
-                    
-                    for (const reportType of Object.keys(this.data)) {
-                        const data = this.data[reportType];
-                        if (data.length > 0) {
-                            const dates = data
-                                .map(record => record._processed_date)
-                                .filter(Boolean)
-                                .sort()
-                                .reverse();
-                            
-                            if (dates.length > 0 && (!latestDate || dates[0] > latestDate)) {
-                                latestDate = dates[0];
-                            }
-                        }
-                    }
-                    
-                    return latestDate ? new Date(latestDate).toLocaleDateString() : 'Never';
-                } catch (error) {
-                    return 'Never';
-                }
-            },
-
-            async calculateStorageUsed() {
-                try {
-                    const stats = await this.db.getStats();
-                    const totalRecords = Object.values(stats).reduce((sum, count) => sum + count, 0);
-                    const estimatedSize = totalRecords * 1024;
-                    return `${(estimatedSize / 1024 / 1024).toFixed(1)} MB (${totalRecords} records)`;
-                } catch (error) {
-                    return '0 MB';
-                }
-            },
-
             updateOverviewChart() {
                 const chartContainer = document.getElementById('overview-chart');
                 if (!chartContainer) return;
                 
                 const reportData = Object.entries(this.data).map(([reportType, data]) => ({
-                    name: this.reportConfigs[reportType].title,
-                    count: data.length,
-                    icon: this.getReportIcon(reportType)
+                    name: reportType.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                    count: data.length
                 }));
                 
                 const maxCount = Math.max(...reportData.map(r => r.count), 1);
                 
                 const chartHTML = reportData.map(report => {
                     const percentage = (report.count / maxCount) * 100;
-                    return `
-                        <div style="display: flex; align-items: center; margin-bottom: 15px; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
-                            <div style="font-size: 28px; margin-right: 20px;">${report.icon}</div>
-                            <div style="flex: 1;">
-                                <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">${report.name}</div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${percentage}%"></div>
-                                </div>
-                            </div>
-                            <div style="font-weight: 700; font-size: 24px; margin-left: 20px; color: var(--primary-color);">${report.count}</div>
-                        </div>
-                    `;
+                    return 
+                        '<div style="display: flex; align-items: center; margin-bottom: 15px; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">' +
+                            '<div style="flex: 1;">' +
+                                '<div style="font-weight: 600; margin-bottom: 8px; font-size: 16px;">' + report.name + '</div>' +
+                                '<div class="progress-bar">' +
+                                    '<div class="progress-fill" style="width: ' + percentage + '%;"></div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div style="font-weight: 700; font-size: 24px; margin-left: 20px; color: var(--primary-color);">' + report.count + '</div>' +
+                        '</div>';
                 }).join('');
                 
                 chartContainer.innerHTML = chartHTML || '<p style="color: #9ca3af; text-align: center; padding: 40px;">No data uploaded yet</p>';
-            },
-
-            getReportIcon(reportType) {
-                const icons = {
-                    'lending-volume': '💰',
-                    'arrears': '⚠️',
-                    'liquidations': '🔄',
-                    'call-center': '📞',
-                    'complaints': '📋'
-                };
-                return icons[reportType] || '📊';
-            },
-
-            exportData(reportType) {
-                const data = this.data[reportType];
-                if (!data.length) {
-                    alert('No data to export');
-                    return;
-                }
-                
-                const headers = Object.keys(data[0]).filter(key => !key.startsWith('_'));
-                const csvRows = [
-                    headers.join(','),
-                    ...data.map(row => headers.map(header => {
-                        let value = row[header] || '';
-                        if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
-                            value = `"${value.replace(/"/g, '""')}"`;
-                        }
-                        return value;
-                    }).join(','))
-                ];
-                
-                const csvContent = csvRows.join('\n');
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', `${reportType}-export-${new Date().toISOString().split('T')[0]}.csv`);
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                } else {
-                    alert('Your browser does not support file downloads');
-                }
             }
         };
 
-        // Initialize application when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             FinancialDashboard.init();
         });
 
-        // Add global utility functions
         window.FinancialDashboard = FinancialDashboard;
     </script>
 </body>
