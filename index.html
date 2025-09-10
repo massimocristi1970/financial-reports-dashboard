@@ -559,6 +559,23 @@
             }
         }
 
+        // Trigger file upload
+        function triggerUpload(reportType) {
+            console.log('Triggering upload for:', reportType);
+            
+            const fileId = reportType.replace('-', '') + '-file';
+            const fileInput = document.getElementById(fileId);
+            
+            console.log('Looking for file input:', fileId, 'Found:', fileInput);
+            
+            if (fileInput) {
+                fileInput.click();
+                console.log('File input clicked');
+            } else {
+                console.error('File input not found:', fileId);
+            }
+        }
+
         // Simple upload function
         function uploadFile(fileInput, reportType) {
             const file = fileInput.files[0];
