@@ -632,7 +632,7 @@
                     <div class="kpi-card info">
                         <div class="kpi-title">Data Storage</div>
                         <div class="kpi-value" id="storage-used">0 MB</div>
-                        <div class="kpi-change">Browser storage usage</div>
+                        <div class="kpi-change">Database storage usage</div>
                     </div>
                 </div>
 
@@ -732,6 +732,14 @@
                             <li><strong>Customer IDs:</strong> Text or numbers are both supported</li>
                             <li><strong>Headers:</strong> First row should contain column headers</li>
                         </ul>
+                        
+                        <h4 style="margin-bottom: 15px; color: var(--dark-color);">Data Storage:</h4>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>IndexedDB:</strong> Unlimited storage capacity</li>
+                            <li><strong>Append Mode:</strong> Add new data to existing records</li>
+                            <li><strong>Replace Mode:</strong> Replace all existing data</li>
+                            <li><strong>Data Persistence:</strong> Survives browser restarts</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -780,8 +788,114 @@
     </div>
 
     <script>
+        // IndexedDB Configuration
+        const DB_CONFIG = {
+            NAME: 'FinancialReportsDB',
+            VERSION: 1,
+            STORES: {
+                LENDING: 'lending-volume',
+                ARREARS: 'arrears',
+                LIQUIDATIONS: 'liquidations',
+                CALL_CENTER: 'call-center',
+                COMPLAINTS: 'complaints',
+                METADATA: 'metadata'
+            }
+        };
+
+        // IndexedDB Helper Class
+        class IndexedDBHelper {
+            constructor() {
+                this.db = null;
+            }
+
+            async init() {
+                if (this.db) return this.db;
+
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_CONFIG.NAME, DB_CONFIG.VERSION);
+
+                    request.onerror = () => reject(new Error('Failed to open database'));
+                    request.onsuccess = () => {
+                        this.db = request.result;
+                        resolve(this.db);
+                    };
+
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        
+                        Object.values(DB_CONFIG.STORES).forEach(storeName => {
+                            if (!db.objectStoreNames.contains(storeName)) {
+                                const store = db.createObjectStore(storeName, { 
+                                    keyPath: '_id',
+                                    autoIncrement: false 
+                                });
+                                store.createIndex('_processed_date', '_processed_date', { unique: false });
+                                store.createIndex('customer_id', 'customer_id', { unique: false });
+                            }
+                        });
+                    };
+                });
+            }
+
+            async saveData(storeName, data, append = false) {
+                await this.init();
+                const transaction = this.db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+
+                if (!append) {
+                    await this.clearStore(storeName);
+                }
+
+                const savePromises = data.map(record => {
+                    record._id = record.id || `${storeName}_${Date.now()}_${Math.random()}`;
+                    record._processed_date = new Date().toISOString();
+                    return store.put(record);
+                });
+
+                await Promise.all(savePromises);
+                return transaction.complete;
+            }
+
+            async getData(storeName) {
+                await this.init();
+                const transaction = this.db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                
+                return new Promise((resolve, reject) => {
+                    const request = store.getAll();
+                    request.onsuccess = () => resolve(request.result || []);
+                    request.onerror = () => reject(request.error);
+                });
+            }
+
+            async clearStore(storeName) {
+                await this.init();
+                const transaction = this.db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                return store.clear();
+            }
+
+            async getStats() {
+                await this.init();
+                const stats = {};
+                
+                for (const [key, storeName] of Object.entries(DB_CONFIG.STORES)) {
+                    if (storeName === 'metadata') continue;
+                    try {
+                        const data = await this.getData(storeName);
+                        stats[storeName] = data.length;
+                    } catch (error) {
+                        stats[storeName] = 0;
+                    }
+                }
+                
+                return stats;
+            }
+        }
+
         // Global Application State
         const FinancialDashboard = {
+            db: new IndexedDBHelper(),
             data: {
                 'lending-volume': [],
                 'arrears': [],
@@ -891,10 +1005,32 @@
                     const csvData = await this.parseCSV(file);
                     const processedData = this.processData(csvData, reportType);
                     
-                    this.data[reportType] = processedData;
-                    this.saveToStorage(reportType, processedData);
+                    // Ask user if they want to append or replace data
+                    const existingData = await this.db.getData(reportType);
+                    let shouldAppend = false;
                     
-                    this.showStatus(statusElement, `<i class="fas fa-check-circle"></i> Successfully processed ${processedData.length} records`, 'success');
+                    if (existingData.length > 0) {
+                        shouldAppend = confirm(
+                            `You have ${existingData.length} existing records for ${reportType}.\n\n` +
+                            `Click OK to ADD new data to existing records.\n` +
+                            `Click Cancel to REPLACE all existing data.`
+                        );
+                    }
+                    
+                    // Save to IndexedDB
+                    await this.db.saveData(reportType, processedData, shouldAppend);
+                    
+                    // Update in-memory data
+                    const allData = await this.db.getData(reportType);
+                    this.data[reportType] = allData;
+                    
+                    const totalRecords = allData.length;
+                    const action = shouldAppend ? 'added to' : 'loaded into';
+                    
+                    this.showStatus(statusElement, 
+                        `<i class="fas fa-check-circle"></i> Successfully ${action} database: ${processedData.length} new records (${totalRecords} total)`, 
+                        'success'
+                    );
                     uploadCard.classList.add('has-data');
                     
                     this.updateUI();
@@ -1324,7 +1460,6 @@
                     for (const reportType of reportTypes) {
                         try {
                             const data = await this.db.getData(reportType);
-                            this.data[reportType] = data || [];
                         } catch (error) {
                             console.error(`Error loading ${reportType} data:`, error);
                             this.data[reportType] = [];
@@ -1336,7 +1471,6 @@
             },
 
             async updateUI() {
-                // Update data counts in navigation
                 Object.entries(this.data).forEach(([reportType, data]) => {
                     const countElement = document.getElementById(`${reportType}-count`);
                     if (countElement) {
@@ -1350,7 +1484,6 @@
                     }
                 });
                 
-                // Update overview KPIs
                 const totalRecords = Object.values(this.data).reduce((sum, data) => sum + data.length, 0);
                 const activeReports = Object.values(this.data).filter(data => data.length > 0).length;
                 const lastUpload = await this.getLastUploadDate();
@@ -1373,7 +1506,6 @@
 
             async getLastUploadDate() {
                 try {
-                    const stats = await this.db.getStats();
                     let latestDate = null;
                     
                     for (const reportType of Object.keys(this.data)) {
@@ -1401,7 +1533,6 @@
                 try {
                     const stats = await this.db.getStats();
                     const totalRecords = Object.values(stats).reduce((sum, count) => sum + count, 0);
-                    // Estimate: average record ~1KB
                     const estimatedSize = totalRecords * 1024;
                     return `${(estimatedSize / 1024 / 1024).toFixed(1)} MB (${totalRecords} records)`;
                 } catch (error) {
@@ -1494,7 +1625,7 @@
             FinancialDashboard.init();
         });
 
-        // Add some global utility functions
+        // Add global utility functions
         window.FinancialDashboard = FinancialDashboard;
     </script>
 </body>
