@@ -55,7 +55,10 @@
     <main class="main-content">
       <section id="overview-page">
         <div class="page-header"><div class="page-title">Welcome</div></div>
-        <div class="panel small">Reports auto-load from <code>/shared-data</code> in this repo.</div>
+        <div class="panel">
+          <h3>Data Summary</h3>
+          <div id="overview-summary" class="kpi-grid"></div>
+        </div>
       </section>
 
       <section id="lending-volume-page" class="hidden"><div class="page-header"><div class="page-title">Lending Volume</div></div><div id="lending-volume-filters" class="panel"></div><div id="lending-volume-content"></div></section>
@@ -71,7 +74,24 @@ const reportData = { 'lending-volume':[], 'arrears':[], 'liquidations':[], 'comp
 const lastUpdated = {};
 const charts = {};
 
-// [helpers, parser, configs, filters, rendering functions remain as in your last working version]
+// [helpers, parser, configs, filters, rendering functions stay the same]
+
+// ---------- Overview Summary ----------
+function updateOverviewSummary() {
+  const container = document.getElementById("overview-summary");
+  container.innerHTML = "";
+  Object.keys(reportData).forEach(type => {
+    const count = reportData[type]?.length || 0;
+    const updated = lastUpdated[type] || "—";
+    const label = type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    container.innerHTML += `
+      <div class="kpi">
+        <div class="label">${label}</div>
+        <div class="value">${count.toLocaleString()} records</div>
+        <div class="small">Last updated: ${updated}</div>
+      </div>`;
+  });
+}
 
 // ---------- Load Shared Data ----------
 async function loadSharedData() {
@@ -96,11 +116,12 @@ async function loadSharedData() {
     }
   }
 
-  // ✅ Build filters + render all reports after data load
+  // Render all reports + update overview
   Object.keys(reportConfigs).forEach(type => {
     buildFiltersUI(type);
     renderReport(type);
   });
+  updateOverviewSummary();
 
   // Default to overview
   showPage(null, 'overview');
