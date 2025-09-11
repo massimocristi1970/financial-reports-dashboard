@@ -70,8 +70,8 @@
           <label for="tierFilter">Tier:</label>
           <select id="tierFilter" multiple size="4" onchange="updateReport('lending-volume')"></select>
 
-          <label for="statusFilter">Payment Status:</label>
-          <select id="statusFilter" multiple size="4" onchange="updateReport('lending-volume')"></select>
+          <label for="stageFilter">Stage:</label>
+          <select id="stageFilter" multiple size="4" onchange="updateReport('lending-volume')"></select>
         </div>
 
         <div id="lending-volume-content"></div>
@@ -149,19 +149,19 @@
       // Tiers
       const tiers = [...new Set(data.map(r => r['TierName'] || 'Unknown'))].sort();
       const tierSel = document.getElementById("tierFilter");
-      tierSel.innerHTML = tiers.map(t=>`<option value="${t}">${t}</option>`).join('');
+      tierSel.innerHTML = '<option value="">All</option>' + tiers.map(t=>`<option value="${t}">${t}</option>`).join('');
 
-      // Payment Status
-      const statuses = [...new Set(data.map(r => r['PaymentStatus'] || 'Unknown'))].sort();
-      const statusSel = document.getElementById("statusFilter");
-      statusSel.innerHTML = statuses.map(s=>`<option value="${s}">${s}</option>`).join('');
+      // Stages
+      const stages = [...new Set(data.map(r => r['Stage'] || 'Unknown'))].sort();
+      const stageSel = document.getElementById("stageFilter");
+      stageSel.innerHTML = '<option value="">All</option>' + stages.map(s=>`<option value="${s}">${s}</option>`).join('');
     }
 
     function applyFilters(reportType) {
       const year = document.getElementById("yearFilter").value;
       const month = document.getElementById("monthFilter").value;
-      const tiers = Array.from(document.getElementById("tierFilter").selectedOptions).map(o => o.value);
-      const statuses = Array.from(document.getElementById("statusFilter").selectedOptions).map(o => o.value);
+      const tiers = Array.from(document.getElementById("tierFilter").selectedOptions).map(o => o.value).filter(v => v !== "");
+      const stages = Array.from(document.getElementById("stageFilter").selectedOptions).map(o => o.value).filter(v => v !== "");
 
       const data = reportData[reportType];
       const dateField = reportConfigs[reportType].dateField;
@@ -178,8 +178,8 @@
         }
         // Tier filter
         if (tiers.length && !tiers.includes(r['TierName'] || 'Unknown')) return false;
-        // Payment Status filter
-        if (statuses.length && !statuses.includes(r['PaymentStatus'] || 'Unknown')) return false;
+        // Stage filter
+        if (stages.length && !stages.includes(r['Stage'] || 'Unknown')) return false;
 
         return true;
       });
