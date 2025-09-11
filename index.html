@@ -1,294 +1,581 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Financial Reports Dashboard</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin:0; }
-    .app-container { display:flex; }
-    .sidebar { width:250px; background:#fff; border-right:1px solid #ddd; min-height:100vh; }
-    .main-content { flex:1; padding:20px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin:0; background:#f8fafc; color:#0f172a; }
+    .app-container { display:flex; min-height:100vh; }
+    .sidebar { width:260px; background:#fff; border-right:1px solid #e2e8f0; }
+    .sidebar-header { padding:18px 20px; font-weight:700; border-bottom:1px solid #e2e8f0; }
+    .nav-link { cursor:pointer; padding:12px 18px; display:flex; gap:10px; align-items:center; color:#334155; }
+    .nav-link:hover { background:#f1f5f9; }
+    .nav-link.active { background:#eef6ff; border-left:3px solid #3b82f6; color:#1d4ed8; }
+    .main-content { flex:1; padding:24px; }
+    .page-header { margin-bottom:16px; }
+    .page-title { font-size:24px; font-weight:800; }
     .hidden { display:none; }
-    .nav-link { cursor:pointer; padding:12px; display:flex; align-items:center; }
-    .nav-link.active { background:#eef6ff; border-left:3px solid #3b82f6; color:#3b82f6; }
-    .page-header { margin-bottom:20px; }
-    .page-title { font-size:24px; font-weight:bold; }
-    .filters { display:flex; flex-wrap:wrap; gap:15px; margin-bottom:20px; }
-    .filters label { margin-right:5px; font-weight:bold; }
-    .data-table { background:#fff; border:1px solid #ddd; border-radius:8px; margin-top:20px; }
-    table { width:100%; border-collapse:collapse; }
-    th,td { padding:10px; border-bottom:1px solid #eee; text-align:left; }
-    tr:hover { background:#f9f9f9; }
-    .chart-card, .kpi-grid { background:#fff; border:1px solid #ddd; border-radius:8px; padding:20px; margin-bottom:20px; }
-    .kpi-grid { display:flex; gap:20px; flex-wrap:wrap; }
-    .kpi-card { flex:1; text-align:center; background:#f9fafb; border-radius:8px; padding:15px; min-width:150px; }
-    .kpi-title { font-size:14px; color:#666; }
-    .kpi-value { font-size:22px; font-weight:bold; margin-top:5px; }
+    .panel { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:18px; margin-bottom:18px; }
+    .filters { display:flex; gap:16px; row-gap:10px; flex-wrap:wrap; align-items:flex-end; }
+    .filters label { font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:6px; }
+    .filters select { min-width:140px; padding:8px; border-radius:8px; border:1px solid #cbd5e1; background:#fff; }
+    .filters select[multiple]{ min-width:200px; height:112px; }
+    .kpi-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:14px; }
+    .kpi { background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; padding:14px 16px; }
+    .kpi .label { font-size:12px; color:#64748b; }
+    .kpi .value { font-size:22px; font-weight:800; margin-top:6px; }
+    .charts-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
+    .chart-card h3 { margin:0 0 8px 0; font-size:14px; color:#334155; }
+    .data-table table { width:100%; border-collapse: collapse; }
+    th, td { padding:10px 12px; border-bottom:1px solid #e5e7eb; text-align:left; white-space:nowrap; }
+    th { background:#f8fafc; position:sticky; top:0; z-index:1; }
+    .table-wrap { max-height:420px; overflow:auto; border:1px solid #e5e7eb; border-radius:12px; }
+    .small { color:#64748b; font-size:12px; }
   </style>
 </head>
 <body>
   <div class="app-container">
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="sidebar-header" style="padding:20px; font-weight:bold;">Financial Reports</div>
+      <div class="sidebar-header"><i class="fas fa-chart-line"></i> Financial Reports</div>
       <nav>
         <div class="nav-link active" onclick="showPage(event,'overview')"><i class="fas fa-home"></i> Overview</div>
         <div class="nav-link" onclick="showPage(event,'data-management')"><i class="fas fa-upload"></i> Data Management</div>
         <div class="nav-link" onclick="showPage(event,'lending-volume')"><i class="fas fa-coins"></i> Lending Volume</div>
+        <div class="nav-link" onclick="showPage(event,'arrears')"><i class="fas fa-exclamation-triangle"></i> Arrears</div>
+        <div class="nav-link" onclick="showPage(event,'liquidations')"><i class="fas fa-sync"></i> Liquidations</div>
+        <div class="nav-link" onclick="showPage(event,'complaints')"><i class="fas fa-clipboard-list"></i> Complaints</div>
+        <div class="nav-link" onclick="showPage(event,'financial-crime')"><i class="fas fa-user-shield"></i> Financial Crime</div>
       </nav>
     </aside>
 
+    <!-- MAIN -->
     <main class="main-content">
-      <div id="overview-page">
-        <div class="page-header"><h1 class="page-title">Welcome</h1></div>
-        <p>Upload data and view reports using the sidebar.</p>
-      </div>
+      <!-- Overview -->
+      <section id="overview-page" class="">
+        <div class="page-header">
+          <div class="page-title">Welcome</div>
+          <div class="small">Upload each dataset under <strong>Data Management</strong>, then use the sidebar to explore interactive reports.</div>
+        </div>
+        <div class="panel">
+          <h3 style="margin:0 0 6px 0;">Tips</h3>
+          <ul class="small" style="line-height:1.8;">
+            <li>Hold <strong>Ctrl/Cmd</strong> (or <strong>Shift</strong>) to select multiple items in multi-select filters.</li>
+            <li>Every report shows <strong>3 charts at once</strong> (Bar, Line, Pie) for complementary views.</li>
+            <li>KPI cards and charts always respect the current filters.</li>
+          </ul>
+        </div>
+      </section>
 
-      <div id="data-management-page" class="hidden">
-        <div class="page-header"><h1 class="page-title">Data Management</h1></div>
-        <div>
+      <!-- Data Management -->
+      <section id="data-management-page" class="hidden">
+        <div class="page-header"><div class="page-title">Data Management</div></div>
+        <div class="panel">
           <h3>Lending Volume</h3>
-          <input type="file" accept=".csv,.tsv" id="lending-file"
-                 onchange="uploadFile(this,'lending-volume')">
-          <div id="lending-volume-status"></div>
+          <input type="file" accept=".csv,.tsv" onchange="uploadFile(this,'lending-volume')"/>
+          <div id="lending-volume-status" class="small"></div>
         </div>
-      </div>
-
-      <div id="lending-volume-page" class="hidden">
-        <div class="page-header"><h1 class="page-title">Lending Volume Analysis</h1></div>
-
-        <!-- Filters -->
-        <div class="filters">
-          <label for="yearFilter">Year:</label>
-          <select id="yearFilter" onchange="updateReport('lending-volume')"></select>
-
-          <label for="monthFilter">Month:</label>
-          <select id="monthFilter" onchange="updateReport('lending-volume')"></select>
-
-          <label for="tierFilter">Tier:</label>
-          <select id="tierFilter" multiple size="4" onchange="updateReport('lending-volume')"></select>
-
-          <label for="stageFilter">Stage:</label>
-          <select id="stageFilter" multiple size="4" onchange="updateReport('lending-volume')"></select>
+        <div class="panel">
+          <h3>Arrears</h3>
+          <input type="file" accept=".csv,.tsv" onchange="uploadFile(this,'arrears')"/>
+          <div id="arrears-status" class="small"></div>
         </div>
+        <div class="panel">
+          <h3>Liquidations</h3>
+          <input type="file" accept=".csv,.tsv" onchange="uploadFile(this,'liquidations')"/>
+          <div id="liquidations-status" class="small"></div>
+        </div>
+        <div class="panel">
+          <h3>Complaints</h3>
+          <input type="file" accept=".csv,.tsv" onchange="uploadFile(this,'complaints')"/>
+          <div id="complaints-status" class="small"></div>
+        </div>
+        <div class="panel">
+          <h3>Financial Crime</h3>
+          <input type="file" accept=".csv,.tsv" onchange="uploadFile(this,'financial-crime')"/>
+          <div id="financial-crime-status" class="small"></div>
+        </div>
+      </section>
 
+      <!-- Generic report pages (filters container + content container) -->
+      <section id="lending-volume-page" class="hidden">
+        <div class="page-header"><div class="page-title">Lending Volume</div></div>
+        <div id="lending-volume-filters" class="panel"></div>
         <div id="lending-volume-content"></div>
-      </div>
+      </section>
+
+      <section id="arrears-page" class="hidden">
+        <div class="page-header"><div class="page-title">Arrears Analysis</div></div>
+        <div id="arrears-filters" class="panel"></div>
+        <div id="arrears-content"></div>
+      </section>
+
+      <section id="liquidations-page" class="hidden">
+        <div class="page-header"><div class="page-title">Liquidations</div></div>
+        <div id="liquidations-filters" class="panel"></div>
+        <div id="liquidations-content"></div>
+      </section>
+
+      <section id="complaints-page" class="hidden">
+        <div class="page-header"><div class="page-title">Complaints</div></div>
+        <div id="complaints-filters" class="panel"></div>
+        <div id="complaints-content"></div>
+      </section>
+
+      <section id="financial-crime-page" class="hidden">
+        <div class="page-header"><div class="page-title">Financial Crime</div></div>
+        <div id="financial-crime-filters" class="panel"></div>
+        <div id="financial-crime-content"></div>
+      </section>
     </main>
   </div>
 
   <script>
-    let reportData = { 'lending-volume': [] };
-    let charts = {};
+    // --------------------------
+    // Data store
+    // --------------------------
+    const reportData = {
+      'lending-volume': [],
+      'arrears': [],
+      'liquidations': [],
+      'complaints': [],
+      'financial-crime': []
+    };
 
+    // keep Chart.js instances
+    const charts = {}; // charts[reportType] = { bar, line, pie }
+
+    // --------------------------
+    // Report configuration
+    // --------------------------
     const reportConfigs = {
       'lending-volume': {
         dateField: 'FundedDate',
-        amountField: 'IssuedAmount'
+        amountField: 'IssuedAmount',
+        filterFields: ['TierName','Stage'],
+        kpis: data => {
+          const total = data.length;
+          const totalIssued = sum(data, 'IssuedAmount');
+          const avgIssued = total ? (totalIssued / total) : 0;
+          return [
+            { label:'Total Loans', value: fmtNum(total,0) },
+            { label:'Total Issued', value:'£'+fmtNum(totalIssued) },
+            { label:'Average Issued', value:'£'+fmtNum(avgIssued) }
+          ];
+        },
+        defaultGroup: 'Stage'
+      },
+      'arrears': {
+        dateField: 'StageDate',
+        amountField: 'TotalDue',
+        filterFields: ['TierName','Stage'],
+        kpis: data => {
+          const total = data.length;
+          const totalDue = sum(data, 'TotalDue');
+          const avgDue = total ? (totalDue / total) : 0;
+          return [
+            { label:'Total Accounts', value: fmtNum(total,0) },
+            { label:'Total Due', value:'£'+fmtNum(totalDue) },
+            { label:'Average Due', value:'£'+fmtNum(avgDue) }
+          ];
+        },
+        defaultGroup: 'Stage'
+      },
+      'liquidations': {
+        dateField: 'StageDate',
+        amountField: 'TotalDue',
+        filterFields: ['TierName','Stage'],
+        kpis: data => {
+          const total = data.length;
+          const totalDue = sum(data, 'TotalDue');
+          const avgDue = total ? (totalDue / total) : 0;
+          return [
+            { label:'Total Liquidations', value: fmtNum(total,0) },
+            { label:'Total Due @ Liquidation', value:'£'+fmtNum(totalDue) },
+            { label:'Average Due', value:'£'+fmtNum(avgDue) }
+          ];
+        },
+        defaultGroup: 'Stage'
+      },
+      'complaints': {
+        dateField: 'ReceivedDate',
+        amountField: null, // use Count + DaysToResolve
+        filterFields: ['Category','Decision'],
+        kpis: data => {
+          const total = sum(data, 'Count') || data.length; // some files might have Count as 1 per row
+          const avgDays = avg(data, 'DaysToResolve');
+          return [
+            { label:'Total Complaints', value: fmtNum(total,0) },
+            { label:'Avg Days to Resolve', value: fmtNum(avgDays,1) },
+            { label:'Open (no ResolvedDate)', value: fmtNum(data.filter(r => !r['ResolvedDate'])?.length || 0,0) }
+          ];
+        },
+        defaultGroup: 'Category'
+      },
+      'financial-crime': {
+        dateField: 'Date Reported',
+        amountField: 'Principal',
+        filterFields: ['Loan Source','AppStatus','Decision'],
+        kpis: data => {
+          const total = data.length;
+          const totalP = sum(data, 'Principal');
+          const avgP = total ? (totalP / total) : 0;
+          return [
+            { label:'Total Cases', value: fmtNum(total,0) },
+            { label:'Total Principal', value:'£'+fmtNum(totalP) },
+            { label:'Average Principal', value:'£'+fmtNum(avgP) }
+          ];
+        },
+        defaultGroup: 'Decision'
       }
     };
 
+    // --------------------------
+    // Navigation
+    // --------------------------
     function showPage(event, pageId) {
       document.querySelectorAll('[id$="-page"]').forEach(p => p.classList.add('hidden'));
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       document.getElementById(pageId + '-page').classList.remove('hidden');
-      event.currentTarget.classList.add('active');
-      if (pageId === 'lending-volume') {
-        populateFilters('lending-volume');
-        renderReport('lending-volume');
+      if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
+      // When navigating to a report, (re)build filters & render if data exists
+      if (reportConfigs[pageId]) {
+        buildFiltersUI(pageId);
+        renderReport(pageId);
       }
     }
 
-    function uploadFile(fileInput, reportType) {
-      const file = fileInput.files[0];
+    // --------------------------
+    // Upload / Parse
+    // --------------------------
+    function uploadFile(input, reportType) {
+      const file = input.files?.[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = e => {
-        const data = parseCSV(e.target.result);
-        reportData[reportType] = data;
-        document.getElementById(reportType + '-status').innerText =
-          `Loaded ${data.length} records`;
+        const text = e.target.result;
+        reportData[reportType] = parseCSV(text);
+        document.getElementById(reportType + '-status').textContent = `Loaded ${reportData[reportType].length} records`;
+        // Rebuild filters (values come from data)
+        buildFiltersUI(reportType);
+        renderReport(reportType);
       };
       reader.readAsText(file);
     }
 
     function parseCSV(csvText) {
-      const lines = csvText.split('\n').filter(l => l.trim());
+      // normalize line endings and strip BOM
+      const text = csvText.replace(/^\uFEFF/, '');
+      const lines = text.split(/\r?\n/).filter(l => l.trim().length);
       if (!lines.length) return [];
       const headers = lines[0].split(/,|\t/).map(h => h.trim());
-      return lines.slice(1).map(line => {
-        const values = line.split(/,|\t/).map(v => v.replace(/\uFFFD/g,'').trim()); // strip “?”
+      const rows = [];
+      for (let i=1; i<lines.length; i++) {
+        const parts = lines[i].split(/,|\t/).map(v => v.replace(/\uFFFD/g,'').trim()); // remove weird replacement char
         const rec = {};
-        headers.forEach((h,i)=> rec[h]=values[i]);
-        return rec;
+        headers.forEach((h,idx) => rec[h] = parts[idx] ?? '');
+        rows.push(rec);
+      }
+      return rows;
+    }
+
+    // --------------------------
+    // Filters UI (generic)
+    // --------------------------
+    function buildFiltersUI(reportType) {
+      const container = document.getElementById(`${reportType}-filters`);
+      const cfg = reportConfigs[reportType];
+      const data = reportData[reportType] || [];
+      container.innerHTML = ''; // reset
+
+      const wrap = document.createElement('div');
+      wrap.className = 'filters';
+
+      // Year select
+      const years = uniqueSorted(
+        data.map(r => {
+          const dt = toDate(r[cfg.dateField]);
+          return isNaN(dt) ? null : dt.getFullYear();
+        }).filter(Boolean)
+      );
+      wrap.appendChild(selectBlock(`${reportType}-year`, 'Year', years, false, true, updateReport.bind(null, reportType)));
+
+      // Month select
+      const months = Array.from({length:12}, (_,i)=> String(i+1).padStart(2,'0'));
+      wrap.appendChild(selectBlock(`${reportType}-month`, 'Month', months, false, true, updateReport.bind(null, reportType)));
+
+      // Additional multi-select filters
+      (cfg.filterFields || []).forEach(field => {
+        const values = uniqueSorted(data.map(r => r[field] || 'Unknown'));
+        wrap.appendChild(selectBlock(`${reportType}-filter-${slug(field)}`, field, values, true, true, updateReport.bind(null, reportType)));
       });
+
+      container.appendChild(wrap);
     }
 
-    function populateFilters(reportType) {
-      const data = reportData[reportType];
-      if (!data.length) return;
-
-      const dateField = reportConfigs[reportType].dateField;
-
-      // Years
-      const years = [...new Set(data.map(r => {
-        const d = new Date(r[dateField]);
-        return isNaN(d) ? null : d.getFullYear();
-      }).filter(Boolean))].sort();
-
-      const yearSel = document.getElementById("yearFilter");
-      yearSel.innerHTML = '<option value="">All</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
-
-      // Months
-      const monthSel = document.getElementById("monthFilter");
-      monthSel.innerHTML = '<option value="">All</option>' +
-        Array.from({length:12},(_,i)=>`<option value="${String(i+1).padStart(2,'0')}">${i+1}</option>`).join('');
-
-      // Tiers
-      const tiers = [...new Set(data.map(r => r['TierName'] || 'Unknown'))].sort();
-      const tierSel = document.getElementById("tierFilter");
-      tierSel.innerHTML = '<option value="">All</option>' + tiers.map(t=>`<option value="${t}">${t}</option>`).join('');
-
-      // Stages
-      const stages = [...new Set(data.map(r => r['Stage'] || 'Unknown'))].sort();
-      const stageSel = document.getElementById("stageFilter");
-      stageSel.innerHTML = '<option value="">All</option>' + stages.map(s=>`<option value="${s}">${s}</option>`).join('');
+    function selectBlock(id, labelText, values, multiple=false, includeAll=false, onChange=()=>{}) {
+      const block = document.createElement('div');
+      const label = document.createElement('label');
+      label.setAttribute('for', id);
+      label.textContent = labelText;
+      const sel = document.createElement('select');
+      sel.id = id;
+      if (multiple) sel.multiple = true;
+      if (multiple) sel.size = Math.min(6, Math.max(4, values.length));
+      if (includeAll && !multiple) {
+        const optAll = new Option('All', '');
+        sel.appendChild(optAll);
+      }
+      if (includeAll && multiple) {
+        sel.appendChild(new Option('All', ''));
+      }
+      values.forEach(v => sel.appendChild(new Option(v, v)));
+      sel.onchange = onChange;
+      block.appendChild(label);
+      block.appendChild(sel);
+      return block;
     }
 
-    function applyFilters(reportType) {
-      const year = document.getElementById("yearFilter").value;
-      const month = document.getElementById("monthFilter").value;
-      const tiers = Array.from(document.getElementById("tierFilter").selectedOptions).map(o => o.value).filter(v => v !== "");
-      const stages = Array.from(document.getElementById("stageFilter").selectedOptions).map(o => o.value).filter(v => v !== "");
+    // --------------------------
+    // Render report (generic)
+    // --------------------------
+    function updateReport(reportType) { renderReport(reportType); }
 
-      const data = reportData[reportType];
-      const dateField = reportConfigs[reportType].dateField;
+    function renderReport(reportType) {
+      const content = document.getElementById(`${reportType}-content`);
+      const cfg = reportConfigs[reportType];
+      const dataRaw = reportData[reportType] || [];
+      if (!dataRaw.length) {
+        content.innerHTML = `<div class="panel"><span class="small">No data uploaded yet.</span></div>`;
+        return;
+      }
+
+      // Apply filters
+      const data = applyFilters(reportType, dataRaw, cfg);
+
+      if (!data.length) {
+        content.innerHTML = `<div class="panel"><span class="small">No data for selected filters.</span></div>`;
+        return;
+      }
+
+      // KPIs
+      const kpiItems = cfg.kpis(data);
+      const kpiHtml = `
+        <div class="panel">
+          <div class="kpi-grid">
+            ${kpiItems.map(k => `
+              <div class="kpi">
+                <div class="label">${k.label}</div>
+                <div class="value">${k.value}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // Decide grouping for charts (complementary to chosen filters)
+      const { groupField, title } = decideGrouping(reportType, cfg);
+
+      // Compute grouped labels/values
+      const { labels, values } = groupData(data, groupField, cfg);
+
+      // Charts (3 types)
+      const barId  = `${reportType}-bar`;
+      const lineId = `${reportType}-line`;
+      const pieId  = `${reportType}-pie`;
+
+      const chartsHtml = `
+        <div class="charts-grid">
+          <div class="panel chart-card">
+            <h3>${title} (Bar)</h3>
+            <canvas id="${barId}" height="140"></canvas>
+          </div>
+          <div class="panel chart-card">
+            <h3>${title} (Line)</h3>
+            <canvas id="${lineId}" height="140"></canvas>
+          </div>
+          <div class="panel chart-card">
+            <h3>${title} (Pie)</h3>
+            <canvas id="${pieId}" height="140"></canvas>
+          </div>
+        </div>
+      `;
+
+      // Table
+      const headers = Object.keys(data[0]);
+      let table = `
+        <div class="panel data-table">
+          <div class="small" style="margin-bottom:8px;">Showing first 100 rows (${data.length.toLocaleString()} total)</div>
+          <div class="table-wrap">
+          <table>
+            <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+            <tbody>
+              ${data.slice(0,100).map(row => `
+                <tr>${headers.map(h=>`<td>${escapeHtml(row[h] ?? '')}</td>`).join('')}</tr>
+              `).join('')}
+            </tbody>
+          </table>
+          </div>
+        </div>
+      `;
+
+      content.innerHTML = kpiHtml + chartsHtml + table;
+
+      // Draw charts
+      drawCharts(reportType, {barId, lineId, pieId}, labels, values);
+    }
+
+    // --------------------------
+    // Filtering / Grouping helpers
+    // --------------------------
+    function applyFilters(reportType, data, cfg) {
+      const year  = valOf(`${reportType}-year`);
+      const month = valOf(`${reportType}-month`);
+
+      const selectedByField = {};
+      (cfg.filterFields || []).forEach(field => {
+        const sel = document.getElementById(`${reportType}-filter-${slug(field)}`);
+        const values = Array.from(sel?.selectedOptions || []).map(o => o.value).filter(v => v !== '');
+        selectedByField[field] = values;
+      });
 
       return data.filter(r => {
         // Date filter
-        const rawDate = r[dateField];
-        if (rawDate) {
-          const dt = new Date(rawDate);
-          if (!isNaN(dt)) {
-            if (year && dt.getFullYear().toString() !== year) return false;
-            if (month && (dt.getMonth()+1).toString().padStart(2,'0') !== month) return false;
-          }
-        }
-        // Tier filter
-        if (tiers.length && !tiers.includes(r['TierName'] || 'Unknown')) return false;
-        // Stage filter
-        if (stages.length && !stages.includes(r['Stage'] || 'Unknown')) return false;
+        const dt = toDate(r[cfg.dateField]);
+        if (year && (!dt || String(dt.getFullYear()) !== String(year))) return false;
+        if (month && (!dt || String(dt.getMonth()+1).padStart(2,'0') !== String(month))) return false;
 
+        // Field filters (multi)
+        for (const field of (cfg.filterFields || [])) {
+          const selected = selectedByField[field];
+          if (selected.length && !selected.includes(r[field] || 'Unknown')) return false;
+        }
         return true;
       });
     }
 
-    function updateReport(reportType) {
-      renderReport(reportType);
+    function decideGrouping(reportType, cfg) {
+      // Complementary grouping:
+      // If user filtered on some of the configured fields, group by another available dimension.
+      const fieldA = cfg.filterFields?.[0];
+      const fieldB = cfg.filterFields?.[1];
+      const aSel = Array.from(document.getElementById(`${reportType}-filter-${slug(fieldA)}`)?.selectedOptions || []).map(o=>o.value).filter(v=>v!=='');
+      const bSel = fieldB ? Array.from(document.getElementById(`${reportType}-filter-${slug(fieldB)}`)?.selectedOptions || []).map(o=>o.value).filter(v=>v!=='') : [];
+
+      if (aSel.length && !bSel.length && fieldB) {
+        return { groupField: fieldB, title: `By ${fieldB}` };
+      } else if (bSel.length && fieldA) {
+        return { groupField: fieldA, title: `By ${fieldA}` };
+      } else if (aSel.length && bSel.length) {
+        return { groupField: 'YEAR', title: 'By Year' };
+      }
+      // default
+      return { groupField: cfg.defaultGroup || (fieldA || 'YEAR'), title: `By ${cfg.defaultGroup || fieldA || 'Year'}` };
     }
 
-    function renderReport(reportType) {
-      const content = document.getElementById(reportType + '-content');
-      let data = applyFilters(reportType);
-
-      if (!data.length) {
-        content.innerHTML = `<div class="chart-card"><p>No data for selected filters</p></div>`;
-        return;
-      }
-
-      const config = reportConfigs[reportType];
-
-      // --- KPIs ---
-      let total = data.length;
-      let totalIssued = data.reduce((s,r)=> {
-        let val = (r[config.amountField] || '').toString().replace(/[^0-9.-]/g,'');
-        return s + (parseFloat(val) || 0);
-      }, 0);
-      let avgIssued = (totalIssued / total).toFixed(2);
-
-      const summaryHTML = `
-        <div class="kpi-grid">
-          <div class="kpi-card"><div class="kpi-title">Total Loans</div><div class="kpi-value">${total}</div></div>
-          <div class="kpi-card"><div class="kpi-title">Total Issued</div><div class="kpi-value">£${totalIssued.toLocaleString()}</div></div>
-          <div class="kpi-card"><div class="kpi-title">Average Issued</div><div class="kpi-value">£${avgIssued}</div></div>
-        </div>
-      `;
-
-      // --- Decide Chart Grouping ---
-      const tiers = Array.from(document.getElementById("tierFilter").selectedOptions).map(o => o.value).filter(v => v !== "");
-      const stages = Array.from(document.getElementById("stageFilter").selectedOptions).map(o => o.value).filter(v => v !== "");
-
-      let chartTitle = "Loans by Stage";
-      let groupField = "Stage";
-
-      if (tiers.length && !stages.length) {
-        chartTitle = "Loans by Stage";
-        groupField = "Stage";
-      } else if (stages.length && !tiers.length) {
-        chartTitle = "Loans by Tier";
-        groupField = "TierName";
-      } else if (tiers.length && stages.length) {
-        chartTitle = "Loans by Year";
-        groupField = "FundedDate";
-      }
-
-      const chartId = reportType + '-chart';
-      const chartHTML = `
-        <div class="chart-card"><h3>${chartTitle}</h3>
-          <canvas id="${chartId}" height="120"></canvas>
-        </div>
-      `;
-
-      // --- Table ---
-      const headers = Object.keys(data[0]);
-      let tableHTML = `<div class="data-table"><table><thead><tr>`;
-      headers.forEach(h => tableHTML += `<th>${h}</th>`);
-      tableHTML += `</tr></thead><tbody>`;
-      data.slice(0,100).forEach(row=>{
-        tableHTML += `<tr>`+headers.map(h=>`<td>${row[h]||''}</td>`).join('')+`</tr>`;
-      });
-      tableHTML += `</tbody></table></div>`;
-
-      // --- Render ---
-      content.innerHTML = summaryHTML + chartHTML + tableHTML;
-
-      // --- Draw Chart ---
-      setTimeout(()=>{
-        const ctx = document.getElementById(chartId).getContext('2d');
-        if (charts[reportType]) charts[reportType].destroy();
-
-        let labels;
-        if (groupField === "FundedDate") {
-          labels = [...new Set(data.map(r => {
-            const d = new Date(r['FundedDate']);
-            return isNaN(d) ? "Unknown" : d.getFullYear();
-          }))];
-        } else {
-          labels = [...new Set(data.map(r => r[groupField] || 'Unknown'))];
-        }
-
-        const values = labels.map(l => {
-          if (groupField === "FundedDate") {
-            return data.filter(r => {
-              const d = new Date(r['FundedDate']);
-              return !isNaN(d) && d.getFullYear().toString() === l.toString();
-            }).length;
-          } else {
-            return data.filter(r => (r[groupField] || 'Unknown') === l).length;
-          }
+    function groupData(data, groupField, cfg) {
+      if (groupField === 'YEAR') {
+        const map = {};
+        data.forEach(r => {
+          const dt = toDate(r[cfg.dateField]);
+          const key = (!dt || isNaN(dt)) ? 'Unknown' : String(dt.getFullYear());
+          map[key] = (map[key] || 0) + 1;
         });
+        const labels = Object.keys(map);
+        return { labels, values: labels.map(l => map[l]) };
+      } else {
+        const map = {};
+        data.forEach(r => {
+          const key = r[groupField] || 'Unknown';
+          map[key] = (map[key] || 0) + 1;
+        });
+        const labels = Object.keys(map);
+        return { labels, values: labels.map(l => map[l]) };
+      }
+    }
 
-        charts[reportType] = new Chart(ctx,{
+    // --------------------------
+    // Charts
+    // --------------------------
+    function drawCharts(reportType, ids, labels, values) {
+      charts[reportType]?.bar?.destroy();
+      charts[reportType]?.line?.destroy();
+      charts[reportType]?.pie?.destroy();
+
+      const commonData = {
+        labels,
+        datasets: [{
+          label: 'Count',
+          data: values,
+          borderWidth: 1
+        }]
+      };
+
+      charts[reportType] = {
+        bar: new Chart(document.getElementById(ids.barId).getContext('2d'), {
           type:'bar',
-          data:{ labels, datasets:[{label:'Loans', data:values,
-            backgroundColor:'rgba(59,130,246,0.6)',
-            borderColor:'rgba(59,130,246,1)', borderWidth:1 }]},
-          options:{ responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} }
-        });
-      },50);
+          data: commonData,
+          options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ y:{ beginAtZero:true } } }
+        }),
+        line: new Chart(document.getElementById(ids.lineId).getContext('2d'), {
+          type:'line',
+          data: commonData,
+          options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ y:{ beginAtZero:true } } }
+        }),
+        pie: new Chart(document.getElementById(ids.pieId).getContext('2d'), {
+          type:'pie',
+          data: commonData,
+          options:{ responsive:true, plugins:{legend:{position:'bottom'}} }
+        })
+      };
     }
+
+    // --------------------------
+    // Utils
+    // --------------------------
+    function valOf(id){ return document.getElementById(id)?.value || ''; }
+    function slug(s){ return String(s).toLowerCase().replace(/\s+/g,'-'); }
+    function toDate(v){
+      if (!v) return NaN;
+      const d = new Date(v);
+      if (!isNaN(d)) return d;
+      // Try dd/mm/yyyy
+      const m = String(v).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      if (m) { return new Date(+m[3], +m[2]-1, +m[1]); }
+      return new Date(v); // may still be invalid
+    }
+    function cleanNumber(x){
+      if (x === null || x === undefined) return 0;
+      const s = String(x).replace(/[^0-9.\-]/g,''); // drop £ and commas
+      const n = parseFloat(s);
+      return isNaN(n) ? 0 : n;
+    }
+    function sum(data, field){ return data.reduce((acc,r)=> acc + cleanNumber(r[field]), 0); }
+    function avg(data, field){
+      if (!data.length) return 0;
+      const s = sum(data, field);
+      return s / data.length;
+    }
+    function fmtNum(n, dp=2){
+      const v = Number.isFinite(n) ? n : 0;
+      return v.toLocaleString(undefined, { minimumFractionDigits: dp, maximumFractionDigits: dp });
+    }
+    function uniqueSorted(arr){ return Array.from(new Set(arr)).sort((a,b)=> (''+a).localeCompare((''+b), undefined, {numeric:true})); }
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s]));
+    }
+
+    // --------------------------
+    // Init
+    // --------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+      // Start on overview
+      // (filters are built dynamically when you navigate to a report)
+    });
   </script>
 </body>
 </html>
