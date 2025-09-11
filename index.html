@@ -110,8 +110,116 @@ const reportConfigs={
       {label:'Total Cases',value:t.toLocaleString()},{label:'Total Principal',value:'£'+fmtMoney(tot)},{label:'Average Principal',value:'£'+fmtMoney(avg)},{label:'Last Updated',value:lastUpdated['financial-crime']||'—'}];},defaultGroup:'Decision'}
 };
 
-// ---------- Filters, Rendering, Grouping, Charts ----------
-// [keep your existing buildFiltersUI, renderReport, applyFilters, drawCharts functions here unchanged]
+// ---------- Navigation ----------
+function showPage(e,id){document.querySelectorAll('[id$="-page"]').forEach(p=>p.classList.add('hidden'));document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));document.getElementById(id+'-page').classList.remove('hidden');if(e)e.currentTarget.classList.add('active');if(reportConfigs[id]){buildFiltersUI(id);renderReport(id);}}
+
+// ---------- Filters ----------
+function buildFiltersUI(type){
+  const container=document.getElementById(`${type}-filters`);
+  const cfg=reportConfigs[type];
+  const data=reportData[type]||[];
+  container.innerHTML='';
+  const wrap=document.createElement('div');wrap.className='filters';
+
+  const years=uniqueSorted(data.map(r=>{const d=toDate(r[cfg.dateField]);return isNaN(d)?null:d.getFullYear();}).filter(Boolean));
+  wrap.appendChild(selectBlock(`${type}-year`,'Year',years,false,true,()=>updateReport(type)));
+  const months=Array.from({length:12},(_,i)=>String(i+1).padStart(2,'0'));
+  wrap.appendChild(selectBlock(`${type}-month`,'Month',months,false,true,()=>updateReport(type)));
+  (cfg.filterFields||[]).forEach(field=>{
+    const vals=uniqueSorted(data.map(r=>r[field]||'Unknown'));
+    wrap.appendChild(selectBlock(`${type}-filter-${slug(field)}`,field,vals,true,true,()=>updateReport(type)));
+  });
+  container.appendChild(wrap);
+}
+function selectBlock(id,labelText,values,multiple=false,includeAll=false,onChange=()=>{}){
+  const block=document.createElement('div');
+  const lab=document.createElement('label');lab.setAttribute('for',id);lab.textContent=labelText;
+  const sel=document.createElement('select');sel.id=id;
+  if(multiple) sel.multiple=true;
+  if(multiple) sel.size=Math.min(6,Math.max(4,values.length));
+  if(includeAll){sel.appendChild(new Option('All',''));}
+  values.forEach(v=>sel.appendChild(new Option(v,v)));
+  sel.onchange=onChange;
+  block.appendChild(lab);block.appendChild(sel);
+  return block;
+}
+
+// ---------- Render ----------
+function updateReport(type){renderReport(type);}
+function renderReport(type){
+  const content=document.getElementById(`${type}-content`);
+  const cfg=reportConfigs[type];
+  const dataRaw=reportData[type]||[];
+  if(!dataRaw.length){content.innerHTML=`<div class="panel small">No data uploaded.</div>`;return;}
+  const data=applyFilters(type,dataRaw,cfg);
+  if(!data.length){content.innerHTML=`<div class="panel small">No data for selected filters.</div>`;return;}
+
+  const kpiItems=cfg.kpis(data);
+  const kpiHtml=`<div class="panel"><div class="kpi-grid">${kpiItems.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')}</div></div>`;
+
+  const {labels,values}=groupData(data,cfg.defaultGroup,cfg);
+
+  const barId=`${type}-bar`,lineId=`${type}-line`,pieId=`${type}-pie`;
+  const chartsHtml=`<div class="charts-grid">
+    <div class="panel chart-card"><h3>Bar Chart</h3><canvas id="${barId}"></canvas></div>
+    <div class="panel chart-card"><h3>Line Chart</h3><canvas id="${lineId}"></canvas></div>
+    <div class="panel chart-card"><h3>Pie Chart</h3><canvas id="${pieId}"></canvas></div>
+  </div>`;
+
+  const headers=Object.keys(data[0]);
+  const table=`<div class="panel data-table"><div class="small">Showing first 100 rows (${data.length.toLocaleString()} total)</div><div class="table-wrap"><table>
+    <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+    <tbody>${data.slice(0,100).map(r=>`<tr>${headers.map(h=>`<td>${escapeHtml(r[h]||''])}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table></div></div>`;
+
+  content.innerHTML=kpiHtml+chartsHtml+table;
+  drawCharts(type,{barId,lineId,pieId},labels,values);
+}
+
+// ---------- Filtering + grouping ----------
+function applyFilters(type,data,cfg){
+  const year=document.getElementById(`${type}-year`)?.value||'';
+  const month=document.getElementById(`${type}-month`)?.value||'';
+  const selected={};
+  (cfg.filterFields||[]).forEach(f=>{
+    const sel=document.getElementById(`${type}-filter-${slug(f)}`);
+    const vals=Array.from(sel?.selectedOptions||[]).map(o=>o.value).filter(v=>v!=='');
+    selected[f]=vals;
+  });
+  return data.filter(r=>{
+    const dt=toDate(r[cfg.dateField]);
+    if(year && (!dt||String(dt.getFullYear())!==String(year))) return false;
+    if(month && (!dt||String(dt.getMonth()+1).padStart(2,'0')!==String(month))) return false;
+    for(const f of (cfg.filterFields||[])){
+      const vals=selected[f];
+      if(vals.length && !vals.includes(r[f]||'Unknown')) return false;
+    }
+    return true;
+  });
+}
+function groupData(data,groupField,cfg){
+  const map={};
+  if(groupField==='YEAR'){
+    data.forEach(r=>{const d=toDate(r[cfg.dateField]);const k=(!d||isNaN(d))?'Unknown':String(d.getFullYear());map[k]=(map[k]||0)+1;});
+  } else {
+    data.forEach(r=>{const k=r[groupField]||'Unknown';map[k]=(map[k]||0)+1;});
+  }
+  const labels=Object.keys(map);
+  return {labels,values:labels.map(l=>map[l])};
+}
+
+// ---------- Charts ----------
+function drawCharts(type,ids,labels,values){
+  charts[type]?.bar?.destroy();charts[type]?.line?.destroy();charts[type]?.pie?.destroy();
+  const data={labels,datasets:[{label:'Count',data:values,borderWidth:1}]};
+  charts[type]={};
+  charts[type].bar=new Chart(document.getElementById(ids.barId),{type:'bar',data,options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  charts[type].line=new Chart(document.getElementById(ids.lineId),{type:'line',data,options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  charts[type].pie=new Chart(document.getElementById(ids.pieId),{type:'pie',data,options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+}
+
+// ---------- Utils ----------
+function slug(s){return String(s).toLowerCase().replace(/\s+/g,'-');}
 
 // ---------- Overview Summary ----------
 function updateOverviewSummary() {
@@ -153,16 +261,16 @@ async function loadSharedData() {
     }
   }
 
-  // Build filters + render all reports + update overview
   Object.keys(reportConfigs).forEach(type => {
     buildFiltersUI(type);
     renderReport(type);
   });
   updateOverviewSummary();
 
-  // Default to overview
   showPage(null, 'overview');
 }
 
 document.addEventListener('DOMContentLoaded', loadSharedData);
 </script>
+</body>
+</html>
