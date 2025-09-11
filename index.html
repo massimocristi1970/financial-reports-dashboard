@@ -216,10 +216,27 @@
         </div>
       `;
 
-      // --- Chart ---
+      // --- Decide Chart Grouping ---
+      const tiers = Array.from(document.getElementById("tierFilter").selectedOptions).map(o => o.value).filter(v => v !== "");
+      const stages = Array.from(document.getElementById("stageFilter").selectedOptions).map(o => o.value).filter(v => v !== "");
+
+      let chartTitle = "Loans by Stage";
+      let groupField = "Stage";
+
+      if (tiers.length && !stages.length) {
+        chartTitle = "Loans by Stage";
+        groupField = "Stage";
+      } else if (stages.length && !tiers.length) {
+        chartTitle = "Loans by Tier";
+        groupField = "TierName";
+      } else if (tiers.length && stages.length) {
+        chartTitle = "Loans by Year";
+        groupField = "FundedDate";
+      }
+
       const chartId = reportType + '-chart';
       const chartHTML = `
-        <div class="chart-card"><h3>Loans by Stage</h3>
+        <div class="chart-card"><h3>${chartTitle}</h3>
           <canvas id="${chartId}" height="120"></canvas>
         </div>
       `;
@@ -242,8 +259,26 @@
         const ctx = document.getElementById(chartId).getContext('2d');
         if (charts[reportType]) charts[reportType].destroy();
 
-        const labels = [...new Set(data.map(r => r['Stage'] || 'Unknown'))];
-        const values = labels.map(l => data.filter(r => (r['Stage'] || 'Unknown') === l).length);
+        let labels;
+        if (groupField === "FundedDate") {
+          labels = [...new Set(data.map(r => {
+            const d = new Date(r['FundedDate']);
+            return isNaN(d) ? "Unknown" : d.getFullYear();
+          }))];
+        } else {
+          labels = [...new Set(data.map(r => r[groupField] || 'Unknown'))];
+        }
+
+        const values = labels.map(l => {
+          if (groupField === "FundedDate") {
+            return data.filter(r => {
+              const d = new Date(r['FundedDate']);
+              return !isNaN(d) && d.getFullYear().toString() === l.toString();
+            }).length;
+          } else {
+            return data.filter(r => (r[groupField] || 'Unknown') === l).length;
+          }
+        });
 
         charts[reportType] = new Chart(ctx,{
           type:'bar',
