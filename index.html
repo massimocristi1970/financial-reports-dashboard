@@ -69,222 +69,147 @@
     </main>
   </div>
 
-  <script>
+    <script>
+/* ========== GLOBALS ========== */
 const reportData = { 'lending-volume':[], 'arrears':[], 'liquidations':[], 'complaints':[], 'financial-crime':[] };
 const lastUpdated = {};
 const charts = {};
 
-// ---------- Helpers ----------
+/* ========== HELPERS ========== */
 function cleanNumber(x){ if(x===null||x===undefined) return NaN; let s=String(x).trim(); if(!s) return NaN; let neg=false; if(/^\(.*\)$/.test(s)){ neg=true; s=s.slice(1,-1); } s=s.replace(/[£,\s]/g,''); const n=parseFloat(s); return isNaN(n)?NaN:(neg?-n:n);}
 function numericList(data,f){const arr=[];for(const r of data){const v=r[f];if(v!==undefined&&String(v).trim()!==''){const n=cleanNumber(v);if(!isNaN(n))arr.push(n);}}return arr;}
 function sumField(data,f){return numericList(data,f).reduce((a,b)=>a+b,0);}
 function avgField(data,f){const arr=numericList(data,f);return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;}
 function fmtMoney(n){return (Number.isFinite(n)?n:0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
-function toDate(v){if(!v) return NaN;const d=new Date(v);if(!isNaN(d))return d;const m=String(v).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);return m?new Date(+m[3],+m[2]-1,+m[1]):new Date(v);}
+function toDate(v){if(!v) return NaN;const d=new Date(v);if(!isNaN(d))return d;return NaN;}
 function uniqueSorted(arr){return Array.from(new Set(arr)).sort((a,b)=>(''+a).localeCompare((''+b),undefined,{numeric:true}));}
 
-// ---------- CSV Parser ----------
-function parseCSV(text){const lines=String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());if(!lines.length) return [];const delim=detectDelimiter(lines[0]);const headers=splitRow(lines[0],delim);const rows=[];for(let i=1;i<lines.length;i++){const parts=splitRow(lines[i],delim);if(!parts.length) continue;const rec={};headers.forEach((h,j)=>rec[h]=(parts[j]||'').replace(/\uFFFD/g,'').trim());rows.push(rec);}return rows;}
-function detectDelimiter(line){let c=(d)=>{let cnt=0,inQ=false;for(let i=0;i<line.length;i++){if(line[i]==='"')inQ=!inQ;else if(!inQ&&line[i]===d)cnt++;}return cnt;};return c('\t')>c(',')?'\t':',';}
-function splitRow(row,delim){const out=[];let cur='',inQ=false;for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='"'){if(inQ&&row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===delim&&!inQ){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out;}
+/* ========== CSV PARSER ========== */
+function parseCSV(text){
+  const lines=String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
+  if(!lines.length) return [];
+  const delim=lines[0].includes('\t')?'\t':',';
+  const headers=lines[0].split(delim);
+  const rows=[];
+  for(let i=1;i<lines.length;i++){
+    const parts=lines[i].split(delim);
+    const rec={};
+    headers.forEach((h,j)=>rec[h]=(parts[j]||'').trim());
+    rows.push(rec);
+  }
+  return rows;
+}
 
-// ---------- Configs ----------
+/* ========== CONFIGS ========== */
 const reportConfigs={
   'lending-volume':{dateField:'FundedDate',filterFields:['TierName','Stage'],
-    kpis:d=>{const t=d.length;const tot=sumField(d,'IssuedAmount');const avg=avgField(d,'IssuedAmount');return[
-      {label:'Total Loans',value:t.toLocaleString()},{label:'Total Issued',value:'£'+fmtMoney(tot)},{label:'Average Issued',value:'£'+fmtMoney(avg)},{label:'Last Updated',value:lastUpdated['lending-volume']||'—'}];},defaultGroup:'Stage'},
+    kpis:d=>[{label:'Total Loans',value:d.length},{label:'Total Issued',value:'£'+fmtMoney(sumField(d,'IssuedAmount'))},{label:'Average Issued',value:'£'+fmtMoney(avgField(d,'IssuedAmount'))}],defaultGroup:'Stage'},
   'arrears':{dateField:'StageDate',filterFields:['TierName','Stage'],
-    kpis:d=>{const totIssued=sumField(d,'IssuedAmount');const totDue=sumField(d,'TotalDue');return[
-      {label:'Total Issued Amount',value:'£'+fmtMoney(totIssued)},{label:'Total Due',value:'£'+fmtMoney(totDue)},{label:'Last Updated',value:lastUpdated['arrears']||'—'}];},
-    defaultGroup:'Stage',chartMode:'due'},
+    kpis:d=>[{label:'Total Issued Amount',value:'£'+fmtMoney(sumField(d,'IssuedAmount'))},{label:'Total Due',value:'£'+fmtMoney(sumField(d,'TotalDue'))}],defaultGroup:'Stage'},
   'liquidations':{dateField:'StageDate',filterFields:['TierName','Stage'],
-    kpis:d=>{const totIssued=sumField(d,'IssuedAmount');const totPaid=sumField(d,'Payment');const pct=totIssued?(totPaid/totIssued*100):0;return[
-      {label:'Total Issued Amount',value:'£'+fmtMoney(totIssued)},{label:'Total Paid',value:'£'+fmtMoney(totPaid)},{label:'Liquidation %',value:pct.toFixed(1)+'%'},{label:'Last Updated',value:lastUpdated['liquidations']||'—'}];},
-    defaultGroup:'Stage',chartMode:'compare-issued-paid'},
+    kpis:d=>{const issued=sumField(d,'IssuedAmount');const paid=sumField(d,'Payment');return[{label:'Total Issued',value:'£'+fmtMoney(issued)},{label:'Total Paid',value:'£'+fmtMoney(paid)},{label:'Recovery %',value:(issued?(paid/issued*100).toFixed(1)+'%':'0%')}];},defaultGroup:'Stage'},
   'complaints':{dateField:'ReceivedDate',filterFields:['Category','Decision'],
-    kpis:d=>{const tot=sumField(d,'Count')||d.length;const avg=avgField(d,'DaysToResolve');const open=d.filter(r=>!r['ResolvedDate']).length;return[
-      {label:'Total Complaints',value:tot.toLocaleString()},{label:'Avg Days to Resolve',value:avg.toFixed(1)},{label:'Open (no ResolvedDate)',value:open.toLocaleString()},{label:'Last Updated',value:lastUpdated['complaints']||'—'}];},defaultGroup:'Category'},
+    kpis:d=>[{label:'Total Complaints',value:d.length},{label:'Avg Days to Resolve',value:avgField(d,'DaysToResolve').toFixed(1)}],defaultGroup:'Category'},
   'financial-crime':{dateField:'Date Reported',filterFields:['Loan Source','AppStatus','Decision'],
-    kpis:d=>{const t=d.length;const tot=sumField(d,'Principal');const avg=avgField(d,'Principal');return[
-      {label:'Total Cases',value:t.toLocaleString()},{label:'Total Principal',value:'£'+fmtMoney(tot)},{label:'Average Principal',value:'£'+fmtMoney(avg)},{label:'Last Updated',value:lastUpdated['financial-crime']||'—'}];},defaultGroup:'Decision'}
+    kpis:d=>[{label:'Total Cases',value:d.length},{label:'Total Principal',value:'£'+fmtMoney(sumField(d,'Principal'))}],defaultGroup:'Decision'}
 };
 
-// ---------- Navigation ----------
-function showPage(e,id){document.querySelectorAll('[id$="-page"]').forEach(p=>p.classList.add('hidden'));document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));document.getElementById(id+'-page').classList.remove('hidden');if(e)e.currentTarget.classList.add('active');if(reportConfigs[id]){buildFiltersUI(id);renderReport(id);}}
+/* ========== NAVIGATION ========== */
+function showPage(e,id){
+  document.querySelectorAll('[id$="-page"]').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById(id+'-page').classList.remove('hidden');
+  if(e) e.currentTarget.classList.add('active');
+  if(reportConfigs[id]){ buildFiltersUI(id); renderReport(id); }
+}
 
-// ---------- Filters ----------
+/* ========== FILTERS ========== */
 function buildFiltersUI(type){
   const container=document.getElementById(`${type}-filters`);
   const cfg=reportConfigs[type];
   const data=reportData[type]||[];
   container.innerHTML='';
+  if(!data.length) return;
   const wrap=document.createElement('div');wrap.className='filters';
-
-  const years=uniqueSorted(data.map(r=>{const d=toDate(r[cfg.dateField]);return isNaN(d)?null:d.getFullYear();}).filter(Boolean));
-  wrap.appendChild(selectBlock(`${type}-year`,'Year',years,false,true,()=>updateReport(type)));
-  const months=Array.from({length:12},(_,i)=>String(i+1).padStart(2,'0'));
+  wrap.appendChild(selectBlock(`${type}-year`,'Year',uniqueSorted(data.map(r=>toDate(r[cfg.dateField])?.getFullYear()).filter(Boolean)),false,true,()=>updateReport(type)));
+  const months=["01","02","03","04","05","06","07","08","09","10","11","12"];
   wrap.appendChild(selectBlock(`${type}-month`,'Month',months,false,true,()=>updateReport(type)));
-  (cfg.filterFields||[]).forEach(field=>{
-    const vals=uniqueSorted(data.map(r=>r[field]||'Unknown'));
-    wrap.appendChild(selectBlock(`${type}-filter-${slug(field)}`,field,vals,true,true,()=>updateReport(type)));
+  (cfg.filterFields||[]).forEach(f=>{
+    const vals=uniqueSorted(data.map(r=>r[f]||'Unknown'));
+    wrap.appendChild(selectBlock(`${type}-filter-${f}`,f,vals,true,true,()=>updateReport(type)));
   });
   container.appendChild(wrap);
 }
-function selectBlock(id,labelText,values,multiple=false,includeAll=false,onChange=()=>{}){
+function selectBlock(id,label,values,multiple=false,includeAll=false,onChange=()=>{}){
   const block=document.createElement('div');
-  const lab=document.createElement('label');lab.setAttribute('for',id);lab.textContent=labelText;
-  const sel=document.createElement('select');sel.id=id;
-  if(multiple) sel.multiple=true;
-  if(multiple) sel.size=Math.min(6,Math.max(4,values.length));
-  if(includeAll){sel.appendChild(new Option('All',''));}
+  const lab=document.createElement('label');lab.textContent=label;
+  const sel=document.createElement('select');sel.id=id;if(multiple) sel.multiple=true;if(includeAll) sel.appendChild(new Option('All',''));
   values.forEach(v=>sel.appendChild(new Option(v,v)));
-  sel.onchange=onChange;
-  block.appendChild(lab);block.appendChild(sel);
-  return block;
+  sel.onchange=onChange;block.appendChild(lab);block.appendChild(sel);return block;
 }
 
-// ---------- Render ----------
-function updateReport(type){renderReport(type);}
+/* ========== RENDER ========== */
+function updateReport(type){ renderReport(type); }
 function renderReport(type){
   const content=document.getElementById(`${type}-content`);
-  const cfg=reportConfigs[type];
-  const dataRaw=reportData[type]||[];
-  if(!dataRaw.length){content.innerHTML=`<div class="panel small">No data uploaded.</div>`;return;}
-  const data=applyFilters(type,dataRaw,cfg);
-  if(!data.length){content.innerHTML=`<div class="panel small">No data for selected filters.</div>`;return;}
-
-  const kpiItems=cfg.kpis(data);
-  const kpiHtml=`<div class="panel"><div class="kpi-grid">${kpiItems.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')}</div></div>`;
-
+  const cfg=reportConfigs[type];const dataRaw=reportData[type]||[];
+  if(!dataRaw.length){content.innerHTML="<div class='panel small'>No data</div>";return;}
+  const data=applyFilters(type,dataRaw,cfg);if(!data.length){content.innerHTML="<div class='panel small'>No data for filters</div>";return;}
+  const kpiHtml="<div class='panel'><div class='kpi-grid'>"+cfg.kpis(data).map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')+"</div></div>";
   const {labels,values}=groupData(data,cfg.defaultGroup,cfg);
-
-  const barId=`${type}-bar`,lineId=`${type}-line`,pieId=`${type}-pie`;
-  const chartsHtml=`<div class="charts-grid">
-    <div class="panel chart-card"><h3>Bar Chart</h3><canvas id="${barId}"></canvas></div>
-    <div class="panel chart-card"><h3>Line Chart</h3><canvas id="${lineId}"></canvas></div>
-    <div class="panel chart-card"><h3>Pie Chart</h3><canvas id="${pieId}"></canvas></div>
-  </div>`;
-
-  const headers=Object.keys(data[0]);
-  const table=`<div class="panel data-table"><div class="small">Showing first 100 rows (${data.length.toLocaleString()} total)</div><div class="table-wrap"><table>
-    <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-    <tbody>${data.slice(0,100).map(r=>`<tr>${headers.map(h=>`<td>${escapeHtml(r[h]||''])}</td>`).join('')}</tr>`).join('')}</tbody>
-  </table></div></div>`;
-
-  content.innerHTML=kpiHtml+chartsHtml+table;
-  drawCharts(type,{barId,lineId,pieId},labels,values);
+  const chartHtml=`<div class="charts-grid"><div class="panel chart-card"><h3>Bar</h3><canvas id="${type}-bar"></canvas></div><div class="panel chart-card"><h3>Line</h3><canvas id="${type}-line"></canvas></div><div class="panel chart-card"><h3>Pie</h3><canvas id="${type}-pie"></canvas></div></div>`;
+  content.innerHTML=kpiHtml+chartHtml;
+  drawCharts(type,{barId:`${type}-bar`,lineId:`${type}-line`,pieId:`${type}-pie`},labels,values);
 }
 
-// ---------- Filtering + grouping ----------
+/* ========== FILTER + GROUP ========== */
 function applyFilters(type,data,cfg){
-  const year=document.getElementById(`${type}-year`)?.value||'';
-  const month=document.getElementById(`${type}-month`)?.value||'';
-  const selected={};
-  (cfg.filterFields||[]).forEach(f=>{
-    const sel=document.getElementById(`${type}-filter-${slug(f)}`);
-    const vals=Array.from(sel?.selectedOptions||[]).map(o=>o.value).filter(v=>v!=='');
-    selected[f]=vals;
-  });
+  const y=document.getElementById(`${type}-year`)?.value||'';const m=document.getElementById(`${type}-month`)?.value||'';
   return data.filter(r=>{
-    const dt=toDate(r[cfg.dateField]);
-    if(year && (!dt||String(dt.getFullYear())!==String(year))) return false;
-    if(month && (!dt||String(dt.getMonth()+1).padStart(2,'0')!==String(month))) return false;
-    for(const f of (cfg.filterFields||[])){
-      const vals=selected[f];
-      if(vals.length && !vals.includes(r[f]||'Unknown')) return false;
-    }
-    return true;
+    const d=toDate(r[cfg.dateField]);if(y&&(!d||d.getFullYear()!=y)) return false;if(m&&(!d||String(d.getMonth()+1).padStart(2,'0')!==m)) return false;return true;
   });
 }
-
-function groupData(data,groupField,cfg){
-  if(groupField==='YEAR'){
-    const map={};
-    data.forEach(r=>{
-      const d=toDate(r[cfg.dateField]);
-      const k=(!d||isNaN(d))?'Unknown':String(d.getFullYear());
-      map[k]=(map[k]||0)+1;
-    });
-    const labels=Object.keys(map);
-    return {labels,values:labels.map(l=>map[l])};
-  } else {
-    const map={};
-    data.forEach(r=>{
-      const k=r[groupField]||'Unknown';
-      map[k]=(map[k]||0)+1;
-    });
-    const labels=Object.keys(map);
-    return {labels,values:labels.map(l=>map[l])};
-  }
+function groupData(data,field,cfg){
+  const map={};data.forEach(r=>{const k=r[field]||'Unknown';map[k]=(map[k]||0)+1;});
+  const labels=Object.keys(map);return {labels,values:labels.map(l=>map[l])};
 }
 
-// ---------- Charts ----------
+/* ========== CHARTS ========== */
 function drawCharts(type,ids,labels,values){
-  charts[type]?.bar?.destroy();
-  charts[type]?.line?.destroy();
-  charts[type]?.pie?.destroy();
-
-  const data={labels,datasets:[{label:'Count',data:values,borderWidth:1}]};
+  charts[type]?.bar?.destroy();charts[type]?.line?.destroy();charts[type]?.pie?.destroy();
+  const d={labels,datasets:[{label:'Count',data:values}]};
   charts[type]={};
-  charts[type].bar=new Chart(document.getElementById(ids.barId),{type:'bar',data,options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-  charts[type].line=new Chart(document.getElementById(ids.lineId),{type:'line',data,options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-  charts[type].pie=new Chart(document.getElementById(ids.pieId),{type:'pie',data,options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+  charts[type].bar=new Chart(document.getElementById(ids.barId),{type:'bar',data:d});
+  charts[type].line=new Chart(document.getElementById(ids.lineId),{type:'line',data:d});
+  charts[type].pie=new Chart(document.getElementById(ids.pieId),{type:'pie',data:d});
 }
 
-// ---------- Utils ----------
-function slug(s){return String(s).toLowerCase().replace(/\s+/g,'-');}
-
-// ---------- Overview Summary ----------
-function updateOverviewSummary() {
-  const container = document.getElementById("overview-summary");
-  container.innerHTML = "";
-  Object.keys(reportData).forEach(type => {
-    const count = reportData[type]?.length || 0;
-    const updated = lastUpdated[type] || "—";
-    const label = type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
-    container.innerHTML += `
-      <div class="kpi">
-        <div class="label">${label}</div>
-        <div class="value">${count.toLocaleString()} records</div>
-        <div class="small">Last updated: ${updated}</div>
-      </div>`;
+/* ========== OVERVIEW ========== */
+function updateOverviewSummary(){
+  const c=document.getElementById("overview-summary");c.innerHTML="";
+  Object.keys(reportConfigs).forEach(t=>{
+    const d=reportData[t]||[];const k=d.length?reportConfigs[t].kpis(d)[0]:{label:"No data",value:"—"};
+    c.innerHTML+=`<div class="kpi"><div class="label">${t}</div><div class="value">${k.value}</div></div>`;
   });
 }
 
-// ---------- Load Shared Data ----------
-async function loadSharedData() {
-  const files = {
-    'lending-volume': 'shared-data/lending_volume.csv',
-    'arrears': 'shared-data/lending_volume.csv',
-    'liquidations': 'shared-data/lending_volume.csv',
-    'complaints': 'shared-data/complaints.csv',
-    'financial-crime': 'shared-data/financial_crime.csv'
+/* ========== LOAD DATA ========== */
+async function loadSharedData(){
+  const files={
+    'lending-volume':'shared-data/lending_volume.csv',
+    'arrears':'shared-data/lending_volume.csv',
+    'liquidations':'shared-data/lending_volume.csv',
+    'complaints':'shared-data/complaints.csv',
+    'financial-crime':'shared-data/financial_crime.csv'
   };
-
-  for (const [key, path] of Object.entries(files)) {
-    try {
-      const res = await fetch(path);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      reportData[key] = parseCSV(text);
-      lastUpdated[key] = new Date().toLocaleString();
-      console.log(`Loaded ${reportData[key].length} records for ${key} from ${path}`);
-    } catch (err) {
-      console.error(`Error loading ${path}:`, err);
-    }
+  for(const [k,p] of Object.entries(files)){
+    try{const res=await fetch(p);const text=await res.text();reportData[k]=parseCSV(text);lastUpdated[k]=new Date().toLocaleString();console.log("Loaded",reportData[k].length,"for",k);}catch(e){console.error("Error loading",p,e);}
   }
-
-  // Build filters + render all reports + update overview
-  Object.keys(reportConfigs).forEach(type => {
-    buildFiltersUI(type);
-    renderReport(type);
-  });
-  updateOverviewSummary();
-
-  // Default to overview
-  showPage(null, 'overview');
+  Object.keys(reportConfigs).forEach(t=>{buildFiltersUI(t);renderReport(t);});
+  updateOverviewSummary();showPage(null,'overview');
 }
-
-document.addEventListener('DOMContentLoaded', loadSharedData);
-</script>
+document.addEventListener('DOMContentLoaded',loadSharedData);
+  </script>
+</body>
+</html>
