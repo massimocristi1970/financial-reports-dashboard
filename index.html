@@ -80,72 +80,203 @@
   </div>
 
   <script>
-    const reportData = { 'lending-volume':[], 'arrears':[], 'liquidations':[], 'complaints':[], 'financial-crime':[] };
-    const charts = {};
+const reportData = { 'lending-volume':[], 'arrears':[], 'liquidations':[], 'complaints':[], 'financial-crime':[] };
+const charts = {};
 
-    // ---------- Helpers ----------
-    function cleanNumber(x){
-      if(x===null||x===undefined) return NaN;
-      let s=String(x).trim();
-      if(!s) return NaN;
-      let neg=false;
-      if(/^\(.*\)$/.test(s)){ neg=true; s=s.slice(1,-1); }
-      s=s.replace(/[£,\s]/g,'');
-      const n=parseFloat(s);
-      return isNaN(n)?NaN:(neg?-n:n);
+// ---------- Helpers ----------
+function cleanNumber(x){
+  if(x===null||x===undefined) return NaN;
+  let s=String(x).trim();
+  if(!s) return NaN;
+  let neg=false;
+  if(/^\(.*\)$/.test(s)){ neg=true; s=s.slice(1,-1); }
+  s=s.replace(/[£,\s]/g,'');
+  const n=parseFloat(s);
+  return isNaN(n)?NaN:(neg?-n:n);
+}
+function numericList(data,f){ const arr=[]; for(const r of data){const v=r[f];if(v!==undefined&&String(v).trim()!==''){const n=cleanNumber(v);if(!isNaN(n))arr.push(n);} } return arr;}
+function sumField(data,f){return numericList(data,f).reduce((a,b)=>a+b,0);}
+function avgField(data,f){const arr=numericList(data,f);return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;}
+function fmtMoney(n){return (Number.isFinite(n)?n:0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function escapeHtml(str){return String(str).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
+function toDate(v){if(!v) return NaN;const d=new Date(v);if(!isNaN(d))return d;const m=String(v).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);return m?new Date(+m[3],+m[2]-1,+m[1]):new Date(v);}
+function uniqueSorted(arr){return Array.from(new Set(arr)).sort((a,b)=>(''+a).localeCompare((''+b),undefined,{numeric:true}));}
+
+// ---------- CSV Parser ----------
+function parseCSV(text){
+  const lines=String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
+  if(!lines.length) return [];
+  const delim=detectDelimiter(lines[0]);
+  const headers=splitRow(lines[0],delim);
+  const rows=[];
+  for(let i=1;i<lines.length;i++){
+    const parts=splitRow(lines[i],delim);
+    if(!parts.length) continue;
+    const rec={}; headers.forEach((h,j)=>rec[h]=(parts[j]||'').replace(/\uFFFD/g,'').trim());
+    rows.push(rec);
+  }
+  return rows;
+}
+function detectDelimiter(line){let c=(d)=>{let cnt=0,inQ=false;for(let i=0;i<line.length;i++){if(line[i]==='"')inQ=!inQ;else if(!inQ&&line[i]===d)cnt++;}return cnt;};return c('\t')>c(',')?'\t':',';}
+function splitRow(row,delim){const out=[];let cur='',inQ=false;for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='"'){if(inQ&&row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===delim&&!inQ){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out;}
+
+// ---------- Configs ----------
+const reportConfigs={
+  'lending-volume':{dateField:'FundedDate',amountField:'IssuedAmount',filterFields:['TierName','Stage'],
+    kpis:d=>{const t=d.length;const tot=sumField(d,'IssuedAmount');const avg=avgField(d,'IssuedAmount');return[
+      {label:'Total Loans',value:t.toLocaleString()},{label:'Total Issued',value:'£'+fmtMoney(tot)},{label:'Average Issued',value:'£'+fmtMoney(avg)}];},defaultGroup:'Stage'},
+  'arrears':{dateField:'StageDate',amountField:'TotalDue',filterFields:['TierName','Stage'],
+    kpis:d=>{const t=d.length;const tot=sumField(d,'TotalDue');const avg=avgField(d,'TotalDue');return[
+      {label:'Total Accounts',value:t.toLocaleString()},{label:'Total Due',value:'£'+fmtMoney(tot)},{label:'Average Due',value:'£'+fmtMoney(avg)}];},defaultGroup:'Stage'},
+  'liquidations':{dateField:'StageDate',amountField:'TotalDue',filterFields:['TierName','Stage'],
+    kpis:d=>{const t=d.length;const tot=sumField(d,'TotalDue');const avg=avgField(d,'TotalDue');return[
+      {label:'Total Liquidations',value:t.toLocaleString()},{label:'Total Due @ Liquidation',value:'£'+fmtMoney(tot)},{label:'Average Due',value:'£'+fmtMoney(avg)}];},defaultGroup:'Stage'},
+  'complaints':{dateField:'ReceivedDate',filterFields:['Category','Decision'],
+    kpis:d=>{const tot=sumField(d,'Count')||d.length;const avg=avgField(d,'DaysToResolve');const open=d.filter(r=>!r['ResolvedDate']).length;return[
+      {label:'Total Complaints',value:tot.toLocaleString()},{label:'Avg Days to Resolve',value:avg.toFixed(1)},{label:'Open (no ResolvedDate)',value:open.toLocaleString()}];},defaultGroup:'Category'},
+  'financial-crime':{dateField:'Date Reported',amountField:'Principal',filterFields:['Loan Source','AppStatus','Decision'],
+    kpis:d=>{const t=d.length;const tot=sumField(d,'Principal');const avg=avgField(d,'Principal');return[
+      {label:'Total Cases',value:t.toLocaleString()},{label:'Total Principal',value:'£'+fmtMoney(tot)},{label:'Average Principal',value:'£'+fmtMoney(avg)}];},defaultGroup:'Decision'}
+};
+
+// ---------- Nav ----------
+function showPage(e,id){
+  document.querySelectorAll('[id$="-page"]').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById(id+'-page').classList.remove('hidden');
+  if(e)e.currentTarget.classList.add('active');
+  if(reportConfigs[id]){buildFiltersUI(id);renderReport(id);}
+}
+function uploadFile(inp,type){
+  const f=inp.files?.[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{reportData[type]=parseCSV(e.target.result);
+    document.getElementById(type+'-status').textContent=`Loaded ${reportData[type].length} records`;
+    buildFiltersUI(type);renderReport(type);};
+  r.readAsText(f);
+}
+
+// ---------- Filters ----------
+function buildFiltersUI(type){
+  const container=document.getElementById(`${type}-filters`);
+  const cfg=reportConfigs[type];
+  const data=reportData[type]||[];
+  container.innerHTML='';
+  const wrap=document.createElement('div');wrap.className='filters';
+
+  // Year
+  const years=uniqueSorted(data.map(r=>{const d=toDate(r[cfg.dateField]);return isNaN(d)?null:d.getFullYear();}).filter(Boolean));
+  wrap.appendChild(selectBlock(`${type}-year`,'Year',years,false,true,()=>updateReport(type)));
+  // Month
+  const months=Array.from({length:12},(_,i)=>String(i+1).padStart(2,'0'));
+  wrap.appendChild(selectBlock(`${type}-month`,'Month',months,false,true,()=>updateReport(type)));
+  // Extra filters
+  (cfg.filterFields||[]).forEach(field=>{
+    const vals=uniqueSorted(data.map(r=>r[field]||'Unknown'));
+    wrap.appendChild(selectBlock(`${type}-filter-${slug(field)}`,field,vals,true,true,()=>updateReport(type)));
+  });
+  container.appendChild(wrap);
+}
+function selectBlock(id,labelText,values,multiple=false,includeAll=false,onChange=()=>{}){
+  const block=document.createElement('div');
+  const lab=document.createElement('label');lab.setAttribute('for',id);lab.textContent=labelText;
+  const sel=document.createElement('select');sel.id=id;
+  if(multiple) sel.multiple=true;
+  if(multiple) sel.size=Math.min(6,Math.max(4,values.length));
+  if(includeAll){sel.appendChild(new Option('All',''));}
+  values.forEach(v=>sel.appendChild(new Option(v,v)));
+  sel.onchange=onChange;
+  block.appendChild(lab);block.appendChild(sel);
+  return block;
+}
+
+// ---------- Render ----------
+function updateReport(type){renderReport(type);}
+function renderReport(type){
+  const content=document.getElementById(`${type}-content`);
+  const cfg=reportConfigs[type];
+  const dataRaw=reportData[type]||[];
+  if(!dataRaw.length){content.innerHTML=`<div class="panel small">No data uploaded.</div>`;return;}
+  const data=applyFilters(type,dataRaw,cfg);
+  if(!data.length){content.innerHTML=`<div class="panel small">No data for selected filters.</div>`;return;}
+
+  // KPIs
+  const kpiItems=cfg.kpis(data);
+  const kpiHtml=`<div class="panel"><div class="kpi-grid">${kpiItems.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')}</div></div>`;
+
+  // Grouping + grouped data
+  const {groupField,title}=decideGrouping(type,cfg);
+  const {labels,values}=groupData(data,groupField,cfg);
+
+  // Charts
+  const barId=`${type}-bar`,lineId=`${type}-line`,pieId=`${type}-pie`;
+  const chartsHtml=`<div class="charts-grid">
+    <div class="panel chart-card"><h3>${title} (Bar)</h3><canvas id="${barId}"></canvas></div>
+    <div class="panel chart-card"><h3>${title} (Line)</h3><canvas id="${lineId}"></canvas></div>
+    <div class="panel chart-card"><h3>${title} (Pie)</h3><canvas id="${pieId}"></canvas></div>
+  </div>`;
+
+  // Table
+  const headers=Object.keys(data[0]);
+  const table=`<div class="panel data-table"><div class="small">Showing first 100 rows (${data.length.toLocaleString()} total)</div><div class="table-wrap"><table>
+    <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+    <tbody>${data.slice(0,100).map(r=>`<tr>${headers.map(h=>`<td>${escapeHtml(r[h]||'')}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table></div></div>`;
+
+  content.innerHTML=kpiHtml+chartsHtml+table;
+  drawCharts(type,{barId,lineId,pieId},labels,values);
+}
+
+// ---------- Filtering + grouping ----------
+function applyFilters(type,data,cfg){
+  const year=document.getElementById(`${type}-year`)?.value||'';
+  const month=document.getElementById(`${type}-month`)?.value||'';
+  const selected={};
+  (cfg.filterFields||[]).forEach(f=>{
+    const sel=document.getElementById(`${type}-filter-${slug(f)}`);
+    const vals=Array.from(sel?.selectedOptions||[]).map(o=>o.value).filter(v=>v!=='');
+    selected[f]=vals;
+  });
+  return data.filter(r=>{
+    const dt=toDate(r[cfg.dateField]);
+    if(year && (!dt||String(dt.getFullYear())!==String(year))) return false;
+    if(month && (!dt||String(dt.getMonth()+1).padStart(2,'0')!==String(month))) return false;
+    for(const f of (cfg.filterFields||[])){
+      const vals=selected[f];
+      if(vals.length && !vals.includes(r[f]||'Unknown')) return false;
     }
-    function numericList(data,f){ const arr=[]; for(const r of data){const v=r[f];if(v!==undefined&&String(v).trim()!==''){const n=cleanNumber(v);if(!isNaN(n))arr.push(n);} } return arr;}
-    function sumField(data,f){return numericList(data,f).reduce((a,b)=>a+b,0);}
-    function avgField(data,f){const arr=numericList(data,f);return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;}
-    function fmtMoney(n){return (Number.isFinite(n)?n:0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
-    function escapeHtml(str){return String(str).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
-    function toDate(v){if(!v) return NaN;const d=new Date(v);if(!isNaN(d))return d;const m=String(v).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);return m?new Date(+m[3],+m[2]-1,+m[1]):new Date(v);}
+    return true;
+  });
+}
+function decideGrouping(type,cfg){
+  const fA=cfg.filterFields?.[0];const fB=cfg.filterFields?.[1];
+  const aSel=Array.from(document.getElementById(`${type}-filter-${slug(fA)}`)?.selectedOptions||[]).map(o=>o.value).filter(v=>v!=='');
+  const bSel=fB?Array.from(document.getElementById(`${type}-filter-${slug(fB)}`)?.selectedOptions||[]).map(o=>o.value).filter(v=>v!==''):[];
+  if(aSel.length && !bSel.length && fB) return {groupField:fB,title:`By ${fB}`};
+  if(bSel.length && fA) return {groupField:fA,title:`By ${fA}`};
+  if(aSel.length && bSel.length) return {groupField:'YEAR',title:'By Year'};
+  return {groupField:cfg.defaultGroup||fA||'YEAR',title:`By ${cfg.defaultGroup||fA||'Year'}`};
+}
+function groupData(data,groupField,cfg){
+  if(groupField==='YEAR'){
+    const map={};data.forEach(r=>{const d=toDate(r[cfg.dateField]);const k=(!d||isNaN(d))?'Unknown':String(d.getFullYear());map[k]=(map[k]||0)+1;});
+    const labels=Object.keys(map);return {labels,values:labels.map(l=>map[l])};
+  } else {
+    const map={};data.forEach(r=>{const k=r[groupField]||'Unknown';map[k]=(map[k]||0)+1;});
+    const labels=Object.keys(map);return {labels,values:labels.map(l=>map[l])};
+  }
+}
 
-    // ---------- CSV Parser ----------
-    function parseCSV(text){
-      const lines=String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
-      if(!lines.length) return [];
-      const delim=detectDelimiter(lines[0]);
-      const headers=splitRow(lines[0],delim);
-      const rows=[];
-      for(let i=1;i<lines.length;i++){
-        const parts=splitRow(lines[i],delim);
-        if(!parts.length) continue;
-        const rec={}; headers.forEach((h,j)=>rec[h]=(parts[j]||'').replace(/\uFFFD/g,'').trim());
-        rows.push(rec);
-      }
-      return rows;
-    }
-    function detectDelimiter(line){let c=(d)=>{let cnt=0,inQ=false;for(let i=0;i<line.length;i++){if(line[i]==='"')inQ=!inQ;else if(!inQ&&line[i]===d)cnt++;}return cnt;};return c('\t')>c(',')?'\t':',';}
-    function splitRow(row,delim){const out=[];let cur='',inQ=false;for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='"'){if(inQ&&row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===delim&&!inQ){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out;}
+// ---------- Charts ----------
+function drawCharts(type,ids,labels,values){
+  charts[type]?.bar?.destroy();charts[type]?.line?.destroy();charts[type]?.pie?.destroy();
+  const data={labels,datasets:[{label:'Count',data:values,borderWidth:1}]};
+  charts[type]={};
+  charts[type].bar=new Chart(document.getElementById(ids.barId),{type:'bar',data,options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  charts[type].line=new Chart(document.getElementById(ids.lineId),{type:'line',data,options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  charts[type].pie=new Chart(document.getElementById(ids.pieId),{type:'pie',data,options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+}
 
-    // ---------- Configs ----------
-    const reportConfigs={
-      'lending-volume':{dateField:'FundedDate',amountField:'IssuedAmount',filterFields:['TierName','Stage'],
-        kpis:d=>{const t=d.length;const tot=sumField(d,'IssuedAmount');const avg=avgField(d,'IssuedAmount');return[
-          {label:'Total Loans',value:t.toLocaleString()},{label:'Total Issued',value:'£'+fmtMoney(tot)},{label:'Average Issued',value:'£'+fmtMoney(avg)}];},defaultGroup:'Stage'},
-      'arrears':{dateField:'StageDate',amountField:'TotalDue',filterFields:['TierName','Stage'],
-        kpis:d=>{const t=d.length;const tot=sumField(d,'TotalDue');const avg=avgField(d,'TotalDue');return[
-          {label:'Total Accounts',value:t.toLocaleString()},{label:'Total Due',value:'£'+fmtMoney(tot)},{label:'Average Due',value:'£'+fmtMoney(avg)}];},defaultGroup:'Stage'},
-      'liquidations':{dateField:'StageDate',amountField:'TotalDue',filterFields:['TierName','Stage'],
-        kpis:d=>{const t=d.length;const tot=sumField(d,'TotalDue');const avg=avgField(d,'TotalDue');return[
-          {label:'Total Liquidations',value:t.toLocaleString()},{label:'Total Due @ Liquidation',value:'£'+fmtMoney(tot)},{label:'Average Due',value:'£'+fmtMoney(avg)}];},defaultGroup:'Stage'},
-      'complaints':{dateField:'ReceivedDate',filterFields:['Category','Decision'],
-        kpis:d=>{const tot=sumField(d,'Count')||d.length;const avg=avgField(d,'DaysToResolve');const open=d.filter(r=>!r['ResolvedDate']).length;return[
-          {label:'Total Complaints',value:tot.toLocaleString()},{label:'Avg Days to Resolve',value:avg.toFixed(1)},{label:'Open (no ResolvedDate)',value:open.toLocaleString()}];},defaultGroup:'Category'},
-      'financial-crime':{dateField:'Date Reported',amountField:'Principal',filterFields:['Loan Source','AppStatus','Decision'],
-        kpis:d=>{const t=d.length;const tot=sumField(d,'Principal');const avg=avgField(d,'Principal');return[
-          {label:'Total Cases',value:t.toLocaleString()},{label:'Total Principal',value:'£'+fmtMoney(tot)},{label:'Average Principal',value:'£'+fmtMoney(avg)}];},defaultGroup:'Decision'}
-    };
-
-    // ---------- Page Nav ----------
-    function showPage(e,id){document.querySelectorAll('[id$="-page"]').forEach(p=>p.classList.add('hidden'));document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));document.getElementById(id+'-page').classList.remove('hidden');if(e)e.currentTarget.classList.add('active');if(reportConfigs[id]){buildFiltersUI(id);renderReport(id);}}
-    function uploadFile(inp,type){const f=inp.files?.[0];if(!f)return;const r=new FileReader();r.onload=e=>{reportData[type]=parseCSV(e.target.result);document.getElementById(type+'-status').textContent=`Loaded ${reportData[type].length} records`;buildFiltersUI(type);renderReport(type);};r.readAsText(f);}
-
-    // ---------- Filters / Render ----------
-    function buildFiltersUI(type){/* unchanged from earlier full code, left out here for brevity */}
-    function renderReport(type){/* unchanged except uses new kpis & helpers */}
-
-  </script>
-</body>
-</html>
+// ---------- Utils ----------
+function slug(s){return String(s).toLowerCase().replace(/\s+/g,'-');}
+</script>
