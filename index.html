@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Financial Reports Dashboard</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin:0; background:#f8fafc; color:#0f172a; }
     .app-container { display:flex; min-height:100vh; }
     .sidebar { width:260px; background:#fff; border-right:1px solid #e2e8f0; }
     .sidebar-header { padding:18px 20px; font-weight:700; border-bottom:1px solid #e2e8f0; }
-    .nav-link { cursor:pointer; padding:12px 18px; display:flex; gap:10px; align-items:center; color:#334155; }
+    .nav-link { cursor:pointer; padding:12px 18px; display:flex; gap:10px; align-items:center; color:#334155; text-decoration:none; }
     .nav-link:hover { background:#f1f5f9; }
     .nav-link.active { background:#eef6ff; border-left:3px solid #3b82f6; color:#1d4ed8; }
     .main-content { flex:1; padding:24px; }
@@ -19,197 +18,205 @@
     .page-title { font-size:24px; font-weight:800; }
     .hidden { display:none; }
     .panel { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:18px; margin-bottom:18px; }
-    .filters { display:flex; gap:16px; row-gap:10px; flex-wrap:wrap; align-items:flex-end; }
-    .filters label { font-size:12px; font-weight:700; color:#475569; display:block; margin-bottom:6px; }
-    .filters select { min-width:140px; padding:8px; border-radius:8px; border:1px solid #cbd5e1; background:#fff; }
-    .filters select[multiple]{ min-width:200px; height:112px; }
     .kpi-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:14px; }
-    .kpi { background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; padding:14px 16px; }
-    .kpi .label { font-size:12px; color:#64748b; }
-    .kpi .value { font-size:22px; font-weight:800; margin-top:6px; }
-    .charts-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
-    .chart-card h3 { margin:0 0 8px 0; font-size:14px; color:#334155; }
+    .kpi-card { background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; padding:14px 16px; }
+    .kpi-title { font-size:12px; color:#64748b; }
+    .kpi-value { font-size:22px; font-weight:800; margin-top:6px; }
+    .chart-card { background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; margin-bottom:20px; }
+    .chart-title { font-weight:600; margin-bottom:10px; }
+    .progress-bar { background:#e5e7eb; border-radius:6px; height:10px; overflow:hidden; }
+    .progress-fill { background:#3b82f6; height:100%; }
     .data-table table { width:100%; border-collapse: collapse; }
-    th, td { padding:10px 12px; border-bottom:1px solid #e5e7eb; text-align:left; white-space:nowrap; }
-    th { background:#f8fafc; position:sticky; top:0; z-index:1; }
-    .table-wrap { max-height:420px; overflow:auto; border:1px solid #e5e7eb; border-radius:12px; }
-    .small { color:#64748b; font-size:12px; }
+    th, td { padding:10px 12px; border-bottom:1px solid #e5e7eb; text-align:left; }
+    th { background:#f8fafc; position:sticky; top:0; }
+    .currency { font-weight:600; color:#16a34a; }
+    .status { padding:8px 12px; border-radius:8px; margin-top:10px; font-size:14px; }
+    .status-success { background:#dcfce7; color:#166534; }
+    .status-error { background:#fee2e2; color:#991b1b; }
+    .status-info { background:#dbeafe; color:#1e3a8a; }
   </style>
 </head>
 <body>
   <div class="app-container">
-    <!-- SIDEBAR -->
+    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header"><i class="fas fa-chart-line"></i> Financial Reports</div>
       <nav>
-        <div class="nav-link active" onclick="showPage(event,'overview')"><i class="fas fa-home"></i> Overview</div>
-        <div class="nav-link" onclick="showPage(event,'lending-volume')"><i class="fas fa-coins"></i> Lending Volume</div>
-        <div class="nav-link" onclick="showPage(event,'arrears')"><i class="fas fa-exclamation-triangle"></i> Arrears</div>
-        <div class="nav-link" onclick="showPage(event,'liquidations')"><i class="fas fa-sync"></i> Liquidations</div>
-        <div class="nav-link" onclick="showPage(event,'complaints')"><i class="fas fa-clipboard-list"></i> Complaints</div>
-        <div class="nav-link" onclick="showPage(event,'financial-crime')"><i class="fas fa-user-shield"></i> Financial Crime</div>
+        <a href="#" class="nav-link active" data-page="overview"><i class="fas fa-home"></i> Overview</a>
+        <a href="#" class="nav-link" data-page="data-management"><i class="fas fa-upload"></i> Data Management</a>
+        <a href="#" class="nav-link" data-page="lending-volume"><i class="fas fa-coins"></i> Lending Volume</a>
+        <a href="#" class="nav-link" data-page="arrears"><i class="fas fa-exclamation-triangle"></i> Arrears</a>
+        <a href="#" class="nav-link" data-page="liquidations"><i class="fas fa-sync"></i> Liquidations</a>
+        <a href="#" class="nav-link" data-page="complaints"><i class="fas fa-clipboard-list"></i> Complaints</a>
+        <a href="#" class="nav-link" data-page="financial-crime"><i class="fas fa-user-shield"></i> Financial Crime</a>
       </nav>
     </aside>
 
-    <!-- MAIN -->
+    <!-- Main -->
     <main class="main-content">
-      <section id="overview-page">
+      <section id="overview-page" class="page">
         <div class="page-header"><div class="page-title">Welcome</div></div>
-        <div class="panel">
-          <h3>Data Summary</h3>
-          <div id="overview-summary" class="kpi-grid"></div>
-        </div>
+        <div class="panel small">Upload CSVs under <strong>Data Management</strong>, then explore reports.</div>
+        <div id="overview-summary" class="kpi-grid"></div>
       </section>
 
-      <section id="lending-volume-page" class="hidden"><div class="page-header"><div class="page-title">Lending Volume</div></div><div id="lending-volume-filters" class="panel"></div><div id="lending-volume-content"></div></section>
-      <section id="arrears-page" class="hidden"><div class="page-header"><div class="page-title">Arrears</div></div><div id="arrears-filters" class="panel"></div><div id="arrears-content"></div></section>
-      <section id="liquidations-page" class="hidden"><div class="page-header"><div class="page-title">Liquidations</div></div><div id="liquidations-filters" class="panel"></div><div id="liquidations-content"></div></section>
-      <section id="complaints-page" class="hidden"><div class="page-header"><div class="page-title">Complaints</div></div><div id="complaints-filters" class="panel"></div><div id="complaints-content"></div></section>
-      <section id="financial-crime-page" class="hidden"><div class="page-header"><div class="page-title">Financial Crime</div></div><div id="financial-crime-filters" class="panel"></div><div id="financial-crime-content"></div></section>
+      <section id="data-management-page" class="page hidden">
+        <div class="page-header"><div class="page-title">Data Management</div></div>
+        <div class="panel"><h3>Lending Volume</h3><input type="file" accept=".csv" onchange="FinancialDashboard.handleFileUpload(event,'lending-volume')"/><div id="lending-volume-status" class="small"></div></div>
+        <div class="panel"><h3>Arrears</h3><input type="file" accept=".csv" onchange="FinancialDashboard.handleFileUpload(event,'arrears')"/><div id="arrears-status" class="small"></div></div>
+        <div class="panel"><h3>Liquidations</h3><input type="file" accept=".csv" onchange="FinancialDashboard.handleFileUpload(event,'liquidations')"/><div id="liquidations-status" class="small"></div></div>
+        <div class="panel"><h3>Complaints</h3><input type="file" accept=".csv" onchange="FinancialDashboard.handleFileUpload(event,'complaints')"/><div id="complaints-status" class="small"></div></div>
+        <div class="panel"><h3>Financial Crime</h3><input type="file" accept=".csv" onchange="FinancialDashboard.handleFileUpload(event,'financial-crime')"/><div id="financial-crime-status" class="small"></div></div>
+      </section>
+
+      <!-- Report Pages -->
+      <section id="lending-volume-page" class="page hidden"><div class="page-header"><div class="page-title">Lending Volume</div></div><div class="report-content" data-report="lending-volume"></div></section>
+      <section id="arrears-page" class="page hidden"><div class="page-header"><div class="page-title">Arrears</div></div><div class="report-content" data-report="arrears"></div></section>
+      <section id="liquidations-page" class="page hidden"><div class="page-header"><div class="page-title">Liquidations</div></div><div class="report-content" data-report="liquidations"></div></section>
+      <section id="complaints-page" class="page hidden"><div class="page-header"><div class="page-title">Complaints</div></div><div class="report-content" data-report="complaints"></div></section>
+      <section id="financial-crime-page" class="page hidden"><div class="page-header"><div class="page-title">Financial Crime</div></div><div class="report-content" data-report="financial-crime"></div></section>
     </main>
   </div>
 
-    <script>
-/* ========== GLOBALS ========== */
-const reportData = { 'lending-volume':[], 'arrears':[], 'liquidations':[], 'complaints':[], 'financial-crime':[] };
-const lastUpdated = {};
-const charts = {};
+  <script>
+  const FinancialDashboard = {
+    data: {
+      'lending-volume': [],
+      'arrears': [],
+      'liquidations': [],
+      'complaints': [],
+      'financial-crime': []
+    },
 
-/* ========== HELPERS ========== */
-function cleanNumber(x){ if(x===null||x===undefined) return NaN; let s=String(x).trim(); if(!s) return NaN; let neg=false; if(/^\(.*\)$/.test(s)){ neg=true; s=s.slice(1,-1); } s=s.replace(/[£,\s]/g,''); const n=parseFloat(s); return isNaN(n)?NaN:(neg?-n:n);}
-function numericList(data,f){const arr=[];for(const r of data){const v=r[f];if(v!==undefined&&String(v).trim()!==''){const n=cleanNumber(v);if(!isNaN(n))arr.push(n);}}return arr;}
-function sumField(data,f){return numericList(data,f).reduce((a,b)=>a+b,0);}
-function avgField(data,f){const arr=numericList(data,f);return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;}
-function fmtMoney(n){return (Number.isFinite(n)?n:0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
-function escapeHtml(str){return String(str).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
-function toDate(v){if(!v) return NaN;const d=new Date(v);if(!isNaN(d))return d;return NaN;}
-function uniqueSorted(arr){return Array.from(new Set(arr)).sort((a,b)=>(''+a).localeCompare((''+b),undefined,{numeric:true}));}
+    init() {
+      this.setupNavigation();
+    },
 
-/* ========== CSV PARSER ========== */
-function parseCSV(text){
-  const lines=String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
-  if(!lines.length) return [];
-  const delim=lines[0].includes('\t')?'\t':',';
-  const headers=lines[0].split(delim);
-  const rows=[];
-  for(let i=1;i<lines.length;i++){
-    const parts=lines[i].split(delim);
-    const rec={};
-    headers.forEach((h,j)=>rec[h]=(parts[j]||'').trim());
-    rows.push(rec);
-  }
-  return rows;
-}
+    setupNavigation() {
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const page = e.currentTarget.dataset.page;
+          this.showPage(page);
+          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+          e.currentTarget.classList.add('active');
+        });
+      });
+    },
 
-/* ========== CONFIGS ========== */
-const reportConfigs={
-  'lending-volume':{dateField:'FundedDate',filterFields:['TierName','Stage'],
-    kpis:d=>[{label:'Total Loans',value:d.length},{label:'Total Issued',value:'£'+fmtMoney(sumField(d,'IssuedAmount'))},{label:'Average Issued',value:'£'+fmtMoney(avgField(d,'IssuedAmount'))}],defaultGroup:'Stage'},
-  'arrears':{dateField:'StageDate',filterFields:['TierName','Stage'],
-    kpis:d=>[{label:'Total Issued Amount',value:'£'+fmtMoney(sumField(d,'IssuedAmount'))},{label:'Total Due',value:'£'+fmtMoney(sumField(d,'TotalDue'))}],defaultGroup:'Stage'},
-  'liquidations':{dateField:'StageDate',filterFields:['TierName','Stage'],
-    kpis:d=>{const issued=sumField(d,'IssuedAmount');const paid=sumField(d,'Payment');return[{label:'Total Issued',value:'£'+fmtMoney(issued)},{label:'Total Paid',value:'£'+fmtMoney(paid)},{label:'Recovery %',value:(issued?(paid/issued*100).toFixed(1)+'%':'0%')}];},defaultGroup:'Stage'},
-  'complaints':{dateField:'ReceivedDate',filterFields:['Category','Decision'],
-    kpis:d=>[{label:'Total Complaints',value:d.length},{label:'Avg Days to Resolve',value:avgField(d,'DaysToResolve').toFixed(1)}],defaultGroup:'Category'},
-  'financial-crime':{dateField:'Date Reported',filterFields:['Loan Source','AppStatus','Decision'],
-    kpis:d=>[{label:'Total Cases',value:d.length},{label:'Total Principal',value:'£'+fmtMoney(sumField(d,'Principal'))}],defaultGroup:'Decision'}
-};
+    async handleFileUpload(event, reportType) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const statusElement = document.getElementById(`${reportType}-status`);
+      try {
+        statusElement.innerHTML = '<div class="status status-info">Processing CSV file...</div>';
+        const csvText = await file.text();
+        const data = this.parseCSVText(csvText);
+        this.data[reportType] = data;
+        statusElement.innerHTML = `<div class="status status-success">Loaded ${data.length} records</div>`;
+        this.renderReport(reportType);
+        this.updateOverviewSummary();
+      } catch (err) {
+        statusElement.innerHTML = `<div class="status status-error">Error: ${err.message}</div>`;
+      }
+    },
 
-/* ========== NAVIGATION ========== */
-function showPage(e,id){
-  document.querySelectorAll('[id$="-page"]').forEach(p=>p.classList.add('hidden'));
-  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-  document.getElementById(id+'-page').classList.remove('hidden');
-  if(e) e.currentTarget.classList.add('active');
-  if(reportConfigs[id]){ buildFiltersUI(id); renderReport(id); }
-}
+    parseCSVText(csvText) {
+      const lines = String(csvText||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l => l.trim());
+      if (!lines.length) throw new Error("Empty CSV file");
 
-/* ========== FILTERS ========== */
-function buildFiltersUI(type){
-  const container=document.getElementById(`${type}-filters`);
-  const cfg=reportConfigs[type];
-  const data=reportData[type]||[];
-  container.innerHTML='';
-  if(!data.length) return;
-  const wrap=document.createElement('div');wrap.className='filters';
-  wrap.appendChild(selectBlock(`${type}-year`,'Year',uniqueSorted(data.map(r=>toDate(r[cfg.dateField])?.getFullYear()).filter(Boolean)),false,true,()=>updateReport(type)));
-  const months=["01","02","03","04","05","06","07","08","09","10","11","12"];
-  wrap.appendChild(selectBlock(`${type}-month`,'Month',months,false,true,()=>updateReport(type)));
-  (cfg.filterFields||[]).forEach(f=>{
-    const vals=uniqueSorted(data.map(r=>r[f]||'Unknown'));
-    wrap.appendChild(selectBlock(`${type}-filter-${f}`,f,vals,true,true,()=>updateReport(type)));
-  });
-  container.appendChild(wrap);
-}
-function selectBlock(id,label,values,multiple=false,includeAll=false,onChange=()=>{}){
-  const block=document.createElement('div');
-  const lab=document.createElement('label');lab.textContent=label;
-  const sel=document.createElement('select');sel.id=id;if(multiple) sel.multiple=true;if(includeAll) sel.appendChild(new Option('All',''));
-  values.forEach(v=>sel.appendChild(new Option(v,v)));
-  sel.onchange=onChange;block.appendChild(lab);block.appendChild(sel);return block;
-}
+      const detectDelimiter = (line) => {
+        const counts = {',':0,';':0,'\t':0};
+        let inQ=false;
+        for (let i=0;i<line.length;i++){
+          const c=line[i];
+          if(c==='"') inQ=!inQ;
+          else if(!inQ && counts.hasOwnProperty(c)) counts[c]++;
+        }
+        return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0] || ',';
+      };
 
-/* ========== RENDER ========== */
-function updateReport(type){ renderReport(type); }
-function renderReport(type){
-  const content=document.getElementById(`${type}-content`);
-  const cfg=reportConfigs[type];const dataRaw=reportData[type]||[];
-  if(!dataRaw.length){content.innerHTML="<div class='panel small'>No data</div>";return;}
-  const data=applyFilters(type,dataRaw,cfg);if(!data.length){content.innerHTML="<div class='panel small'>No data for filters</div>";return;}
-  const kpiHtml="<div class='panel'><div class='kpi-grid'>"+cfg.kpis(data).map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')+"</div></div>";
-  const {labels,values}=groupData(data,cfg.defaultGroup,cfg);
-  const chartHtml=`<div class="charts-grid"><div class="panel chart-card"><h3>Bar</h3><canvas id="${type}-bar"></canvas></div><div class="panel chart-card"><h3>Line</h3><canvas id="${type}-line"></canvas></div><div class="panel chart-card"><h3>Pie</h3><canvas id="${type}-pie"></canvas></div></div>`;
-  content.innerHTML=kpiHtml+chartHtml;
-  drawCharts(type,{barId:`${type}-bar`,lineId:`${type}-line`,pieId:`${type}-pie`},labels,values);
-}
+      const delim = detectDelimiter(lines[0]);
+      const parseLine = (line) => {
+        const out=[],len=line.length;
+        let cur="",inQ=false;
+        for(let i=0;i<len;i++){
+          const ch=line[i];
+          if(ch==='"'){
+            if(inQ && line[i+1]==='"'){cur+='"';i++;}
+            else inQ=!inQ;
+          } else if(ch===delim && !inQ){out.push(cur);cur="";}
+          else cur+=ch;
+        }
+        out.push(cur);
+        return out;
+      };
 
-/* ========== FILTER + GROUP ========== */
-function applyFilters(type,data,cfg){
-  const y=document.getElementById(`${type}-year`)?.value||'';const m=document.getElementById(`${type}-month`)?.value||'';
-  return data.filter(r=>{
-    const d=toDate(r[cfg.dateField]);if(y&&(!d||d.getFullYear()!=y)) return false;if(m&&(!d||String(d.getMonth()+1).padStart(2,'0')!==m)) return false;return true;
-  });
-}
-function groupData(data,field,cfg){
-  const map={};data.forEach(r=>{const k=r[field]||'Unknown';map[k]=(map[k]||0)+1;});
-  const labels=Object.keys(map);return {labels,values:labels.map(l=>map[l])};
-}
+      const headers=parseLine(lines[0]).map(h=>h.trim().toLowerCase().replace(/\s+/g,'_'));
+      const data=[];
+      for(let i=1;i<lines.length;i++){
+        const values=parseLine(lines[i]);
+        const rec={};
+        headers.forEach((h,idx)=>{
+          let v=values[idx]||'';
+          if(typeof v==='string' && (v.includes('£')||v.includes('€')||v.includes('$'))){
+            v=v.replace(/[£€$,]/g,'');
+            if(!isNaN(parseFloat(v))) v=parseFloat(v);
+          } else if(!isNaN(parseFloat(v)) && isFinite(v)){
+            v=parseFloat(v);
+          }
+          rec[h]=v;
+        });
+        if(Object.values(rec).some(val=>val!=='')) data.push(rec);
+      }
+      return data;
+    },
 
-/* ========== CHARTS ========== */
-function drawCharts(type,ids,labels,values){
-  charts[type]?.bar?.destroy();charts[type]?.line?.destroy();charts[type]?.pie?.destroy();
-  const d={labels,datasets:[{label:'Count',data:values}]};
-  charts[type]={};
-  charts[type].bar=new Chart(document.getElementById(ids.barId),{type:'bar',data:d});
-  charts[type].line=new Chart(document.getElementById(ids.lineId),{type:'line',data:d});
-  charts[type].pie=new Chart(document.getElementById(ids.pieId),{type:'pie',data:d});
-}
+    showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+      const page=document.getElementById(`${pageId}-page`);
+      if(page) page.classList.remove('hidden');
+      if(pageId!=='overview'&&pageId!=='data-management'){this.renderReport(pageId);}
+    },
 
-/* ========== OVERVIEW ========== */
-function updateOverviewSummary(){
-  const c=document.getElementById("overview-summary");c.innerHTML="";
-  Object.keys(reportConfigs).forEach(t=>{
-    const d=reportData[t]||[];const k=d.length?reportConfigs[t].kpis(d)[0]:{label:"No data",value:"—"};
-    c.innerHTML+=`<div class="kpi"><div class="label">${t}</div><div class="value">${k.value}</div></div>`;
-  });
-}
+    renderReport(reportType) {
+      const content=document.querySelector(`[data-report="${reportType}"]`);
+      const data=this.data[reportType];
+      if(!content) return;
+      if(!data.length){
+        content.innerHTML='<div class="chart-card">No data uploaded.</div>';
+        return;
+      }
+      const headers=Object.keys(data[0]);
+      const tableRows=data.slice(0,50).map(r=>
+        `<tr>${headers.map(h=>`<td>${r[h]}</td>`).join('')}</tr>`).join('');
+      content.innerHTML=`
+        <div class="data-table">
+          <div class="table-header"><h3>Data Records (${data.length} total)</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+              <tbody>${tableRows}</tbody>
+            </table>
+          </div>
+        </div>`;
+    },
 
-/* ========== LOAD DATA ========== */
-async function loadSharedData(){
-  const files={
-    'lending-volume':'shared-data/lending_volume.csv',
-    'arrears':'shared-data/lending_volume.csv',
-    'liquidations':'shared-data/lending_volume.csv',
-    'complaints':'shared-data/complaints.csv',
-    'financial-crime':'shared-data/financial_crime.csv'
+    updateOverviewSummary() {
+      const container=document.getElementById("overview-summary");
+      container.innerHTML="";
+      Object.entries(this.data).forEach(([type,data])=>{
+        const label=type.replace('-', ' ').replace(/\b\w/g,l=>l.toUpperCase());
+        container.innerHTML+=`
+          <div class="kpi-card">
+            <div class="kpi-title">${label}</div>
+            <div class="kpi-value">${data.length} records</div>
+          </div>`;
+      });
+    }
   };
-  for(const [k,p] of Object.entries(files)){
-    try{const res=await fetch(p);const text=await res.text();reportData[k]=parseCSV(text);lastUpdated[k]=new Date().toLocaleString();console.log("Loaded",reportData[k].length,"for",k);}catch(e){console.error("Error loading",p,e);}
-  }
-  Object.keys(reportConfigs).forEach(t=>{buildFiltersUI(t);renderReport(t);});
-  updateOverviewSummary();showPage(null,'overview');
-}
-document.addEventListener('DOMContentLoaded',loadSharedData);
+
+  document.addEventListener('DOMContentLoaded',()=>FinancialDashboard.init());
   </script>
 </body>
 </html>
