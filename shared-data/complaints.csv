@@ -1,0 +1,1428 @@
+CustomerID,Count,ReceivedDate,ResolvedDate,DaysToResolve,Category,Decision,Month,Year,Resolved Time (Weeks)
+10158249,1,16/01/2022,09/03/2022,52,Irresponsible lending,Rejected,1,2022,7.4
+20048289,1,09/03/2022,03/05/2022,55,Irresponsible lending,Rejected,3,2022,7.9
+20036727,1,14/03/2022,09/05/2022,56,Irresponsible lending,Rejected,3,2022,8.0
+20021886,1,19/03/2022,09/05/2022,51,Irresponsible lending,Rejected,3,2022,7.3
+20062257,1,30/03/2022,24/05/2022,55,Irresponsible lending,Rejected,3,2022,7.9
+20106560,1,30/03/2022,30/03/2022,0,Service Issue,Rejected,3,2022,0.0
+10227641,1,05/04/2022,05/04/2022,0,Application process,Rejected,4,2022,0.0
+20067925,1,14/04/2022,20/04/2022,6,Service Issue,Rejected,4,2022,0.9
+20048407,1,15/04/2022,15/04/2022,0,Service Issue,Rejected,4,2022,0.0
+20101216,1,15/04/2022,10/06/2022,56,Irresponsible lending,Rejected,4,2022,8.0
+20161540,1,15/04/2022,10/06/2022,56,Service Issue,Rejected,4,2022,8.0
+20205722,1,16/04/2022,13/06/2022,58,Irresponsible lending,Rejected,4,2022,8.3
+20124133,1,18/04/2022,13/06/2022,56,Irresponsible lending,Rejected,4,2022,8.0
+10150614,1,19/04/2022,14/06/2022,56,Irresponsible lending,Rejected,4,2022,8.0
+20367817,1,21/04/2022,16/06/2022,56,Irresponsible lending,Rejected,4,2022,8.0
+10142535,1,22/04/2022,16/06/2022,55,Irresponsible lending,Rejected,4,2022,7.9
+10151280,1,22/04/2022,27/05/2022,35,Irresponsible lending,Rejected,4,2022,5.0
+20022081,1,25/04/2022,16/06/2022,52,Irresponsible lending,Rejected,4,2022,7.4
+20031086,1,28/04/2022,24/06/2022,57,Irresponsible lending,Rejected,4,2022,8.1
+20002120,1,30/04/2022,24/06/2022,55,Irresponsible lending,Rejected,4,2022,7.9
+20104118,1,02/05/2022,,,Subject Access Request,,5,2022,0.0
+10155603,1,03/05/2022,,,Subject Access Request,,5,2022,0.0
+20134676,1,06/05/2022,,,Subject Access Request,,5,2022,0.0
+20302274,1,09/05/2022,04/07/2022,56,Irresponsible lending,Rejected,5,2022,8.0
+20298391,1,10/05/2022,04/07/2022,55,Irresponsible lending,Rejected,5,2022,7.9
+20202625,1,16/05/2022,11/07/2022,56,Irresponsible lending,Rejected,5,2022,8.0
+20461816,1,16/05/2022,,,Subject Access Request,,5,2022,0.0
+10151049,1,20/05/2022,,,Subject Access Request,,5,2022,0.0
+20082379,1,20/05/2022,11/07/2022,52,Irresponsible lending,Rejected,5,2022,7.4
+20016556,1,23/05/2022,,,Subject Access Request,,5,2022,0.0
+20023674,1,25/05/2022,,,Subject Access Request,,5,2022,0.0
+20035607,1,06/06/2022,,,Subject Access Request,,6,2022,0.0
+20270247,1,06/06/2022,,,Subject Access Request,,6,2022,0.0
+20388563,1,06/06/2022,,,Subject Access Request,,6,2022,0.0
+20423965,1,06/06/2022,,,Subject Access Request,,6,2022,0.0
+20385554,1,08/06/2022,03/08/2022,56,Irresponsible lending,Rejected,6,2022,8.0
+20170495,1,10/06/2022,03/08/2022,54,Irresponsible lending,Rejected,6,2022,7.7
+20124374,1,13/06/2022,,,Subject Access Request,,6,2022,0.0
+20075597,1,15/06/2022,,,Subject Access Request,,6,2022,0.0
+20110031,1,15/06/2022,10/08/2022,56,Subject Access Request,,6,2022,8.0
+20110031,1,15/06/2022,10/08/2022,56,Irresponsible lending,Rejected,6,2022,8.0
+20006198,1,16/06/2022,10/08/2022,55,Irresponsible lending,Rejected,6,2022,7.9
+20114342,1,17/06/2022,10/08/2022,54,Irresponsible lending,Rejected,6,2022,7.7
+20287799,1,17/06/2022,,,Subject Access Request,,6,2022,0.0
+20106409,1,20/06/2022,15/08/2022,56,Irresponsible lending,Rejected,6,2022,8.0
+20140494,1,20/06/2022,,,Subject Access Request,,6,2022,0.0
+20608139,1,22/06/2022,17/08/2022,56,Irresponsible lending,Rejected,6,2022,8.0
+20032792,1,23/06/2022,,,Subject Access Request,,6,2022,0.0
+20132810,1,23/06/2022,15/08/2022,53,Irresponsible lending,Rejected,6,2022,7.6
+20321804,1,23/06/2022,,,Subject Access Request,,6,2022,0.0
+10145522,1,27/06/2022,22/08/2022,56,Subject Access Request,,6,2022,8.0
+10145522,1,27/06/2022,22/08/2022,56,Irresponsible lending,Rejected,6,2022,8.0
+20067923,1,27/06/2022,,,Subject Access Request,,6,2022,0.0
+20116813,1,27/06/2022,22/08/2022,56,Irresponsible lending,Rejected,6,2022,8.0
+20048155,1,29/06/2022,22/08/2022,54,Irresponsible lending,Rejected,6,2022,7.7
+10156231,1,30/06/2022,,,Subject Access Request,,6,2022,0.0
+20056391,1,30/06/2022,,,Subject Access Request,,6,2022,0.0
+20026118,1,04/07/2022,,,Subject Access Request,,7,2022,0.0
+10172970,1,06/07/2022,,,Subject Access Request,,7,2022,0.0
+20059369,1,06/07/2022,,,Subject Access Request,,7,2022,0.0
+20161603,1,06/07/2022,,,Subject Access Request,,7,2022,0.0
+20596161,1,06/07/2022,,,Subject Access Request,,7,2022,0.0
+20459038,1,07/07/2022,,,Subject Access Request,,7,2022,0.0
+20493975,1,08/07/2022,,,Subject Access Request,,7,2022,0.0
+20301843,1,12/07/2022,,,Subject Access Request,,7,2022,0.0
+10140515,1,15/07/2022,,,Subject Access Request,,7,2022,0.0
+20079630,1,15/07/2022,09/09/2022,56,Irresponsible lending,Rejected,7,2022,8.0
+20605407,1,18/07/2022,09/09/2022,53,Service Issue,Rejected,7,2022,7.6
+10142136,1,20/07/2022,09/09/2022,51,Irresponsible lending,Rejected,7,2022,7.3
+20181091,1,20/07/2022,,,Subject Access Request,,7,2022,0.0
+20029694,1,25/07/2022,19/09/2022,56,Irresponsible lending,Rejected,7,2022,8.0
+20025923,1,27/07/2022,21/09/2022,56,Irresponsible lending,Rejected,7,2022,8.0
+20005487,1,28/07/2022,21/09/2022,55,Irresponsible lending,Rejected,7,2022,7.9
+20514249,1,28/07/2022,21/09/2022,55,Irresponsible lending,Rejected,7,2022,7.9
+20128436,1,01/08/2022,21/09/2022,51,Irresponsible lending,Rejected,8,2022,7.3
+20592929,1,01/08/2022,21/09/2022,51,Irresponsible lending,Rejected,8,2022,7.3
+20707247,1,11/08/2022,06/10/2022,56,Irresponsible lending,Rejected,8,2022,8.0
+20825949,1,11/08/2022,06/10/2022,56,Irresponsible lending,Rejected,8,2022,8.0
+20296938,1,12/08/2022,09/09/2022,28,Irresponsible lending,Rejected,8,2022,4.0
+20077076,1,15/08/2022,07/10/2022,53,Irresponsible lending,Rejected,8,2022,7.6
+20783890,1,16/08/2022,07/10/2022,52,Subject Access Request,,8,2022,7.4
+20783890,1,16/08/2022,07/10/2022,52,Irresponsible lending,Rejected,8,2022,7.4
+20428542,1,22/08/2022,17/10/2022,56,Irresponsible lending,Rejected,8,2022,8.0
+20145702,1,24/08/2022,17/10/2022,54,Irresponsible lending,Rejected,8,2022,7.7
+20424891,1,24/08/2022,17/10/2022,54,Irresponsible lending,Rejected,8,2022,7.7
+10152163,1,01/09/2022,27/10/2022,56,Irresponsible lending,Rejected,9,2022,8.0
+20717404,1,01/09/2022,27/10/2022,56,Irresponsible lending,Rejected,9,2022,8.0
+20230236,1,07/09/2022,01/11/2022,55,Irresponsible lending,Rejected,9,2022,7.9
+10156397,1,08/09/2022,01/11/2022,54,Irresponsible lending,Rejected,9,2022,7.7
+20025675,1,08/09/2022,01/11/2022,54,Irresponsible lending,Rejected,9,2022,7.7
+20596656,1,09/09/2022,01/11/2022,53,Irresponsible lending,Rejected,9,2022,7.6
+20046391,1,12/09/2022,07/11/2022,56,Irresponsible lending,Rejected,9,2022,8.0
+20594652,1,12/09/2022,07/11/2022,56,Irresponsible lending,Rejected,9,2022,8.0
+20186087,1,16/09/2022,08/11/2022,53,Irresponsible lending,Rejected,9,2022,7.6
+20836052,1,16/09/2022,08/11/2022,53,Irresponsible lending,Rejected,9,2022,7.6
+20876130,1,20/09/2022,08/11/2022,49,Irresponsible lending,Rejected,9,2022,7.0
+20634582,1,23/09/2022,19/11/2022,57,Irresponsible lending,Rejected,9,2022,8.1
+20659035,1,26/09/2022,21/11/2022,56,Application process,Rejected,9,2022,8.0
+10143701,1,29/09/2022,08/11/2022,40,Irresponsible lending,Rejected,9,2022,5.7
+10145291,1,03/10/2022,28/11/2022,56,Irresponsible lending,Rejected,10,2022,8.0
+10141715,1,05/10/2022,30/11/2022,56,Irresponsible lending,Rejected,10,2022,8.0
+20206517,1,05/10/2022,30/11/2022,56,Irresponsible lending,Rejected,10,2022,8.0
+20972018,1,05/10/2022,30/11/2022,56,Irresponsible lending,Rejected,10,2022,8.0
+20829008,1,10/10/2022,05/12/2022,56,Irresponsible lending,Rejected,10,2022,8.0
+20449789,1,11/10/2022,06/12/2022,56,Irresponsible lending,Rejected,10,2022,8.0
+20313567,1,13/10/2022,08/12/2022,56,Irresponsible lending,Rejected,10,2022,8.0
+20845837,1,18/10/2022,17/11/2022,30,Fraud,Upheld,10,2022,4.3
+20113117,1,21/10/2022,15/12/2022,55,Irresponsible lending,Rejected,10,2022,7.9
+20941807,1,21/10/2022,16/12/2022,56,Irresponsible lending,Rejected,10,2022,8.0
+20848095,1,27/10/2022,16/12/2022,50,Irresponsible lending,Rejected,10,2022,7.1
+20312537,1,31/10/2022,20/12/2022,50,Irresponsible lending,Rejected,10,2022,7.1
+20093380,1,01/11/2022,08/11/2022,7,Subject Access Request,,11,2022,1.0
+20093380,1,01/11/2022,20/12/2022,49,Irresponsible lending,Rejected,11,2022,7.0
+21091355,1,01/11/2022,16/12/2022,45,Service Issue,Rejected,11,2022,6.4
+20018224,1,06/11/2022,20/12/2022,44,Irresponsible lending,Rejected,11,2022,6.3
+20221446,1,08/11/2022,20/12/2022,42,Irresponsible lending,Rejected,11,2022,6.0
+10141906,1,09/11/2022,15/12/2022,36,Irresponsible lending,Rejected,11,2022,5.1
+20435661,1,10/11/2022,15/12/2022,35,Irresponsible lending,Rejected,11,2022,5.0
+20002263,1,14/11/2022,09/01/2023,56,Irresponsible lending,Rejected,11,2022,8.0
+20417242,1,15/11/2022,16/12/2022,31,Service Issue,Rejected,11,2022,4.4
+20681237,1,17/11/2022,12/01/2023,56,Irresponsible lending,Rejected,11,2022,8.0
+20206064,1,18/11/2022,12/01/2023,55,Irresponsible lending,Rejected,11,2022,7.9
+20540036,1,18/11/2022,12/01/2023,55,Irresponsible lending,Rejected,11,2022,7.9
+10245994,1,21/11/2022,12/01/2023,52,Irresponsible lending,Rejected,11,2022,7.4
+20006268,1,22/11/2022,12/01/2023,51,Irresponsible lending,Rejected,11,2022,7.3
+20226386,1,23/11/2022,12/01/2023,50,Irresponsible lending,Rejected,11,2022,7.1
+20109028,1,30/11/2022,25/01/2023,56,Irresponsible lending,Rejected,11,2022,8.0
+20351697,1,30/11/2022,25/01/2023,56,Irresponsible lending,Rejected,11,2022,8.0
+20763195,1,02/12/2022,25/01/2023,54,Irresponsible lending,Rejected,12,2022,7.7
+20579567,1,05/12/2022,25/01/2023,51,Irresponsible lending,Rejected,12,2022,7.3
+20416723,1,08/12/2022,01/02/2023,55,Irresponsible lending,Rejected,12,2022,7.9
+20896422,1,08/12/2022,02/02/2023,56,Irresponsible lending,Rejected,12,2022,8.0
+20036465,1,09/12/2022,20/01/2023,42,Subject Access Request,,12,2022,6.0
+20036465,1,09/12/2022,02/02/2023,55,Irresponsible lending,Rejected,12,2022,7.9
+20308915,1,12/12/2022,06/02/2023,56,Irresponsible lending,Rejected,12,2022,8.0
+20850727,1,12/12/2022,27/01/2023,46,Subject Access Request,,12,2022,6.6
+20850727,1,12/12/2022,06/02/2023,56,Irresponsible lending,Rejected,12,2022,8.0
+20527578,1,13/12/2022,06/02/2023,55,Irresponsible lending,Rejected,12,2022,7.9
+20276355,1,14/12/2022,06/02/2023,54,Irresponsible lending,Rejected,12,2022,7.7
+20106560,1,19/12/2022,09/02/2023,52,Irresponsible lending,Rejected,12,2022,7.4
+10143723,1,21/12/2022,15/02/2023,56,Irresponsible lending,Rejected,12,2022,8.0
+20325471,1,21/12/2022,10/02/2023,51,Irresponsible lending,Rejected,12,2022,7.3
+21091059,1,24/12/2022,17/02/2023,55,Irresponsible lending,Rejected,12,2022,7.9
+20542714,1,28/12/2022,04/01/2023,7,Fraud,Upheld,12,2022,1.0
+20127061,1,30/12/2022,17/02/2023,49,Irresponsible lending,Rejected,12,2022,7.0
+20147756,1,04/01/2023,27/02/2023,54,Irresponsible lending,Rejected,1,2023,7.7
+20983979,1,04/01/2023,05/01/2023,1,Fraud,Upheld,1,2023,0.1
+10142035,1,05/01/2023,27/02/2023,53,Irresponsible lending,Rejected,1,2023,7.6
+20329713,1,06/01/2023,27/02/2023,52,Irresponsible lending,Rejected,1,2023,7.4
+20260991,1,09/01/2023,27/02/2023,49,Irresponsible lending,Rejected,1,2023,7.0
+20189273,1,12/01/2023,09/03/2023,56,Irresponsible lending,Rejected,1,2023,8.0
+21177313,1,14/01/2023,16/01/2023,2,Subject Access Request,,1,2023,0.3
+21177313,1,14/01/2023,09/03/2023,54,Irresponsible lending,Rejected,1,2023,7.7
+10159901,1,18/01/2023,09/03/2023,50,Irresponsible lending,Rejected,1,2023,7.1
+10191499,1,19/01/2023,09/03/2023,49,Irresponsible lending,Rejected,1,2023,7.0
+20504197,1,20/01/2023,17/03/2023,56,Irresponsible lending,Rejected,1,2023,8.0
+20664717,1,23/01/2023,17/03/2023,53,Irresponsible lending,Rejected,1,2023,7.6
+20964822,1,24/01/2023,17/03/2023,52,Irresponsible lending,Rejected,1,2023,7.4
+20566324,1,25/01/2023,17/03/2023,51,Irresponsible lending,Rejected,1,2023,7.3
+20596572,1,25/01/2023,16/02/2023,22,Fraud,Upheld,1,2023,3.1
+20574682,1,28/01/2023,17/03/2023,48,Irresponsible lending,Rejected,1,2023,6.9
+20543953,1,29/01/2023,17/03/2023,47,Service Issue,Rejected,1,2023,6.7
+20429486,1,03/02/2023,31/03/2023,56,Irresponsible lending,Rejected,2,2023,8.0
+21122717,1,03/02/2023,06/02/2023,3,Service Issue,Rejected,2,2023,0.4
+20014659,1,04/02/2023,06/02/2023,2,Subject Access Request,,2,2023,0.3
+20014659,1,04/02/2023,31/03/2023,55,Irresponsible lending,Rejected,2,2023,7.9
+20583132,1,08/02/2023,31/03/2023,51,Irresponsible lending,Rejected,2,2023,7.3
+20351012,1,09/02/2023,09/02/2023,0,Subject Access Request,,2,2023,0.0
+20351012,1,09/02/2023,31/03/2023,50,Irresponsible lending,Rejected,2,2023,7.1
+20105177,1,12/02/2023,31/03/2023,47,Irresponsible lending,Rejected,2,2023,6.7
+20343852,1,13/02/2023,31/03/2023,46,Irresponsible lending,Rejected,2,2023,6.6
+20980007,1,14/02/2023,16/02/2023,2,Fraud,Upheld,2,2023,0.3
+20006378,1,15/02/2023,06/04/2023,50,Irresponsible lending,Rejected,2,2023,7.1
+20183137,1,15/02/2023,06/04/2023,50,Irresponsible lending,Rejected,2,2023,7.1
+20020410,1,16/02/2023,06/04/2023,49,Irresponsible lending,Rejected,2,2023,7.0
+20176342,1,16/02/2023,06/04/2023,49,Irresponsible lending,Rejected,2,2023,7.0
+20092563,1,17/02/2023,06/04/2023,48,Irresponsible lending,Rejected,2,2023,6.9
+10198466,1,19/02/2023,06/04/2023,46,Irresponsible lending,Rejected,2,2023,6.6
+20180311,1,20/02/2023,06/04/2023,45,Irresponsible lending,Rejected,2,2023,6.4
+20344570,1,21/02/2023,18/04/2023,56,Irresponsible lending,Rejected,2,2023,8.0
+20741418,1,24/02/2023,21/04/2023,56,Irresponsible lending,Rejected,2,2023,8.0
+20036335,1,27/02/2023,21/04/2023,53,Irresponsible lending,Rejected,2,2023,7.6
+21286075,1,27/02/2023,21/04/2023,53,Irresponsible lending,Rejected,2,2023,7.6
+20931942,1,28/02/2023,25/04/2023,56,Irresponsible lending,Rejected,2,2023,8.0
+20650102,1,01/03/2023,25/04/2023,55,Service Issue,Rejected,3,2023,7.9
+20031339,1,03/03/2023,25/04/2023,53,Irresponsible lending,Rejected,3,2023,7.6
+20064113,1,03/03/2023,25/04/2023,53,Irresponsible lending,Rejected,3,2023,7.6
+10150555,1,06/03/2023,25/04/2023,50,Irresponsible lending,Rejected,3,2023,7.1
+20395687,1,08/03/2023,03/05/2023,56,Irresponsible lending,Rejected,3,2023,8.0
+20022075,1,10/03/2023,03/05/2023,54,Irresponsible lending,Rejected,3,2023,7.7
+20204415,1,13/03/2023,03/05/2023,51,Irresponsible lending,Rejected,3,2023,7.3
+21478210,1,14/03/2023,09/06/2023,87,Fraud,Upheld,3,2023,12.4
+20294452,1,15/03/2023,10/05/2023,56,Irresponsible lending,Rejected,3,2023,8.0
+20620481,1,15/03/2023,03/05/2023,49,Irresponsible lending,Rejected,3,2023,7.0
+21036820,1,17/03/2023,11/05/2023,55,Irresponsible lending,Rejected,3,2023,7.9
+10147953,1,23/03/2023,18/05/2023,56,Irresponsible lending,Rejected,3,2023,8.0
+20862708,1,31/03/2023,26/05/2023,56,Irresponsible lending,Rejected,3,2023,8.0
+20055147,1,03/04/2023,26/05/2023,53,Irresponsible lending,Rejected,4,2023,7.6
+21045769,1,03/04/2023,11/05/2023,38,Fraud,Upheld,4,2023,5.4
+20831572,1,04/04/2023,26/05/2023,52,Irresponsible lending,Rejected,4,2023,7.4
+21238158,1,05/04/2023,21/05/2023,46,Fraud,Upheld,4,2023,6.6
+20388776,1,10/04/2023,05/06/2023,56,Irresponsible lending,Rejected,4,2023,8.0
+20412665,1,10/04/2023,26/05/2023,46,Irresponsible lending,Rejected,4,2023,6.6
+20415600,1,12/04/2023,18/04/2023,6,Subject Access Request,,4,2023,0.9
+20415600,1,12/04/2023,07/06/2023,56,Irresponsible lending,Rejected,4,2023,8.0
+20028124,1,14/04/2023,09/06/2023,56,Irresponsible lending,Rejected,4,2023,8.0
+20424144,1,17/04/2023,09/06/2023,53,Irresponsible lending,Rejected,4,2023,7.6
+20175536,1,19/04/2023,14/06/2023,56,Irresponsible lending,Rejected,4,2023,8.0
+21461063,1,19/04/2023,19/04/2023,0,Subject Access Request,,4,2023,0.0
+21461063,1,19/04/2023,14/06/2023,56,Irresponsible lending,Rejected,4,2023,8.0
+20599269,1,20/04/2023,15/06/2023,56,Service Issue,Rejected,4,2023,8.0
+21508603,1,22/04/2023,22/04/2023,0,Subject Access Request,,4,2023,0.0
+21508603,1,22/04/2023,15/06/2023,54,Irresponsible lending,Rejected,4,2023,7.7
+20015146,1,24/04/2023,15/06/2023,52,Irresponsible lending,Rejected,4,2023,7.4
+21524862,1,26/04/2023,21/06/2023,56,Irresponsible lending,Rejected,4,2023,8.0
+20871865,1,28/04/2023,21/06/2023,54,Irresponsible lending,Rejected,4,2023,7.7
+21087956,1,01/05/2023,21/06/2023,51,Irresponsible lending,Rejected,5,2023,7.3
+10174819,1,02/05/2023,21/06/2023,50,Irresponsible lending,Rejected,5,2023,7.1
+20265060,1,02/05/2023,27/06/2023,56,Irresponsible lending,Rejected,5,2023,8.0
+20081809,1,05/05/2023,30/06/2023,56,Irresponsible lending,Rejected,5,2023,8.0
+20044770,1,09/05/2023,04/07/2023,56,Irresponsible lending,Rejected,5,2023,8.0
+21098894,1,12/05/2023,04/07/2023,53,Irresponsible lending,Rejected,5,2023,7.6
+20420143,1,19/05/2023,04/07/2023,46,Irresponsible lending,Rejected,5,2023,6.6
+10139659,1,22/05/2023,04/07/2023,43,Irresponsible lending,Rejected,5,2023,6.1
+20224323,1,23/05/2023,14/07/2023,52,Irresponsible lending,Rejected,5,2023,7.4
+20026102,1,24/05/2023,14/07/2023,51,Irresponsible lending,Rejected,5,2023,7.3
+20542791,1,24/05/2023,14/07/2023,51,Irresponsible lending,Rejected,5,2023,7.3
+20144734,1,25/05/2023,14/07/2023,50,Irresponsible lending,Rejected,5,2023,7.1
+21253634,1,02/06/2023,27/07/2023,55,Irresponsible lending,Rejected,6,2023,7.9
+21735381,1,02/06/2023,30/06/2023,28,Service Issue,Upheld,6,2023,4.0
+21175146,1,07/06/2023,02/08/2023,56,Irresponsible lending,Rejected,6,2023,8.0
+21014383,1,08/06/2023,02/08/2023,55,Irresponsible lending,Rejected,6,2023,7.9
+21366274,1,09/06/2023,31/01/2024,236,Fraud,Upheld,6,2023,33.7
+20709725,1,13/06/2023,02/08/2023,50,Irresponsible lending,Rejected,6,2023,7.1
+20267922,1,14/06/2023,02/08/2023,49,Irresponsible lending,Rejected,6,2023,7.0
+10152949,1,18/06/2023,02/08/2023,45,Irresponsible lending,Rejected,6,2023,6.4
+21233963,1,20/06/2023,02/08/2023,43,Irresponsible lending,Rejected,6,2023,6.1
+20018210,1,21/06/2023,02/08/2023,42,Irresponsible lending,Rejected,6,2023,6.0
+21240144,1,26/06/2023,09/08/2023,44,Fraud,Upheld,6,2023,6.3
+21251948,1,26/06/2023,30/06/2023,4,Fraud,Upheld,6,2023,0.6
+10153023,1,27/06/2023,02/08/2023,36,Irresponsible lending,Rejected,6,2023,5.1
+20528769,1,27/06/2023,17/08/2023,51,Service Issue,Rejected,6,2023,7.3
+21122717,1,27/06/2023,17/08/2023,51,Application process,Upheld,6,2023,7.3
+10164733,1,29/06/2023,17/08/2023,49,Service Issue,Rejected,6,2023,7.0
+20044665,1,29/06/2023,17/08/2023,49,Irresponsible lending,Rejected,6,2023,7.0
+21805115,1,30/06/2023,17/08/2023,48,Irresponsible lending,Rejected,6,2023,6.9
+20011462,1,02/07/2023,25/08/2023,54,Irresponsible lending,Rejected,7,2023,7.7
+20785685,1,03/07/2023,25/08/2023,53,Irresponsible lending,Rejected,7,2023,7.6
+20995445,1,03/07/2023,25/08/2023,53,Irresponsible lending,Rejected,7,2023,7.6
+21787200,1,03/07/2023,25/08/2023,53,Irresponsible lending,Rejected,7,2023,7.6
+20109840,1,05/07/2023,25/08/2023,51,Irresponsible lending,Rejected,7,2023,7.3
+20136123,1,06/07/2023,31/08/2023,56,Subject Access Request,,7,2023,8.0
+20136123,1,06/07/2023,31/08/2023,56,Irresponsible lending,Rejected,7,2023,8.0
+20026008,1,07/07/2023,25/08/2023,49,Application process,Rejected,7,2023,7.0
+20237553,1,07/07/2023,01/09/2023,56,Irresponsible lending,Rejected,7,2023,8.0
+21893364,1,07/07/2023,21/07/2023,14,Subject Access Request,,7,2023,2.0
+21893364,1,07/07/2023,01/09/2023,56,Irresponsible lending,Rejected,7,2023,8.0
+21901598,1,07/07/2023,14/07/2023,7,Service Issue,Upheld,7,2023,1.0
+20400322,1,10/07/2023,04/09/2023,56,Irresponsible lending,Rejected,7,2023,8.0
+10149045,1,11/07/2023,05/09/2023,56,Irresponsible lending,Rejected,7,2023,8.0
+10156023,1,12/07/2023,04/09/2023,54,Irresponsible lending,Rejected,7,2023,7.7
+20133411,1,12/07/2023,05/09/2023,55,Irresponsible lending,Rejected,7,2023,7.9
+21582468,1,12/07/2023,05/09/2023,55,Irresponsible lending,Rejected,7,2023,7.9
+20096900,1,13/07/2023,07/09/2023,56,Application process,Upheld,7,2023,8.0
+20113038,1,13/07/2023,17/08/2023,35,Service Issue,Rejected,7,2023,5.0
+20845155,1,13/07/2023,05/09/2023,54,Irresponsible lending,Rejected,7,2023,7.7
+10224556,1,14/07/2023,05/09/2023,53,Irresponsible lending,Rejected,7,2023,7.6
+10271376,1,14/07/2023,05/09/2023,53,Irresponsible lending,Rejected,7,2023,7.6
+20001368,1,15/07/2023,05/09/2023,52,Irresponsible lending,Rejected,7,2023,7.4
+10206178,1,17/07/2023,11/09/2023,56,Irresponsible lending,Rejected,7,2023,8.0
+21394771,1,17/07/2023,05/09/2023,50,Irresponsible lending,Rejected,7,2023,7.1
+20640575,1,18/07/2023,12/09/2023,56,Irresponsible lending,Rejected,7,2023,8.0
+21689342,1,18/07/2023,12/09/2023,56,Irresponsible lending,Rejected,7,2023,8.0
+21193223,1,23/07/2023,12/09/2023,51,Irresponsible lending,Rejected,7,2023,7.3
+20086105,1,24/07/2023,12/09/2023,50,Irresponsible lending,Rejected,7,2023,7.1
+20588444,1,24/07/2023,12/09/2023,50,Irresponsible lending,Rejected,7,2023,7.1
+20000834,1,26/07/2023,28/09/2023,64,Irresponsible lending,Rejected,7,2023,9.1
+22051244,1,27/07/2023,20/09/2023,55,Irresponsible lending,Rejected,7,2023,7.9
+20015582,1,28/07/2023,20/09/2023,54,Irresponsible lending,Rejected,7,2023,7.7
+20285988,1,28/07/2023,20/09/2023,54,Irresponsible lending,Rejected,7,2023,7.7
+21698244,1,30/07/2023,21/09/2023,53,Irresponsible lending,Rejected,7,2023,7.6
+10152306,1,02/08/2023,20/09/2023,49,Irresponsible lending,Rejected,8,2023,7.0
+20054581,1,02/08/2023,11/09/2023,40,Irresponsible lending,Rejected,8,2023,5.7
+20222364,1,03/08/2023,28/09/2023,56,Irresponsible lending,Rejected,8,2023,8.0
+21130358,1,03/08/2023,11/09/2023,39,Irresponsible lending,Rejected,8,2023,5.6
+21244448,1,03/08/2023,28/09/2023,56,Irresponsible lending,Rejected,8,2023,8.0
+21885113,1,03/08/2023,28/09/2023,56,Irresponsible lending,Rejected,8,2023,8.0
+21376674,1,04/08/2023,07/09/2023,34,Fraud,Upheld,8,2023,4.9
+10243077,1,07/08/2023,20/09/2023,44,Payment,Rejected,8,2023,6.3
+20449252,1,07/08/2023,11/09/2023,35,Irresponsible lending,Rejected,8,2023,5.0
+21723291,1,07/08/2023,12/09/2023,36,Irresponsible lending,Rejected,8,2023,5.1
+20054344,1,08/08/2023,11/09/2023,34,Irresponsible lending,Rejected,8,2023,4.9
+21305243,1,09/08/2023,04/10/2023,56,Irresponsible lending,Rejected,8,2023,8.0
+20114260,1,13/08/2023,04/10/2023,52,Irresponsible lending,Rejected,8,2023,7.4
+20831997,1,14/08/2023,04/10/2023,51,Irresponsible lending,Rejected,8,2023,7.3
+22156051,1,14/08/2023,14/08/2023,0,Fraud,Upheld,8,2023,0.0
+20029711,1,15/08/2023,11/09/2023,27,Irresponsible lending,Rejected,8,2023,3.9
+21938935,1,17/08/2023,12/09/2023,26,Irresponsible lending,Rejected,8,2023,3.7
+21294762,1,18/08/2023,04/10/2023,47,Irresponsible lending,Rejected,8,2023,6.7
+22093517,1,18/08/2023,04/10/2023,47,Irresponsible lending,Rejected,8,2023,6.7
+10149360,1,19/08/2023,13/10/2023,55,Irresponsible lending,Rejected,8,2023,7.9
+20347177,1,19/08/2023,13/10/2023,55,Irresponsible lending,Rejected,8,2023,7.9
+20074886,1,20/08/2023,13/10/2023,54,Irresponsible lending,Rejected,8,2023,7.7
+10227641,1,21/08/2023,21/08/2023,0,Irresponsible lending,Withdrawn,8,2023,0.0
+20071506,1,22/08/2023,11/09/2023,20,Irresponsible lending,Rejected,8,2023,2.9
+21182547,1,24/08/2023,13/10/2023,50,Irresponsible lending,Rejected,8,2023,7.1
+22281183,1,24/08/2023,13/10/2023,50,Irresponsible lending,Rejected,8,2023,7.1
+20087327,1,27/08/2023,20/10/2023,54,Irresponsible lending,Rejected,8,2023,7.7
+20175402,1,29/08/2023,20/10/2023,52,Irresponsible lending,Rejected,8,2023,7.4
+20188692,1,29/08/2023,11/09/2023,13,Irresponsible lending,Rejected,8,2023,1.9
+20271547,1,29/08/2023,11/09/2023,13,Irresponsible lending,Rejected,8,2023,1.9
+21852174,1,29/08/2023,20/10/2023,52,Service Issue,Rejected,8,2023,7.4
+21773386,1,30/08/2023,11/09/2023,12,Irresponsible lending,Rejected,8,2023,1.7
+21765023,1,31/08/2023,20/10/2023,50,Irresponsible lending,Rejected,8,2023,7.1
+20140830,1,01/09/2023,11/09/2023,10,Irresponsible lending,Rejected,9,2023,1.4
+21412373,1,01/09/2023,20/10/2023,49,Irresponsible lending,Rejected,9,2023,7.0
+20141698,1,03/09/2023,27/10/2023,54,Irresponsible lending,Rejected,9,2023,7.7
+20310789,1,04/09/2023,27/10/2023,53,Irresponsible lending,Rejected,9,2023,7.6
+10139319,1,05/09/2023,27/10/2023,52,Irresponsible lending,Rejected,9,2023,7.4
+10153744,1,05/09/2023,28/09/2023,23,Payment,Rejected,9,2023,3.3
+20374498,1,05/09/2023,11/09/2023,6,Irresponsible lending,Rejected,9,2023,0.9
+20441362,1,06/09/2023,27/10/2023,51,Irresponsible lending,Rejected,9,2023,7.3
+20061564,1,07/09/2023,27/10/2023,50,Irresponsible lending,Rejected,9,2023,7.1
+20335036,1,07/09/2023,02/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20805746,1,07/09/2023,02/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20645509,1,08/09/2023,11/09/2023,3,Irresponsible lending,Rejected,9,2023,0.4
+20992639,1,08/09/2023,11/09/2023,3,Irresponsible lending,Rejected,9,2023,0.4
+10178675,1,10/09/2023,11/09/2023,1,Irresponsible lending,Rejected,9,2023,0.1
+20813287,1,11/09/2023,06/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20214457,1,12/09/2023,06/11/2023,55,Irresponsible lending,Rejected,9,2023,7.9
+20715680,1,12/09/2023,06/11/2023,55,Irresponsible lending,Rejected,9,2023,7.9
+21393448,1,12/09/2023,06/11/2023,55,Payment,Rejected,9,2023,7.9
+10158031,1,13/09/2023,08/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20012975,1,13/09/2023,08/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20926637,1,13/09/2023,08/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20987883,1,13/09/2023,08/11/2023,56,Irresponsible lending,Withdrawn,9,2023,8.0
+22474301,1,13/09/2023,08/11/2023,56,Irresponsible lending,Withdrawn,9,2023,8.0
+22492859,1,13/09/2023,08/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20077463,1,14/09/2023,08/11/2023,55,Irresponsible lending,Rejected,9,2023,7.9
+20106948,1,14/09/2023,08/11/2023,55,Irresponsible lending,Rejected,9,2023,7.9
+20130763,1,14/09/2023,08/11/2023,55,Irresponsible lending,Rejected,9,2023,7.9
+20131912,1,14/09/2023,08/11/2023,55,Application process,Rejected,9,2023,7.9
+21972838,1,14/09/2023,08/11/2023,55,Irresponsible lending,Rejected,9,2023,7.9
+10148841,1,15/09/2023,08/11/2023,54,Irresponsible lending,Rejected,9,2023,7.7
+10155234,1,15/09/2023,08/11/2023,54,Irresponsible lending,Rejected,9,2023,7.7
+20092138,1,15/09/2023,08/11/2023,54,Irresponsible lending,Rejected,9,2023,7.7
+20920647,1,15/09/2023,08/11/2023,54,Irresponsible lending,Rejected,9,2023,7.7
+21236762,1,15/09/2023,08/11/2023,54,Irresponsible lending,Rejected,9,2023,7.7
+22188698,1,15/09/2023,08/11/2023,54,Irresponsible lending,Rejected,9,2023,7.7
+22468376,1,15/09/2023,08/11/2023,54,Irresponsible lending,Rejected,9,2023,7.7
+21303575,1,17/09/2023,08/11/2023,52,Irresponsible lending,Rejected,9,2023,7.4
+21989699,1,17/09/2023,08/11/2023,52,Irresponsible lending,Rejected,9,2023,7.4
+21065187,1,18/09/2023,08/11/2023,51,Irresponsible lending,Rejected,9,2023,7.3
+21529403,1,18/09/2023,08/11/2023,51,Irresponsible lending,Rejected,9,2023,7.3
+22146326,1,18/09/2023,08/11/2023,51,Irresponsible lending,Withdrawn,9,2023,7.3
+22243858,1,18/09/2023,08/11/2023,51,Irresponsible lending,Rejected,9,2023,7.3
+20382144,1,19/09/2023,08/11/2023,50,Irresponsible lending,Rejected,9,2023,7.1
+21747950,1,19/09/2023,14/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20324658,1,20/09/2023,08/11/2023,49,Irresponsible lending,Rejected,9,2023,7.0
+22164294,1,20/09/2023,08/11/2023,49,Irresponsible lending,Withdrawn,9,2023,7.0
+20070260,1,21/09/2023,16/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20263353,1,21/09/2023,16/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20012356,1,25/09/2023,08/11/2023,44,Irresponsible lending,Rejected,9,2023,6.3
+20758118,1,25/09/2023,16/11/2023,52,Irresponsible lending,Rejected,9,2023,7.4
+20049844,1,26/09/2023,08/11/2023,43,Irresponsible lending,Rejected,9,2023,6.1
+22505007,1,26/09/2023,16/11/2023,51,Irresponsible lending,Rejected,9,2023,7.3
+10151506,1,27/09/2023,08/11/2023,42,Irresponsible lending,Rejected,9,2023,6.0
+21736924,1,27/09/2023,08/11/2023,42,Irresponsible lending,Rejected,9,2023,6.0
+20788815,1,28/09/2023,16/10/2023,18,Subject Access Request,,9,2023,2.6
+10142472,1,29/09/2023,24/11/2023,56,Irresponsible lending,Rejected,9,2023,8.0
+20509838,1,29/09/2023,08/11/2023,40,Irresponsible lending,Rejected,9,2023,5.7
+20897148,1,29/09/2023,08/11/2023,40,Irresponsible lending,Rejected,9,2023,5.7
+21105885,1,29/09/2023,08/11/2023,40,Irresponsible lending,Upheld,9,2023,5.7
+21333827,1,29/09/2023,08/11/2023,40,Irresponsible lending,Rejected,9,2023,5.7
+21580746,1,29/09/2023,08/11/2023,40,Irresponsible lending,Rejected,9,2023,5.7
+22069864,1,29/09/2023,08/11/2023,40,Irresponsible lending,Withdrawn,9,2023,5.7
+22231701,1,29/09/2023,08/11/2023,40,Irresponsible lending,Rejected,9,2023,5.7
+20021525,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+20129679,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+20563054,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+20843753,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+20867700,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+21132406,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+21335110,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+21572245,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+22007899,1,30/09/2023,08/11/2023,39,Irresponsible lending,Rejected,9,2023,5.6
+20203502,1,03/10/2023,08/11/2023,36,Irresponsible lending,Rejected,10,2023,5.1
+21515138,1,03/10/2023,08/11/2023,36,Irresponsible lending,Rejected,10,2023,5.1
+21698218,1,03/10/2023,24/11/2023,52,Irresponsible lending,Rejected,10,2023,7.4
+10150569,1,04/10/2023,08/11/2023,35,Irresponsible lending,Rejected,10,2023,5.0
+20084863,1,04/10/2023,04/11/2023,31,Subject Access Request,,10,2023,4.4
+20084863,1,04/10/2023,24/11/2023,51,Irresponsible lending,Rejected,10,2023,7.3
+20141457,1,04/10/2023,08/11/2023,35,Irresponsible lending,Rejected,10,2023,5.0
+20755880,1,04/10/2023,08/11/2023,35,Irresponsible lending,Rejected,10,2023,5.0
+21161929,1,04/10/2023,08/11/2023,35,Irresponsible lending,Rejected,10,2023,5.0
+21241991,1,04/10/2023,08/11/2023,35,Irresponsible lending,Rejected,10,2023,5.0
+21255354,1,04/10/2023,08/11/2023,35,Irresponsible lending,Rejected,10,2023,5.0
+20673323,1,08/10/2023,08/11/2023,31,Irresponsible lending,Rejected,10,2023,4.4
+10226081,1,10/10/2023,06/11/2023,27,Irresponsible lending,Rejected,10,2023,3.9
+10143017,1,11/10/2023,24/11/2023,44,Irresponsible lending,Upheld,10,2023,6.3
+20814887,1,17/10/2023,08/11/2023,22,Irresponsible lending,Rejected,10,2023,3.1
+22634509,1,17/10/2023,06/11/2023,20,Irresponsible lending,Upheld,10,2023,2.9
+20806394,1,18/10/2023,08/11/2023,21,Irresponsible lending,Rejected,10,2023,3.0
+20464277,1,19/10/2023,24/11/2023,36,Irresponsible lending,Rejected,10,2023,5.1
+22442104,1,20/10/2023,15/12/2023,56,Irresponsible lending,Rejected,10,2023,8.0
+20056894,1,21/10/2023,15/12/2023,55,Service Issue,Rejected,10,2023,7.9
+22798225,1,23/10/2023,08/03/2024,137,Fraud,Upheld,10,2023,19.6
+20892162,1,25/10/2023,08/11/2023,14,Irresponsible lending,Rejected,10,2023,2.0
+22527209,1,26/10/2023,08/11/2023,13,Irresponsible lending,Rejected,10,2023,1.9
+20703838,1,27/10/2023,16/11/2023,20,Subject Access Request,,10,2023,2.9
+22275305,1,28/10/2023,08/11/2023,11,Irresponsible lending,Rejected,10,2023,1.6
+20709009,1,30/10/2023,31/01/2024,93,Fraud,Upheld,10,2023,13.3
+21024213,1,30/10/2023,15/12/2023,46,Irresponsible lending,Rejected,10,2023,6.6
+20285880,1,31/10/2023,08/11/2023,8,Irresponsible lending,Rejected,10,2023,1.1
+21054793,1,01/11/2023,15/12/2023,44,Irresponsible lending,Rejected,11,2023,6.3
+22458390,1,01/11/2023,30/11/2023,29,Subject Access Request,,11,2023,4.1
+20062786,1,03/11/2023,08/11/2023,5,Irresponsible lending,Withdrawn,11,2023,0.7
+20885871,1,03/11/2023,15/12/2023,42,Irresponsible lending,Rejected,11,2023,6.0
+21829862,1,05/11/2023,28/12/2023,53,Irresponsible lending,Rejected,11,2023,7.6
+20607967,1,06/11/2023,28/12/2023,52,Irresponsible lending,Rejected,11,2023,7.4
+20030267,1,07/11/2023,28/12/2023,51,Irresponsible lending,Rejected,11,2023,7.3
+21847433,1,07/11/2023,28/12/2023,51,Service Issue,Rejected,11,2023,7.3
+20762090,1,08/11/2023,03/01/2024,56,Irresponsible lending,Rejected,11,2023,8.0
+21032929,1,08/11/2023,03/01/2024,56,Irresponsible lending,Rejected,11,2023,8.0
+21976828,1,08/11/2023,28/12/2023,50,Irresponsible lending,Rejected,11,2023,7.1
+20031704,1,09/11/2023,03/01/2024,55,Irresponsible lending,Rejected,11,2023,7.9
+20087827,1,10/11/2023,05/01/2024,56,Irresponsible lending,Upheld,11,2023,8.0
+20996164,1,12/11/2023,05/01/2024,54,Irresponsible lending,Rejected,11,2023,7.7
+20048479,1,13/11/2023,03/01/2024,51,Irresponsible lending,Rejected,11,2023,7.3
+20513089,1,13/11/2023,05/01/2024,53,Irresponsible lending,Rejected,11,2023,7.6
+21393891,1,13/11/2023,15/11/2023,2,Fraud,Rejected,11,2023,0.3
+10152804,1,14/11/2023,03/01/2024,50,Irresponsible lending,Rejected,11,2023,7.1
+22577092,1,14/11/2023,05/01/2024,52,Irresponsible lending,Rejected,11,2023,7.4
+21110011,1,18/11/2023,12/01/2024,55,Irresponsible lending,Rejected,11,2023,7.9
+10190507,1,19/11/2023,12/01/2024,54,Irresponsible lending,Rejected,11,2023,7.7
+21920816,1,19/11/2023,03/01/2024,45,Irresponsible lending,Rejected,11,2023,6.4
+21815001,1,20/11/2023,31/01/2024,72,Fraud,Upheld,11,2023,10.3
+21831787,1,20/11/2023,25/11/2024,371,Fraud,Upheld,11,2023,53.0
+21831979,1,20/11/2023,16/07/2024,239,Fraud,Upheld,11,2023,34.1
+21985010,1,20/11/2023,31/01/2024,72,Fraud,Upheld,11,2023,10.3
+23024556,1,20/11/2023,08/03/2024,109,Fraud,Rejected,11,2023,15.6
+20056775,1,22/11/2023,12/01/2024,51,Irresponsible lending,Rejected,11,2023,7.3
+20220270,1,22/11/2023,12/01/2024,51,Irresponsible lending,Rejected,11,2023,7.3
+20242726,1,22/11/2023,03/01/2024,42,Irresponsible lending,Rejected,11,2023,6.0
+21412353,1,22/11/2023,12/01/2024,51,Irresponsible lending,Rejected,11,2023,7.3
+10141171,1,23/11/2023,18/01/2024,56,Irresponsible lending,Rejected,11,2023,8.0
+20149181,1,23/11/2023,03/01/2024,41,Irresponsible lending,Upheld,11,2023,5.9
+23021379,1,23/11/2023,18/01/2024,56,Irresponsible lending,Rejected,11,2023,8.0
+20524796,1,24/11/2023,03/01/2024,40,Irresponsible lending,Rejected,11,2023,5.7
+23137984,1,24/11/2023,03/01/2024,40,Irresponsible lending,Rejected,11,2023,5.7
+20883112,1,25/11/2023,18/01/2024,54,Irresponsible lending,Rejected,11,2023,7.7
+20129088,1,26/11/2023,18/01/2024,53,Irresponsible lending,Upheld,11,2023,7.6
+20303896,1,26/11/2023,03/01/2024,38,Irresponsible lending,Withdrawn,11,2023,5.4
+20286599,1,27/11/2023,03/01/2024,37,Irresponsible lending,Rejected,11,2023,5.3
+21920544,1,27/11/2023,31/01/2024,65,Fraud,Upheld,11,2023,9.3
+20207166,1,29/11/2023,24/01/2024,56,Irresponsible lending,Rejected,11,2023,8.0
+20215506,1,29/11/2023,18/01/2024,50,Irresponsible lending,Rejected,11,2023,7.1
+20515738,1,29/11/2023,24/01/2024,56,Irresponsible lending,Rejected,11,2023,8.0
+21027446,1,29/11/2023,03/01/2024,35,Irresponsible lending,Rejected,11,2023,5.0
+20142278,1,01/12/2023,03/01/2024,33,Irresponsible lending,Rejected,12,2023,4.7
+20231484,1,02/12/2023,03/01/2024,32,Irresponsible lending,Rejected,12,2023,4.6
+22555560,1,02/12/2023,24/01/2024,53,Irresponsible lending,Rejected,12,2023,7.6
+20505040,1,03/12/2023,03/01/2024,31,Irresponsible lending,Rejected,12,2023,4.4
+10144376,1,04/12/2023,24/01/2024,51,Irresponsible lending,Rejected,12,2023,7.3
+23219336,1,04/12/2023,03/01/2024,30,Irresponsible lending,Rejected,12,2023,4.3
+20962397,1,05/12/2023,03/01/2024,29,Irresponsible lending,Rejected,12,2023,4.1
+20122712,1,06/12/2023,03/01/2024,28,Irresponsible lending,Rejected,12,2023,4.0
+21487863,1,06/12/2023,03/01/2024,28,Irresponsible lending,Rejected,12,2023,4.0
+22073672,1,06/12/2023,03/01/2024,28,Irresponsible lending,Rejected,12,2023,4.0
+22220917,1,06/12/2023,31/01/2024,56,Irresponsible lending,Rejected,12,2023,8.0
+22489912,1,06/12/2023,24/01/2024,49,Irresponsible lending,Rejected,12,2023,7.0
+10215156,1,07/12/2023,03/01/2024,27,Irresponsible lending,Rejected,12,2023,3.9
+21232058,1,07/12/2023,03/01/2024,27,Irresponsible lending,Rejected,12,2023,3.9
+21731281,1,07/12/2023,31/01/2024,55,Irresponsible lending,Rejected,12,2023,7.9
+22151971,1,07/12/2023,31/01/2024,55,Irresponsible lending,Rejected,12,2023,7.9
+22166409,1,07/12/2023,03/01/2024,27,Irresponsible lending,Rejected,12,2023,3.9
+20009563,1,08/12/2023,03/01/2024,26,Irresponsible lending,Rejected,12,2023,3.7
+20490383,1,08/12/2023,03/01/2024,26,Irresponsible lending,Rejected,12,2023,3.7
+21333576,1,08/12/2023,03/01/2024,26,Irresponsible lending,Rejected,12,2023,3.7
+23154447,1,08/12/2023,03/01/2024,26,Irresponsible lending,Rejected,12,2023,3.7
+21445771,1,10/12/2023,03/01/2024,24,Irresponsible lending,Rejected,12,2023,3.4
+22709510,1,11/12/2023,03/01/2024,23,Irresponsible lending,Rejected,12,2023,3.3
+23373094,1,11/12/2023,31/01/2024,51,Application process,Rejected,12,2023,7.3
+23182121,1,12/12/2023,03/01/2024,22,Irresponsible lending,Rejected,12,2023,3.1
+22480116,1,14/12/2023,03/01/2024,20,Irresponsible lending,Rejected,12,2023,2.9
+21263851,1,16/12/2023,03/01/2024,18,Irresponsible lending,Rejected,12,2023,2.6
+23149000,1,16/12/2023,03/01/2024,18,Irresponsible lending,Rejected,12,2023,2.6
+21383192,1,17/12/2023,31/01/2024,45,Irresponsible lending,Rejected,12,2023,6.4
+22473533,1,18/12/2023,03/01/2024,16,Irresponsible lending,Rejected,12,2023,2.3
+23039058,1,18/12/2023,31/01/2024,44,Fraud,Upheld,12,2023,6.3
+22005244,1,19/12/2023,05/02/2024,48,Fraud,Upheld,12,2023,6.9
+23297321,1,19/12/2023,09/02/2024,52,Irresponsible lending,Rejected,12,2023,7.4
+23315248,1,19/12/2023,25/01/2024,37,Fraud,Upheld,12,2023,5.3
+21248116,1,21/12/2023,09/02/2024,50,Irresponsible lending,Rejected,12,2023,7.1
+21989374,1,21/12/2023,31/01/2024,41,Fraud,Upheld,12,2023,5.9
+22360989,1,24/12/2023,09/02/2024,47,Irresponsible lending,Rejected,12,2023,6.7
+20462405,1,28/12/2023,22/01/2024,25,Subject Access Request,,12,2023,3.6
+20665431,1,28/12/2023,03/01/2024,6,Irresponsible lending,Rejected,12,2023,0.9
+22287913,1,28/12/2023,09/02/2024,43,Irresponsible lending,Rejected,12,2023,6.1
+22934404,1,28/12/2023,19/02/2024,53,Service Issue,Rejected,12,2023,7.6
+22971166,1,28/12/2023,09/02/2024,43,Irresponsible lending,Rejected,12,2023,6.1
+22690156,1,29/12/2023,22/01/2024,24,Subject Access Request,,12,2023,3.4
+23266258,1,30/12/2023,19/02/2024,51,Irresponsible lending,Rejected,12,2023,7.3
+22876922,1,31/12/2023,19/02/2024,50,Irresponsible lending,Rejected,12,2023,7.1
+21246802,1,01/01/2024,19/02/2024,49,Irresponsible lending,Rejected,1,2024,7.0
+22392038,1,01/01/2024,19/02/2024,49,Irresponsible lending,Rejected,1,2024,7.0
+22838975,1,01/01/2024,22/02/2024,52,Irresponsible lending,Rejected,1,2024,7.4
+10147708,1,03/01/2024,22/02/2024,50,Irresponsible lending,Rejected,1,2024,7.1
+23510340,1,03/01/2024,22/02/2024,50,Application process,Rejected,1,2024,7.1
+20144627,1,04/01/2024,22/02/2024,49,Irresponsible lending,Rejected,1,2024,7.0
+10191065,1,05/01/2024,04/03/2024,59,Irresponsible lending,Rejected,1,2024,8.4
+20321386,1,05/01/2024,01/03/2024,56,Irresponsible lending,Upheld,1,2024,8.0
+21915897,1,05/01/2024,22/02/2024,48,Irresponsible lending,Rejected,1,2024,6.9
+10233572,1,06/01/2024,04/03/2024,58,Irresponsible lending,Rejected,1,2024,8.3
+20126905,1,06/01/2024,04/03/2024,58,Irresponsible lending,Rejected,1,2024,8.3
+20131912,1,06/01/2024,01/03/2024,55,Application process,Rejected,1,2024,7.9
+20305218,1,06/01/2024,04/03/2024,58,Irresponsible lending,Rejected,1,2024,8.3
+20975044,1,06/01/2024,04/03/2024,58,Irresponsible lending,Rejected,1,2024,8.3
+21141535,1,06/01/2024,08/01/2024,2,Irresponsible lending,Withdrawn,1,2024,0.3
+21155083,1,06/01/2024,04/03/2024,58,Irresponsible lending,Rejected,1,2024,8.3
+22981922,1,06/01/2024,04/03/2024,58,Irresponsible lending,Rejected,1,2024,8.3
+23016114,1,06/01/2024,04/03/2024,58,Irresponsible lending,Rejected,1,2024,8.3
+10139684,1,08/01/2024,31/01/2024,23,Subject Access Request,,1,2024,3.3
+10139684,1,08/01/2024,01/03/2024,53,Irresponsible lending,Rejected,1,2024,7.6
+20718294,1,08/01/2024,01/03/2024,53,Irresponsible lending,Rejected,1,2024,7.6
+21387294,1,10/01/2024,04/03/2024,54,Irresponsible lending,Rejected,1,2024,7.7
+22518270,1,11/01/2024,16/12/2024,340,Fraud,Upheld,1,2024,48.6
+20959990,1,12/01/2024,01/03/2024,49,Irresponsible lending,Rejected,1,2024,7.0
+21966488,1,12/01/2024,01/03/2024,49,Irresponsible lending,Rejected,1,2024,7.0
+22569064,1,12/01/2024,31/01/2024,19,Fraud,Upheld,1,2024,2.7
+21285380,1,13/01/2024,04/03/2024,51,Irresponsible lending,Rejected,1,2024,7.3
+22320590,1,14/01/2024,04/03/2024,50,Irresponsible lending,Rejected,1,2024,7.1
+21309069,1,15/01/2024,04/03/2024,49,Irresponsible lending,Rejected,1,2024,7.0
+22541274,1,16/01/2024,21/10/2024,279,Fraud,Upheld,1,2024,39.9
+22308648,1,17/01/2024,04/03/2024,47,Irresponsible lending,Rejected,1,2024,6.7
+20536107,1,18/01/2024,01/03/2024,43,Irresponsible lending,Rejected,1,2024,6.1
+21984335,1,18/01/2024,01/03/2024,43,Irresponsible lending,Rejected,1,2024,6.1
+20429201,1,19/01/2024,08/03/2024,49,Irresponsible lending,Rejected,1,2024,7.0
+21906064,1,21/01/2024,05/03/2024,44,Subject Access Request,,1,2024,6.3
+21906064,1,21/01/2024,08/03/2024,47,Irresponsible lending,Rejected,1,2024,6.7
+20002120,1,22/01/2024,04/03/2024,42,Irresponsible lending,Rejected,1,2024,6.0
+20616379,1,22/01/2024,04/03/2024,42,Irresponsible lending,Rejected,1,2024,6.0
+22294892,1,22/01/2024,19/02/2024,28,Subject Access Request,,1,2024,4.0
+22294892,1,22/01/2024,08/03/2024,46,Irresponsible lending,Rejected,1,2024,6.6
+20767508,1,23/01/2024,08/03/2024,45,Irresponsible lending,Rejected,1,2024,6.4
+21807567,1,23/01/2024,04/03/2024,41,Irresponsible lending,Rejected,1,2024,5.9
+21139030,1,24/01/2024,22/02/2024,29,Subject Access Request,,1,2024,4.1
+21139030,1,24/01/2024,08/03/2024,44,Application process,Rejected,1,2024,6.3
+21748333,1,24/01/2024,08/03/2024,44,Irresponsible lending,Rejected,1,2024,6.3
+23411116,1,25/01/2024,18/03/2024,53,Irresponsible lending,Upheld,1,2024,7.6
+20265183,1,30/01/2024,18/03/2024,48,Irresponsible lending,Rejected,1,2024,6.9
+20579255,1,30/01/2024,04/03/2024,34,Irresponsible lending,Rejected,1,2024,4.9
+23078717,1,30/01/2024,18/03/2024,48,Irresponsible lending,Upheld,1,2024,6.9
+23351581,1,30/01/2024,18/03/2024,48,Irresponsible lending,Rejected,1,2024,6.9
+22562950,1,31/01/2024,22/02/2024,22,Subject Access Request,,1,2024,3.1
+22562950,1,31/01/2024,18/03/2024,47,Irresponsible lending,Rejected,1,2024,6.7
+10164733,1,01/02/2024,04/03/2024,32,Irresponsible lending,Rejected,2,2024,4.6
+22941231,1,02/02/2024,19/03/2024,46,Irresponsible lending,Rejected,2,2024,6.6
+23066048,1,02/02/2024,04/03/2024,31,Irresponsible lending,Rejected,2,2024,4.4
+23214396,1,02/02/2024,18/03/2024,45,Irresponsible lending,Rejected,2,2024,6.4
+23295474,1,02/02/2024,19/03/2024,46,Service Issue,Rejected,2,2024,6.6
+23319796,1,02/02/2024,19/03/2024,46,Service Issue,Rejected,2,2024,6.6
+20281856,1,03/02/2024,19/03/2024,45,Irresponsible lending,Rejected,2,2024,6.4
+22210252,1,03/02/2024,05/02/2024,2,Irresponsible lending,Withdrawn,2,2024,0.3
+20211517,1,04/02/2024,19/03/2024,44,Irresponsible lending,Rejected,2,2024,6.3
+20644401,1,04/02/2024,19/03/2024,44,Irresponsible lending,Rejected,2,2024,6.3
+20897385,1,05/02/2024,20/03/2024,44,Irresponsible lending,Rejected,2,2024,6.3
+21131019,1,05/02/2024,20/03/2024,44,Irresponsible lending,Rejected,2,2024,6.3
+21232747,1,05/02/2024,04/03/2024,28,Irresponsible lending,Rejected,2,2024,4.0
+21825777,1,05/02/2024,20/03/2024,44,Irresponsible lending,Rejected,2,2024,6.3
+21951590,1,05/02/2024,20/03/2024,44,Irresponsible lending,Rejected,2,2024,6.3
+21979936,1,05/02/2024,20/03/2024,44,Irresponsible lending,Rejected,2,2024,6.3
+21951590,1,06/02/2024,29/02/2024,23,Subject Access Request,,2,2024,3.3
+20201454,1,07/02/2024,20/03/2024,42,Irresponsible lending,Rejected,2,2024,6.0
+20280225,1,08/02/2024,04/03/2024,25,Irresponsible lending,Rejected,2,2024,3.6
+20681756,1,08/02/2024,04/04/2024,56,Irresponsible lending,Rejected,2,2024,8.0
+23597978,1,08/02/2024,12/03/2024,33,Fraud,Upheld,2,2024,4.7
+23858907,1,08/02/2024,04/04/2024,56,Application process,Rejected,2,2024,8.0
+20057526,1,09/02/2024,04/03/2024,24,Irresponsible lending,Rejected,2,2024,3.4
+20087277,1,09/02/2024,04/04/2024,55,Irresponsible lending,Rejected,2,2024,7.9
+22648089,1,09/02/2024,04/04/2024,55,Irresponsible lending,Rejected,2,2024,7.9
+10141371,1,10/02/2024,04/03/2024,23,Irresponsible lending,Rejected,2,2024,3.3
+20079007,1,10/02/2024,04/04/2024,54,Irresponsible lending,Rejected,2,2024,7.7
+21923897,1,10/02/2024,04/03/2024,23,Irresponsible lending,Rejected,2,2024,3.3
+21267190,1,11/02/2024,04/04/2024,53,Service Issue,Rejected,2,2024,7.6
+20640256,1,12/02/2024,04/03/2024,21,Irresponsible lending,Rejected,2,2024,3.0
+21773386,1,12/02/2024,04/04/2024,52,Irresponsible lending,Rejected,2,2024,7.4
+10144870,1,13/02/2024,09/04/2024,56,Irresponsible lending,Rejected,2,2024,8.0
+20281098,1,14/02/2024,09/04/2024,55,Irresponsible lending,Rejected,2,2024,7.9
+21257273,1,14/02/2024,04/03/2024,19,Irresponsible lending,Rejected,2,2024,2.7
+23212693,1,14/02/2024,09/04/2024,55,Irresponsible lending,Rejected,2,2024,7.9
+20889278,1,15/02/2024,09/04/2024,54,Irresponsible lending,Rejected,2,2024,7.7
+22213765,1,16/02/2024,12/03/2024,25,Fraud,Upheld,2,2024,3.6
+20423908,1,17/02/2024,09/04/2024,52,Irresponsible lending,Rejected,2,2024,7.4
+21471014,1,20/02/2024,09/04/2024,49,Irresponsible lending,Rejected,2,2024,7.0
+20223398,1,22/02/2024,18/04/2024,56,Irresponsible lending,Rejected,2,2024,8.0
+20738621,1,22/02/2024,04/03/2024,11,Irresponsible lending,Rejected,2,2024,1.6
+21297353,1,22/02/2024,18/04/2024,56,Irresponsible lending,Rejected,2,2024,8.0
+20954462,1,23/02/2024,19/04/2024,56,Irresponsible lending,Rejected,2,2024,8.0
+21264949,1,25/02/2024,19/04/2024,54,Irresponsible lending,Rejected,2,2024,7.7
+20163297,1,26/02/2024,19/04/2024,53,Irresponsible lending,Rejected,2,2024,7.6
+23293867,1,27/02/2024,19/04/2024,52,Service Issue,Rejected,2,2024,7.4
+20568974,1,29/02/2024,19/04/2024,50,Irresponsible lending,Rejected,2,2024,7.1
+21504190,1,29/02/2024,19/04/2024,50,Irresponsible lending,Rejected,2,2024,7.1
+20115922,1,01/03/2024,19/04/2024,49,Irresponsible lending,Rejected,3,2024,7.0
+20809049,1,02/03/2024,19/04/2024,48,Irresponsible lending,Rejected,3,2024,6.9
+21812163,1,03/03/2024,04/03/2024,1,Payment,Withdrawn,3,2024,0.1
+10142556,1,04/03/2024,19/04/2024,46,Irresponsible lending,Rejected,3,2024,6.6
+10148265,1,05/03/2024,19/04/2024,45,Irresponsible lending,Rejected,3,2024,6.4
+21708313,1,05/03/2024,19/04/2024,45,Irresponsible lending,Rejected,3,2024,6.4
+20132935,1,06/03/2024,19/04/2024,44,Irresponsible lending,Rejected,3,2024,6.3
+20505566,1,06/03/2024,19/04/2024,44,Irresponsible lending,Rejected,3,2024,6.3
+21980138,1,07/03/2024,19/04/2024,43,Irresponsible lending,Rejected,3,2024,6.1
+23465913,1,10/03/2024,19/04/2024,40,Irresponsible lending,Upheld,3,2024,5.7
+21039500,1,11/03/2024,19/04/2024,39,Irresponsible lending,Rejected,3,2024,5.6
+22726559,1,13/03/2024,08/05/2024,56,Fraud,Upheld,3,2024,8.0
+23385274,1,13/03/2024,19/04/2024,37,Irresponsible lending,Rejected,3,2024,5.3
+20099337,1,15/03/2024,19/04/2024,35,Irresponsible lending,Rejected,3,2024,5.0
+20190893,1,15/03/2024,19/04/2024,35,Irresponsible lending,Rejected,3,2024,5.0
+23939856,1,15/03/2024,19/04/2024,35,Irresponsible lending,Rejected,3,2024,5.0
+10231448,1,16/03/2024,19/04/2024,34,Irresponsible lending,Rejected,3,2024,4.9
+20181091,1,16/03/2024,19/04/2024,34,Irresponsible lending,Rejected,3,2024,4.9
+20238385,1,16/03/2024,19/04/2024,34,Irresponsible lending,Rejected,3,2024,4.9
+22592929,1,19/03/2024,14/05/2024,56,Irresponsible lending,Rejected,3,2024,8.0
+23938095,1,20/03/2024,15/05/2024,56,Irresponsible lending,Partially upheld,3,2024,8.0
+23302918,1,21/03/2024,20/05/2024,60,Irresponsible lending,Rejected,3,2024,8.6
+23300203,1,22/03/2024,19/04/2024,28,Subject Access Request,,3,2024,4.0
+20244554,1,23/03/2024,20/05/2024,58,Irresponsible lending,Rejected,3,2024,8.3
+22716115,1,23/03/2024,17/05/2024,55,Irresponsible lending,Rejected,3,2024,7.9
+20406139,1,24/03/2024,20/05/2024,57,Irresponsible lending,Rejected,3,2024,8.1
+21472155,1,25/03/2024,17/05/2024,53,Irresponsible lending,Upheld,3,2024,7.6
+20432243,1,26/03/2024,17/05/2024,52,Irresponsible lending,Rejected,3,2024,7.4
+22829715,1,27/03/2024,23/05/2024,57,Irresponsible lending,Rejected,3,2024,8.1
+20966782,1,28/03/2024,20/05/2024,53,Irresponsible lending,Rejected,3,2024,7.6
+23046254,1,28/03/2024,02/05/2024,35,Fraud,Upheld,3,2024,5.0
+23191066,1,29/03/2024,23/05/2024,55,Irresponsible lending,Rejected,3,2024,7.9
+20814762,1,30/03/2024,20/05/2024,51,Irresponsible lending,Rejected,3,2024,7.3
+20060375,1,31/03/2024,20/05/2024,50,Irresponsible lending,Rejected,3,2024,7.1
+23309884,1,01/04/2024,22/04/2024,21,Service Issue,Partially upheld,4,2024,3.0
+20296077,1,04/04/2024,20/05/2024,46,Irresponsible lending,Rejected,4,2024,6.6
+20351435,1,04/04/2024,23/05/2024,49,Irresponsible lending,Rejected,4,2024,7.0
+21569352,1,04/04/2024,23/05/2024,49,Irresponsible lending,Rejected,4,2024,7.0
+21951975,1,04/04/2024,20/05/2024,46,Irresponsible lending,Rejected,4,2024,6.6
+22908841,1,04/04/2024,23/05/2024,49,Irresponsible lending,Withdrawn,4,2024,7.0
+23952676,1,04/04/2024,30/05/2024,56,Irresponsible lending,Rejected,4,2024,8.0
+23011686,1,07/04/2024,20/05/2024,43,Irresponsible lending,Rejected,4,2024,6.1
+21207212,1,08/04/2024,03/06/2024,56,Irresponsible lending,Rejected,4,2024,8.0
+21257027,1,08/04/2024,04/06/2024,57,Application process,Rejected,4,2024,8.1
+22183393,1,08/04/2024,20/05/2024,42,Irresponsible lending,Rejected,4,2024,6.0
+21166653,1,09/04/2024,04/06/2024,56,Application process,Rejected,4,2024,8.0
+22654093,1,09/04/2024,20/05/2024,41,Irresponsible lending,Rejected,4,2024,5.9
+23717991,1,10/04/2024,20/05/2024,40,Irresponsible lending,Rejected,4,2024,5.7
+10183419,1,12/04/2024,07/06/2024,56,Service Issue,Rejected,4,2024,8.0
+22543923,1,12/04/2024,17/05/2024,35,Irresponsible lending,Rejected,4,2024,5.0
+23299925,1,12/04/2024,03/06/2024,52,Irresponsible lending,Rejected,4,2024,7.4
+23534633,1,12/04/2024,03/06/2024,52,Irresponsible lending,Rejected,4,2024,7.4
+20162905,1,13/04/2024,20/05/2024,37,Irresponsible lending,Rejected,4,2024,5.3
+23045831,1,13/04/2024,08/05/2024,25,Fraud,Upheld,4,2024,3.6
+20104680,1,14/04/2024,20/05/2024,36,Irresponsible lending,Rejected,4,2024,5.1
+22340190,1,14/04/2024,07/06/2024,54,Irresponsible lending,Rejected,4,2024,7.7
+24092868,1,14/04/2024,20/05/2024,36,Irresponsible lending,Rejected,4,2024,5.1
+23920520,1,16/04/2024,02/05/2024,16,Fraud,Upheld,4,2024,2.3
+24093741,1,16/04/2024,07/06/2024,52,Service Issue,Rejected,4,2024,7.4
+22779207,1,17/04/2024,20/05/2024,33,Irresponsible lending,Rejected,4,2024,4.7
+23716442,1,17/04/2024,19/04/2024,2,Subject Access Request,,4,2024,0.3
+20024658,1,18/04/2024,13/06/2024,56,Irresponsible lending,Rejected,4,2024,8.0
+22343516,1,18/04/2024,07/06/2024,50,Irresponsible lending,Rejected,4,2024,7.1
+23070009,1,18/04/2024,20/05/2024,32,Irresponsible lending,Rejected,4,2024,4.6
+10219348,1,19/04/2024,13/06/2024,55,Irresponsible lending,Rejected,4,2024,7.9
+23043956,1,19/04/2024,18/07/2024,90,Fraud,Upheld,4,2024,12.9
+23739567,1,19/04/2024,13/06/2024,55,Irresponsible lending,Rejected,4,2024,7.9
+23980741,1,19/04/2024,13/06/2024,55,Payment,Upheld,4,2024,7.9
+20076766,1,20/04/2024,20/05/2024,30,Irresponsible lending,Rejected,4,2024,4.3
+24032636,1,21/04/2024,20/05/2024,29,Irresponsible lending,Rejected,4,2024,4.1
+22586469,1,22/04/2024,13/06/2024,52,Irresponsible lending,Rejected,4,2024,7.4
+22280649,1,25/04/2024,17/05/2024,22,Irresponsible lending,Rejected,4,2024,3.1
+22540888,1,25/04/2024,20/05/2024,25,Irresponsible lending,Rejected,4,2024,3.6
+22982587,1,26/04/2024,02/07/2024,67,Fraud,Upheld,4,2024,9.6
+20117604,1,30/04/2024,20/05/2024,20,Irresponsible lending,Rejected,4,2024,2.9
+22361586,1,30/04/2024,20/05/2024,20,Irresponsible lending,Rejected,4,2024,2.9
+20108016,1,01/05/2024,20/05/2024,19,Irresponsible lending,Rejected,5,2024,2.7
+20631440,1,01/05/2024,26/06/2024,56,Irresponsible lending,Rejected,5,2024,8.0
+10140564,1,02/05/2024,26/06/2024,55,Irresponsible lending,Rejected,5,2024,7.9
+20250802,1,02/05/2024,26/06/2024,55,Irresponsible lending,Rejected,5,2024,7.9
+21020104,1,02/05/2024,20/05/2024,18,Irresponsible lending,Rejected,5,2024,2.6
+23094678,1,03/05/2024,30/05/2024,27,Fraud,Upheld,5,2024,3.9
+23423479,1,03/05/2024,20/05/2024,17,Irresponsible lending,Rejected,5,2024,2.4
+21189902,1,06/05/2024,20/05/2024,14,Irresponsible lending,Rejected,5,2024,2.0
+23383176,1,06/05/2024,20/05/2024,14,Irresponsible lending,Rejected,5,2024,2.0
+23881479,1,06/05/2024,20/05/2024,14,Irresponsible lending,Rejected,5,2024,2.0
+20063987,1,07/05/2024,26/06/2024,50,Irresponsible lending,Rejected,5,2024,7.1
+20205760,1,07/05/2024,20/05/2024,13,Irresponsible lending,Rejected,5,2024,1.9
+22272280,1,07/05/2024,26/06/2024,50,Irresponsible lending,Rejected,5,2024,7.1
+21004276,1,08/05/2024,20/05/2024,12,Irresponsible lending,Rejected,5,2024,1.7
+23399696,1,08/05/2024,04/07/2024,57,Irresponsible lending,Upheld,5,2024,8.1
+20162040,1,14/05/2024,04/07/2024,51,Irresponsible lending,Rejected,5,2024,7.3
+21868236,1,14/05/2024,04/07/2024,51,Irresponsible lending,Rejected,5,2024,7.3
+10141322,1,15/05/2024,20/05/2024,5,Irresponsible lending,Rejected,5,2024,0.7
+23483406,1,16/05/2024,16/05/2024,0,Fraud,Upheld,5,2024,0.0
+10144206,1,17/05/2024,20/05/2024,3,Irresponsible lending,Rejected,5,2024,0.4
+21640353,1,17/05/2024,04/07/2024,48,Irresponsible lending,Rejected,5,2024,6.9
+23362053,1,17/05/2024,04/07/2024,48,Service Issue,Rejected,5,2024,6.9
+23681065,1,18/05/2024,12/07/2024,55,Irresponsible lending,Rejected,5,2024,7.9
+22746195,1,20/05/2024,20/05/2024,0,Fraud,Upheld,5,2024,0.0
+10270655,1,21/05/2024,12/07/2024,52,Irresponsible lending,Rejected,5,2024,7.4
+24472293,1,21/05/2024,20/08/2024,91,Fraud,Upheld,5,2024,13.0
+20830307,1,22/05/2024,12/07/2024,51,Irresponsible lending,Rejected,5,2024,7.3
+21083604,1,22/05/2024,16/07/2024,55,Irresponsible lending,Rejected,5,2024,7.9
+22264049,1,22/05/2024,12/07/2024,51,Irresponsible lending,Rejected,5,2024,7.3
+22292634,1,22/05/2024,12/07/2024,51,Irresponsible lending,Rejected,5,2024,7.3
+24680017,1,22/05/2024,29/05/2024,7,Fraud,Upheld,5,2024,1.0
+20706978,1,23/05/2024,12/07/2024,50,Irresponsible lending,Rejected,5,2024,7.1
+23808378,1,23/05/2024,18/07/2024,56,Irresponsible lending,Rejected,5,2024,8.0
+20200690,1,24/05/2024,16/07/2024,53,Irresponsible lending,Rejected,5,2024,7.6
+22120320,1,24/05/2024,29/05/2024,5,Irresponsible lending,Withdrawn,5,2024,0.7
+21609873,1,28/05/2024,23/07/2024,56,Irresponsible lending,Rejected,5,2024,8.0
+22239000,1,28/05/2024,23/07/2024,56,Irresponsible lending,Rejected,5,2024,8.0
+23664974,1,28/05/2024,23/07/2024,56,Irresponsible lending,Upheld,5,2024,8.0
+21240979,1,29/05/2024,24/07/2024,56,Service Issue,Upheld,5,2024,8.0
+21869225,1,29/05/2024,16/07/2024,48,Irresponsible lending,Rejected,5,2024,6.9
+21922198,1,29/05/2024,24/07/2024,56,Irresponsible lending,Rejected,5,2024,8.0
+23948294,1,29/05/2024,16/07/2024,48,Irresponsible lending,Rejected,5,2024,6.9
+20004559,1,30/05/2024,16/07/2024,47,Irresponsible lending,Rejected,5,2024,6.7
+23430485,1,30/05/2024,24/07/2024,55,Irresponsible lending,Rejected,5,2024,7.9
+23136085,1,31/05/2024,16/07/2024,46,Irresponsible lending,Rejected,5,2024,6.6
+23574466,1,31/05/2024,01/08/2024,62,Fraud,Upheld,5,2024,8.9
+21025258,1,01/06/2024,24/07/2024,53,Irresponsible lending,Rejected,6,2024,7.6
+23891454,1,01/06/2024,24/07/2024,53,Service Issue,Rejected,6,2024,7.6
+24686171,1,02/06/2024,16/07/2024,44,Irresponsible lending,Rejected,6,2024,6.3
+23740554,1,03/06/2024,16/07/2024,43,Irresponsible lending,Rejected,6,2024,6.1
+20657192,1,04/06/2024,16/07/2024,42,Irresponsible lending,Rejected,6,2024,6.0
+24429190,1,04/06/2024,16/07/2024,42,Irresponsible lending,Rejected,6,2024,6.0
+22387253,1,05/06/2024,16/07/2024,41,Irresponsible lending,Rejected,6,2024,5.9
+23266634,1,05/06/2024,24/07/2024,49,Irresponsible lending,Rejected,6,2024,7.0
+21905260,1,06/06/2024,16/07/2024,40,Irresponsible lending,Rejected,6,2024,5.7
+23377785,1,08/06/2024,24/07/2024,46,Irresponsible lending,Rejected,6,2024,6.6
+23849677,1,08/06/2024,02/08/2024,55,Irresponsible lending,Rejected,6,2024,7.9
+21671112,1,09/06/2024,16/07/2024,37,Irresponsible lending,Rejected,6,2024,5.3
+20183785,1,10/06/2024,02/08/2024,53,Application process,Rejected,6,2024,7.6
+21297243,1,10/06/2024,02/08/2024,53,Irresponsible lending,Rejected,6,2024,7.6
+23318518,1,10/06/2024,02/08/2024,53,Application process,Rejected,6,2024,7.6
+22538380,1,12/06/2024,16/07/2024,34,Irresponsible lending,Rejected,6,2024,4.9
+22709052,1,12/06/2024,02/08/2024,51,Irresponsible lending,Rejected,6,2024,7.3
+24598596,1,12/06/2024,02/08/2024,51,Fraud,Upheld,6,2024,7.3
+22386045,1,13/06/2024,02/08/2024,50,Service Issue,Rejected,6,2024,7.1
+23516122,1,13/06/2024,24/07/2024,41,Irresponsible lending,Rejected,6,2024,5.9
+20137405,1,14/06/2024,16/07/2024,32,Irresponsible lending,Rejected,6,2024,4.6
+20763576,1,14/06/2024,17/06/2024,3,Subject Access Request,,6,2024,0.4
+21255852,1,14/06/2024,09/08/2024,56,Irresponsible lending,Rejected,6,2024,8.0
+23736768,1,14/06/2024,09/08/2024,56,Irresponsible lending,Rejected,6,2024,8.0
+24120529,1,14/06/2024,21/06/2024,7,Fraud,Upheld,6,2024,1.0
+21292967,1,15/06/2024,16/07/2024,31,Irresponsible lending,Rejected,6,2024,4.4
+21743003,1,17/06/2024,09/08/2024,53,Irresponsible lending,Rejected,6,2024,7.6
+22831688,1,19/06/2024,16/07/2024,27,Irresponsible lending,Rejected,6,2024,3.9
+22835537,1,19/06/2024,19/06/2024,0,Fraud,Upheld,6,2024,0.0
+23619877,1,20/06/2024,21/06/2024,1,Fraud,Upheld,6,2024,0.1
+24011360,1,20/06/2024,09/08/2024,50,Irresponsible lending,Rejected,6,2024,7.1
+21800628,1,22/06/2024,16/07/2024,24,Irresponsible lending,Rejected,6,2024,3.4
+20054251,1,24/06/2024,19/08/2024,56,Irresponsible lending,Rejected,6,2024,8.0
+20326273,1,24/06/2024,16/07/2024,22,Irresponsible lending,Rejected,6,2024,3.1
+20578651,1,24/06/2024,09/08/2024,46,Irresponsible lending,Rejected,6,2024,6.6
+21034074,1,24/06/2024,09/08/2024,46,Service Issue,Rejected,6,2024,6.6
+21610700,1,24/06/2024,19/08/2024,56,Irresponsible lending,Rejected,6,2024,8.0
+22570082,1,24/06/2024,19/08/2024,56,Irresponsible lending,Rejected,6,2024,8.0
+20760536,1,25/06/2024,19/08/2024,55,Irresponsible lending,Rejected,6,2024,7.9
+22368461,1,25/06/2024,19/08/2024,55,Irresponsible lending,Rejected,6,2024,7.9
+22534866,1,25/06/2024,19/08/2024,55,Irresponsible lending,Rejected,6,2024,7.9
+22360989,1,26/06/2024,21/08/2024,56,Service Issue,Rejected,6,2024,8.0
+20642522,1,27/06/2024,22/08/2024,56,Irresponsible lending,Rejected,6,2024,8.0
+23148093,1,28/06/2024,15/07/2024,17,Subject Access Request,,6,2024,2.4
+24292275,1,28/06/2024,22/08/2024,55,Irresponsible lending,Rejected,6,2024,7.9
+24755245,1,28/06/2024,22/08/2024,55,Irresponsible lending,Rejected,6,2024,7.9
+22594158,1,29/06/2024,22/08/2024,54,Irresponsible lending,Rejected,6,2024,7.7
+20849295,1,01/07/2024,16/07/2024,15,Irresponsible lending,Rejected,7,2024,2.1
+20408709,1,02/07/2024,22/08/2024,51,Service Issue,Rejected,7,2024,7.3
+20526180,1,02/07/2024,22/08/2024,51,Irresponsible lending,Rejected,7,2024,7.3
+22459644,1,03/07/2024,16/07/2024,13,Irresponsible lending,Rejected,7,2024,1.9
+23243755,1,03/07/2024,28/08/2024,56,Payment,Rejected,7,2024,8.0
+22514487,1,06/07/2024,16/07/2024,10,Irresponsible lending,Rejected,7,2024,1.4
+20210220,1,07/07/2024,28/08/2024,52,Irresponsible lending,Rejected,7,2024,7.4
+23724375,1,07/07/2024,29/11/2024,145,Fraud,Upheld,7,2024,20.7
+10152058,1,08/07/2024,28/08/2024,51,Irresponsible lending,Rejected,7,2024,7.3
+20921587,1,08/07/2024,16/07/2024,8,Irresponsible lending,Rejected,7,2024,1.1
+22344904,1,08/07/2024,28/08/2024,51,Irresponsible lending,Rejected,7,2024,7.3
+22384757,1,08/07/2024,16/07/2024,8,Irresponsible lending,Rejected,7,2024,1.1
+10166410,1,11/07/2024,16/07/2024,5,Irresponsible lending,Rejected,7,2024,0.7
+23772696,1,11/07/2024,16/07/2024,5,Irresponsible lending,Rejected,7,2024,0.7
+22526584,1,12/07/2024,28/08/2024,47,Service Issue,Rejected,7,2024,6.7
+21289397,1,14/07/2024,28/08/2024,45,Irresponsible lending,Rejected,7,2024,6.4
+21303120,1,15/07/2024,05/08/2024,21,Subject Access Request,,7,2024,3.0
+22427340,1,15/07/2024,10/09/2024,57,Service Issue,Rejected,7,2024,8.1
+24465518,1,15/07/2024,09/09/2024,56,Irresponsible lending,Rejected,7,2024,8.0
+23917294,1,17/07/2024,18/07/2024,1,Fraud,Upheld,7,2024,0.1
+21260829,1,18/07/2024,16/08/2024,29,Subject Access Request,,7,2024,4.1
+23283055,1,18/07/2024,12/09/2024,56,Irresponsible lending,Rejected,7,2024,8.0
+10141557,1,19/07/2024,10/09/2024,53,Application process,Rejected,7,2024,7.6
+20211116,1,19/07/2024,12/09/2024,55,Irresponsible lending,Rejected,7,2024,7.9
+20774554,1,19/07/2024,12/09/2024,55,Irresponsible lending,Rejected,7,2024,7.9
+10233871,1,22/07/2024,12/09/2024,52,Irresponsible lending,Rejected,7,2024,7.4
+24579042,1,22/07/2024,10/09/2024,50,Irresponsible lending,Rejected,7,2024,7.1
+23840073,1,23/07/2024,19/08/2024,27,Subject Access Request,,7,2024,3.9
+24530762,1,23/07/2024,05/08/2024,13,Subject Access Request,,7,2024,1.9
+25062666,1,23/07/2024,29/07/2024,6,Fraud,Upheld,7,2024,0.9
+20010659,1,24/07/2024,10/09/2024,48,Irresponsible lending,Rejected,7,2024,6.9
+21446332,1,24/07/2024,12/09/2024,50,Irresponsible lending,Rejected,7,2024,7.1
+10145458,1,25/07/2024,12/09/2024,49,Irresponsible lending,Rejected,7,2024,7.0
+23891454,1,25/07/2024,19/09/2024,56,Irresponsible lending,Rejected,7,2024,8.0
+24401744,1,25/07/2024,10/09/2024,47,Application process,Rejected,7,2024,6.7
+22069864,1,26/07/2024,20/09/2024,56,Irresponsible lending,Rejected,7,2024,8.0
+21136825,1,28/07/2024,20/09/2024,54,Irresponsible lending,Rejected,7,2024,7.7
+10262948,1,31/07/2024,12/09/2024,43,Irresponsible lending,Rejected,7,2024,6.1
+22111651,1,31/07/2024,20/09/2024,51,Irresponsible lending,Rejected,7,2024,7.3
+23113888,1,31/07/2024,12/09/2024,43,Irresponsible lending,Rejected,7,2024,6.1
+23467966,1,01/08/2024,12/09/2024,42,Irresponsible lending,Rejected,8,2024,6.0
+24174272,1,01/08/2024,09/12/2024,130,Fraud,Upheld,8,2024,18.6
+20552632,1,02/08/2024,20/09/2024,49,Irresponsible lending,Rejected,8,2024,7.0
+20209825,1,04/08/2024,12/09/2024,39,Irresponsible lending,Rejected,8,2024,5.6
+20054739,1,05/08/2024,20/09/2024,46,Irresponsible lending,Rejected,8,2024,6.6
+23691789,1,05/08/2024,12/09/2024,38,Irresponsible lending,Rejected,8,2024,5.4
+20114182,1,06/08/2024,19/08/2024,13,Subject Access Request,,8,2024,1.9
+22689184,1,06/08/2024,12/09/2024,37,Irresponsible lending,Rejected,8,2024,5.3
+22805104,1,06/08/2024,12/09/2024,37,Irresponsible lending,Rejected,8,2024,5.3
+10225712,1,07/08/2024,02/10/2024,56,Irresponsible lending,Rejected,8,2024,8.0
+20287122,1,07/08/2024,12/09/2024,36,Irresponsible lending,Rejected,8,2024,5.1
+21145612,1,07/08/2024,12/09/2024,36,Irresponsible lending,Rejected,8,2024,5.1
+21163048,1,07/08/2024,02/10/2024,56,Irresponsible lending,Rejected,8,2024,8.0
+21849332,1,07/08/2024,02/10/2024,56,Irresponsible lending,Rejected,8,2024,8.0
+23183772,1,08/08/2024,02/10/2024,55,Irresponsible lending,Rejected,8,2024,7.9
+23555225,1,08/08/2024,12/09/2024,35,Irresponsible lending,Rejected,8,2024,5.0
+22340471,1,10/08/2024,12/09/2024,33,Irresponsible lending,Rejected,8,2024,4.7
+24550263,1,10/08/2024,12/09/2024,33,Irresponsible lending,Rejected,8,2024,4.7
+24889064,1,10/08/2024,12/09/2024,33,Irresponsible lending,Rejected,8,2024,4.7
+21219671,1,11/08/2024,12/09/2024,32,Irresponsible lending,Rejected,8,2024,4.6
+10196230,1,12/08/2024,02/10/2024,51,Irresponsible lending,Rejected,8,2024,7.3
+21432923,1,12/08/2024,02/10/2024,51,Irresponsible lending,Rejected,8,2024,7.3
+23559316,1,13/08/2024,07/10/2024,55,Irresponsible lending,Rejected,8,2024,7.9
+10147931,1,14/08/2024,12/09/2024,29,Irresponsible lending,Rejected,8,2024,4.1
+20979409,1,15/08/2024,07/10/2024,53,Irresponsible lending,Rejected,8,2024,7.6
+24766229,1,15/08/2024,07/10/2024,53,Irresponsible lending,Rejected,8,2024,7.6
+25107019,1,15/08/2024,07/10/2024,53,Fraud,Upheld,8,2024,7.6
+20410105,1,16/08/2024,07/10/2024,52,Irresponsible lending,Rejected,8,2024,7.4
+21961969,1,17/08/2024,12/09/2024,26,Irresponsible lending,Rejected,8,2024,3.7
+24188380,1,17/08/2024,12/09/2024,26,Irresponsible lending,Rejected,8,2024,3.7
+22463873,1,18/08/2024,07/10/2024,50,Irresponsible lending,Rejected,8,2024,7.1
+20031593,1,19/08/2024,12/09/2024,24,Irresponsible lending,Rejected,8,2024,3.4
+20276316,1,19/08/2024,12/09/2024,24,Irresponsible lending,Rejected,8,2024,3.4
+22759264,1,19/08/2024,14/10/2024,56,Irresponsible lending,Rejected,8,2024,8.0
+23493903,1,19/08/2024,12/09/2024,24,Irresponsible lending,Rejected,8,2024,3.4
+24793281,1,19/08/2024,20/09/2024,32,Fraud,Upheld,8,2024,4.6
+23447902,1,20/08/2024,12/09/2024,23,Irresponsible lending,Rejected,8,2024,3.3
+23663565,1,20/08/2024,12/09/2024,23,Irresponsible lending,Rejected,8,2024,3.3
+24692646,1,20/08/2024,12/09/2024,23,Irresponsible lending,Rejected,8,2024,3.3
+10221563,1,21/08/2024,14/10/2024,54,Irresponsible lending,Rejected,8,2024,7.7
+20310343,1,21/08/2024,12/09/2024,22,Irresponsible lending,Rejected,8,2024,3.1
+20518178,1,21/08/2024,14/10/2024,54,Irresponsible lending,Rejected,8,2024,7.7
+22516256,1,21/08/2024,12/09/2024,22,Irresponsible lending,Rejected,8,2024,3.1
+22633230,1,21/08/2024,14/10/2024,54,Irresponsible lending,Rejected,8,2024,7.7
+24878905,1,21/08/2024,14/10/2024,54,Irresponsible lending,Rejected,8,2024,7.7
+24909526,1,22/08/2024,14/10/2024,53,Irresponsible lending,Rejected,8,2024,7.6
+20932065,1,23/08/2024,12/09/2024,20,Irresponsible lending,Rejected,8,2024,2.9
+24143601,1,23/08/2024,28/01/2025,158,Fraud,Upheld,8,2024,22.6
+21995348,1,24/08/2024,12/09/2024,19,Irresponsible lending,Rejected,8,2024,2.7
+22127339,1,24/08/2024,12/09/2024,19,Irresponsible lending,Rejected,8,2024,2.7
+24203195,1,24/08/2024,18/10/2024,55,Irresponsible lending,Rejected,8,2024,7.9
+23167598,1,25/08/2024,12/09/2024,18,Irresponsible lending,Rejected,8,2024,2.6
+24837562,1,26/08/2024,18/10/2024,53,Irresponsible lending,Rejected,8,2024,7.6
+10143326,1,27/08/2024,12/09/2024,16,Irresponsible lending,Rejected,8,2024,2.3
+23318518,1,27/08/2024,21/10/2024,55,Application process,Upheld,8,2024,7.9
+10140575,1,28/08/2024,12/09/2024,15,Irresponsible lending,Rejected,8,2024,2.1
+22182350,1,29/08/2024,18/10/2024,50,Irresponsible lending,Rejected,8,2024,7.1
+20047939,1,30/08/2024,12/09/2024,13,Irresponsible lending,Rejected,8,2024,1.9
+20849739,1,30/08/2024,12/09/2024,13,Irresponsible lending,Rejected,8,2024,1.9
+22750297,1,30/08/2024,12/09/2024,13,Irresponsible lending,Rejected,8,2024,1.9
+24492448,1,30/08/2024,12/09/2024,13,Irresponsible lending,Rejected,8,2024,1.9
+20437030,1,31/08/2024,18/10/2024,48,Irresponsible lending,Rejected,8,2024,6.9
+21435545,1,01/09/2024,12/09/2024,11,Irresponsible lending,Rejected,9,2024,1.6
+23807298,1,01/09/2024,12/09/2024,11,Irresponsible lending,Rejected,9,2024,1.6
+23292609,1,02/09/2024,12/09/2024,10,Irresponsible lending,Rejected,9,2024,1.4
+20070068,1,03/09/2024,12/09/2024,9,Irresponsible lending,Rejected,9,2024,1.3
+21341810,1,03/09/2024,12/09/2024,9,Irresponsible lending,Rejected,9,2024,1.3
+21620547,1,03/09/2024,18/10/2024,45,Irresponsible lending,Rejected,9,2024,6.4
+25373350,1,03/09/2024,12/09/2024,9,Irresponsible lending,Withdrawn,9,2024,1.3
+20053766,1,04/09/2024,12/09/2024,8,Irresponsible lending,Rejected,9,2024,1.1
+22369293,1,04/09/2024,12/09/2024,8,Irresponsible lending,Rejected,9,2024,1.1
+23013953,1,04/09/2024,12/09/2024,8,Irresponsible lending,Rejected,9,2024,1.1
+24339260,1,04/09/2024,12/09/2024,8,Irresponsible lending,Rejected,9,2024,1.1
+20502131,1,05/09/2024,18/10/2024,43,Irresponsible lending,Rejected,9,2024,6.1
+22436422,1,05/09/2024,12/09/2024,7,Irresponsible lending,Rejected,9,2024,1.0
+24268158,1,05/09/2024,12/09/2024,7,Irresponsible lending,Rejected,9,2024,1.0
+20005513,1,07/09/2024,01/11/2024,55,Irresponsible lending,Rejected,9,2024,7.9
+20106781,1,09/09/2024,12/09/2024,3,Irresponsible lending,Rejected,9,2024,0.4
+20151214,1,09/09/2024,12/09/2024,3,Irresponsible lending,Rejected,9,2024,0.4
+20372097,1,09/09/2024,12/09/2024,3,Irresponsible lending,Rejected,9,2024,0.4
+20380946,1,09/09/2024,12/09/2024,3,Irresponsible lending,Rejected,9,2024,0.4
+22707653,1,09/09/2024,12/09/2024,3,Irresponsible lending,Rejected,9,2024,0.4
+24618811,1,09/09/2024,12/09/2024,3,Irresponsible lending,Rejected,9,2024,0.4
+24807986,1,09/09/2024,12/09/2024,3,Irresponsible lending,Rejected,9,2024,0.4
+24286873,1,10/09/2024,10/09/2024,0,Irresponsible lending,Withdrawn,9,2024,0.0
+24812209,1,10/09/2024,15/11/2024,66,Fraud,Upheld,9,2024,9.4
+20565705,1,11/09/2024,06/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+22793307,1,11/09/2024,06/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+23461034,1,11/09/2024,06/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+20216354,1,12/09/2024,06/11/2024,55,Irresponsible lending,Rejected,9,2024,7.9
+21193503,1,12/09/2024,07/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+22869456,1,12/09/2024,07/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+23347078,1,12/09/2024,06/11/2024,55,Irresponsible lending,Rejected,9,2024,7.9
+20018241,1,13/09/2024,06/11/2024,54,Irresponsible lending,Rejected,9,2024,7.7
+20563967,1,13/09/2024,06/11/2024,54,Irresponsible lending,Rejected,9,2024,7.7
+20815042,1,14/09/2024,06/11/2024,53,Irresponsible lending,Rejected,9,2024,7.6
+20006178,1,15/09/2024,06/11/2024,52,Irresponsible lending,Rejected,9,2024,7.4
+20323577,1,15/09/2024,07/11/2024,53,Irresponsible lending,Rejected,9,2024,7.6
+22177556,1,16/09/2024,06/11/2024,51,Irresponsible lending,Rejected,9,2024,7.3
+20365785,1,17/09/2024,06/11/2024,50,Irresponsible lending,Rejected,9,2024,7.1
+20456804,1,17/09/2024,06/11/2024,50,Irresponsible lending,Rejected,9,2024,7.1
+21285209,1,17/09/2024,06/11/2024,50,Irresponsible lending,Rejected,9,2024,7.1
+23849100,1,18/09/2024,06/11/2024,49,Irresponsible lending,Rejected,9,2024,7.0
+24272310,1,18/09/2024,06/11/2024,49,Irresponsible lending,Rejected,9,2024,7.0
+24528054,1,18/09/2024,13/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+20170229,1,19/09/2024,13/11/2024,55,Irresponsible lending,Rejected,9,2024,7.9
+21981324,1,20/09/2024,13/11/2024,54,Irresponsible lending,Rejected,9,2024,7.7
+22118898,1,20/09/2024,13/11/2024,54,Irresponsible lending,Rejected,9,2024,7.7
+23155448,1,20/09/2024,06/11/2024,47,Irresponsible lending,Rejected,9,2024,6.7
+20322797,1,21/09/2024,06/11/2024,46,Irresponsible lending,Rejected,9,2024,6.6
+21800265,1,21/09/2024,06/11/2024,46,Irresponsible lending,Rejected,9,2024,6.6
+22282479,1,23/09/2024,13/11/2024,51,Irresponsible lending,Rejected,9,2024,7.3
+23874390,1,23/09/2024,06/11/2024,44,Irresponsible lending,Rejected,9,2024,6.3
+21737400,1,24/09/2024,06/11/2024,43,Irresponsible lending,Rejected,9,2024,6.1
+21888708,1,24/09/2024,19/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+22195312,1,24/09/2024,19/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+25027653,1,24/09/2024,19/11/2024,56,Irresponsible lending,Upheld,9,2024,8.0
+25040459,1,24/09/2024,11/10/2024,17,Fraud,Upheld,9,2024,2.4
+20659226,1,25/09/2024,06/11/2024,42,Irresponsible lending,Rejected,9,2024,6.0
+10257377,1,26/09/2024,06/11/2024,41,Irresponsible lending,Rejected,9,2024,5.9
+20989852,1,26/09/2024,19/11/2024,54,Irresponsible lending,Rejected,9,2024,7.7
+22794722,1,26/09/2024,19/11/2024,54,Irresponsible lending,Rejected,9,2024,7.7
+10140553,1,27/09/2024,22/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+20839090,1,27/09/2024,19/11/2024,53,Irresponsible lending,Rejected,9,2024,7.6
+21556535,1,27/09/2024,19/11/2024,53,Service Issue,Rejected,9,2024,7.6
+22929179,1,27/09/2024,06/11/2024,40,Irresponsible lending,Rejected,9,2024,5.7
+23355582,1,28/09/2024,06/11/2024,39,Irresponsible lending,Rejected,9,2024,5.6
+23465346,1,28/09/2024,06/11/2024,39,Irresponsible lending,Rejected,9,2024,5.6
+24593459,1,28/09/2024,04/10/2024,6,Irresponsible lending,Rejected,9,2024,0.9
+20021191,1,30/09/2024,25/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+23233493,1,30/09/2024,06/11/2024,37,Irresponsible lending,Rejected,9,2024,5.3
+25091420,1,30/09/2024,25/11/2024,56,Irresponsible lending,Rejected,9,2024,8.0
+25217532,1,30/09/2024,11/10/2024,11,Fraud,Upheld,9,2024,1.6
+21006719,1,01/10/2024,25/11/2024,55,Irresponsible lending,Rejected,10,2024,7.9
+21367370,1,01/10/2024,25/11/2024,55,Irresponsible lending,Rejected,10,2024,7.9
+21489297,1,01/10/2024,25/11/2024,55,Irresponsible lending,Rejected,10,2024,7.9
+21804525,1,01/10/2024,06/11/2024,36,Irresponsible lending,Rejected,10,2024,5.1
+22674412,1,01/10/2024,06/11/2024,36,Irresponsible lending,Rejected,10,2024,5.1
+25201099,1,02/10/2024,14/10/2024,12,Subject Access Request,,10,2024,1.7
+23983120,1,03/10/2024,25/11/2024,53,Irresponsible lending,Rejected,10,2024,7.6
+24026150,1,03/10/2024,28/11/2024,56,Service Issue,Rejected,10,2024,8.0
+20116278,1,04/10/2024,06/11/2024,33,Irresponsible lending,Rejected,10,2024,4.7
+24790348,1,04/10/2024,06/11/2024,33,Irresponsible lending,Rejected,10,2024,4.7
+10150525,1,06/10/2024,28/11/2024,53,Irresponsible lending,Rejected,10,2024,7.6
+25278626,1,07/10/2024,11/10/2024,4,Fraud,Upheld,10,2024,0.6
+20299935,1,08/10/2024,07/11/2024,30,Subject Access Request,,10,2024,4.3
+21755151,1,08/10/2024,07/11/2024,30,Irresponsible lending,Rejected,10,2024,4.3
+24588427,1,08/10/2024,06/11/2024,29,Irresponsible lending,Rejected,10,2024,4.1
+25284527,1,08/10/2024,11/10/2024,3,Fraud,Upheld,10,2024,0.4
+21816289,1,09/10/2024,06/11/2024,28,Irresponsible lending,Rejected,10,2024,4.0
+23458792,1,10/10/2024,06/11/2024,27,Irresponsible lending,Rejected,10,2024,3.9
+23619936,1,10/10/2024,06/11/2024,27,Irresponsible lending,Rejected,10,2024,3.9
+24286817,1,10/10/2024,06/11/2024,27,Irresponsible lending,Rejected,10,2024,3.9
+25245173,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+25267910,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+25297917,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+25310874,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+25315259,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+25345665,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+25350692,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+25370983,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+25394298,1,10/10/2024,11/10/2024,1,Fraud,Upheld,10,2024,0.1
+20002261,1,11/10/2024,06/11/2024,26,Irresponsible lending,Rejected,10,2024,3.7
+22267865,1,11/10/2024,06/11/2024,26,Irresponsible lending,Rejected,10,2024,3.7
+24516587,1,11/10/2024,07/11/2024,27,Service Issue,Upheld,10,2024,3.9
+24558036,1,11/10/2024,07/11/2024,27,Service Issue,Rejected,10,2024,3.9
+25046863,1,11/10/2024,06/11/2024,26,Irresponsible lending,Rejected,10,2024,3.7
+21017730,1,12/10/2024,06/11/2024,25,Irresponsible lending,Rejected,10,2024,3.6
+21336988,1,12/10/2024,13/11/2024,32,Irresponsible lending,Rejected,10,2024,4.6
+21671134,1,12/10/2024,06/11/2024,25,Irresponsible lending,Rejected,10,2024,3.6
+24806236,1,12/10/2024,06/11/2024,25,Irresponsible lending,Rejected,10,2024,3.6
+20035605,1,13/10/2024,06/11/2024,24,Irresponsible lending,Rejected,10,2024,3.4
+23201707,1,13/10/2024,21/10/2024,8,Payment,Rejected,10,2024,1.1
+10140563,1,14/10/2024,06/11/2024,23,Irresponsible lending,Rejected,10,2024,3.3
+23984207,1,14/10/2024,06/11/2024,23,Irresponsible lending,Rejected,10,2024,3.3
+20417065,1,15/10/2024,06/11/2024,22,Irresponsible lending,Rejected,10,2024,3.1
+25420685,1,15/10/2024,06/11/2024,22,Irresponsible lending,Rejected,10,2024,3.1
+23761517,1,16/10/2024,06/11/2024,21,Irresponsible lending,Rejected,10,2024,3.0
+10182133,1,17/10/2024,06/11/2024,20,Irresponsible lending,Rejected,10,2024,2.9
+23229023,1,17/10/2024,13/11/2024,27,Irresponsible lending,Rejected,10,2024,3.9
+23717273,1,17/10/2024,06/11/2024,20,Irresponsible lending,Rejected,10,2024,2.9
+22894788,1,18/10/2024,06/11/2024,19,Irresponsible lending,Rejected,10,2024,2.7
+25275848,1,18/10/2024,11/11/2024,24,Fraud,Upheld,10,2024,3.4
+25181287,1,19/10/2024,06/11/2024,18,Irresponsible lending,Rejected,10,2024,2.6
+23296847,1,20/10/2024,28/11/2024,39,Irresponsible lending,Rejected,10,2024,5.6
+23406017,1,20/10/2024,28/11/2024,39,Irresponsible lending,Rejected,10,2024,5.6
+20795410,1,21/10/2024,06/11/2024,16,Irresponsible lending,Rejected,10,2024,2.3
+21858844,1,21/10/2024,06/11/2024,16,Irresponsible lending,Rejected,10,2024,2.3
+23348555,1,21/10/2024,28/11/2024,38,Irresponsible lending,Rejected,10,2024,5.4
+23972676,1,21/10/2024,06/11/2024,16,Irresponsible lending,Rejected,10,2024,2.3
+20016439,1,22/10/2024,05/12/2024,44,Irresponsible lending,Rejected,10,2024,6.3
+20123907,1,22/10/2024,06/11/2024,15,Irresponsible lending,Rejected,10,2024,2.1
+20364343,1,22/10/2024,28/11/2024,37,Irresponsible lending,Rejected,10,2024,5.3
+23166407,1,22/10/2024,06/11/2024,15,Irresponsible lending,Rejected,10,2024,2.1
+23513640,1,22/10/2024,06/11/2024,15,Irresponsible lending,Rejected,10,2024,2.1
+24137608,1,22/10/2024,22/11/2024,31,Subject Access Request,,10,2024,4.4
+24137608,1,22/10/2024,28/11/2024,37,Irresponsible lending,Rejected,10,2024,5.3
+10141278,1,23/10/2024,06/11/2024,14,Irresponsible lending,Rejected,10,2024,2.0
+20379766,1,23/10/2024,06/11/2024,14,Irresponsible lending,Rejected,10,2024,2.0
+25342342,1,23/10/2024,21/11/2024,29,Fraud,Upheld,10,2024,4.1
+20118713,1,24/10/2024,05/12/2024,42,Irresponsible lending,Rejected,10,2024,6.0
+23500646,1,24/10/2024,05/12/2024,42,Irresponsible lending,Rejected,10,2024,6.0
+23705020,1,24/10/2024,05/12/2024,42,Irresponsible lending,Rejected,10,2024,6.0
+20129007,1,25/10/2024,05/12/2024,41,Irresponsible lending,Rejected,10,2024,5.9
+10149616,1,26/10/2024,05/12/2024,40,Irresponsible lending,Rejected,10,2024,5.7
+23580784,1,26/10/2024,05/12/2024,40,Irresponsible lending,Rejected,10,2024,5.7
+25270423,1,27/10/2024,03/03/2025,127,Fraud,Upheld,10,2024,18.1
+20125007,1,28/10/2024,05/12/2024,38,Irresponsible lending,Rejected,10,2024,5.4
+20126591,1,28/10/2024,05/12/2024,38,Irresponsible lending,Rejected,10,2024,5.4
+20776189,1,28/10/2024,05/12/2024,38,Irresponsible lending,Rejected,10,2024,5.4
+22586060,1,28/10/2024,05/12/2024,38,Irresponsible lending,Rejected,10,2024,5.4
+24078300,1,28/10/2024,05/12/2024,38,Irresponsible lending,Rejected,10,2024,5.4
+24450965,1,28/10/2024,05/12/2024,38,Irresponsible lending,Rejected,10,2024,5.4
+20017573,1,29/10/2024,05/12/2024,37,Irresponsible lending,Rejected,10,2024,5.3
+23536865,1,29/10/2024,05/12/2024,37,Irresponsible lending,Rejected,10,2024,5.3
+25581653,1,29/10/2024,16/11/2024,18,Fraud,Upheld,10,2024,2.6
+20408709,1,30/10/2024,05/12/2024,36,Irresponsible lending,Rejected,10,2024,5.1
+20558951,1,30/10/2024,05/12/2024,36,Irresponsible lending,Rejected,10,2024,5.1
+23328570,1,30/10/2024,05/12/2024,36,Irresponsible lending,Rejected,10,2024,5.1
+24944313,1,30/10/2024,05/12/2024,36,Irresponsible lending,Rejected,10,2024,5.1
+20018918,1,31/10/2024,05/12/2024,35,Irresponsible lending,Rejected,10,2024,5.0
+23929188,1,31/10/2024,12/12/2024,42,Irresponsible lending,Rejected,10,2024,6.0
+25343287,1,31/10/2024,05/12/2024,35,Irresponsible lending,Rejected,10,2024,5.0
+25504315,1,31/10/2024,12/12/2024,42,Irresponsible lending,Rejected,10,2024,6.0
+23391489,1,01/11/2024,05/12/2024,34,Irresponsible lending,Rejected,11,2024,4.9
+23563987,1,01/11/2024,05/12/2024,34,Irresponsible lending,Rejected,11,2024,4.9
+24285306,1,01/11/2024,12/12/2024,41,Irresponsible lending,Rejected,11,2024,5.9
+20120593,1,02/11/2024,05/12/2024,33,Irresponsible lending,Rejected,11,2024,4.7
+20658483,1,02/11/2024,05/12/2024,33,Irresponsible lending,Rejected,11,2024,4.7
+22794919,1,02/11/2024,05/12/2024,33,Irresponsible lending,Rejected,11,2024,4.7
+20007598,1,03/11/2024,12/12/2024,39,Irresponsible lending,Rejected,11,2024,5.6
+22576510,1,03/11/2024,05/12/2024,32,Irresponsible lending,Rejected,11,2024,4.6
+25201021,1,03/11/2024,12/12/2024,39,Irresponsible lending,Rejected,11,2024,5.6
+22975000,1,04/11/2024,05/12/2024,31,Irresponsible lending,Rejected,11,2024,4.4
+20213046,1,05/11/2024,05/12/2024,30,Irresponsible lending,Rejected,11,2024,4.3
+23223190,1,05/11/2024,12/12/2024,37,Irresponsible lending,Rejected,11,2024,5.3
+23225802,1,05/11/2024,05/12/2024,30,Irresponsible lending,Rejected,11,2024,4.3
+10173462,1,06/11/2024,12/12/2024,36,Irresponsible lending,Rejected,11,2024,5.1
+10236074,1,06/11/2024,05/12/2024,29,Subject Access Request,,11,2024,4.1
+20756610,1,06/11/2024,19/12/2024,43,Irresponsible lending,Rejected,11,2024,6.1
+23116348,1,06/11/2024,24/12/2024,48,Application process,Rejected,11,2024,6.9
+25414119,1,06/11/2024,05/12/2024,29,Irresponsible lending,Rejected,11,2024,4.1
+25360504,1,08/11/2024,18/12/2024,40,Fraud,Upheld,11,2024,5.7
+20010034,1,09/11/2024,19/12/2024,40,Irresponsible lending,Rejected,11,2024,5.7
+20269082,1,12/11/2024,19/12/2024,37,Irresponsible lending,Rejected,11,2024,5.3
+22766823,1,12/11/2024,19/12/2024,37,Irresponsible lending,Rejected,11,2024,5.3
+25042875,1,13/11/2024,14/02/2025,93,Fraud,Upheld,11,2024,13.3
+22958755,1,14/11/2024,19/12/2024,35,Irresponsible lending,Rejected,11,2024,5.0
+24822352,1,14/11/2024,19/12/2024,35,Irresponsible lending,Rejected,11,2024,5.0
+24818769,1,16/11/2024,19/12/2024,33,Irresponsible lending,Rejected,11,2024,4.7
+20869775,1,18/11/2024,24/12/2024,36,Irresponsible lending,Rejected,11,2024,5.1
+21103588,1,19/11/2024,24/12/2024,35,Service Issue,Rejected,11,2024,5.0
+22043569,1,20/11/2024,24/12/2024,34,Irresponsible lending,Rejected,11,2024,4.9
+23311859,1,20/11/2024,04/12/2024,14,Service Issue,Withdrawn,11,2024,2.0
+24815868,1,20/11/2024,24/12/2024,34,Irresponsible lending,Rejected,11,2024,4.9
+21436599,1,21/11/2024,24/12/2024,33,Irresponsible lending,Rejected,11,2024,4.7
+10139781,1,25/11/2024,24/12/2024,29,Irresponsible lending,Rejected,11,2024,4.1
+21926590,1,27/11/2024,16/12/2024,19,Subject Access Request,,11,2024,2.7
+21246611,1,28/11/2024,16/12/2024,18,Subject Access Request,,11,2024,2.6
+20326465,1,29/11/2024,21/01/2025,53,Irresponsible lending,Rejected,11,2024,7.6
+24798651,1,30/11/2024,21/01/2025,52,Irresponsible lending,Rejected,11,2024,7.4
+24987533,1,01/12/2024,21/01/2025,51,Irresponsible lending,Rejected,12,2024,7.3
+22550664,1,02/12/2024,21/01/2025,50,Irresponsible lending,Rejected,12,2024,7.1
+25003743,1,02/12/2024,21/01/2025,50,Irresponsible lending,Rejected,12,2024,7.1
+20794813,1,03/12/2024,21/01/2025,49,Irresponsible lending,Rejected,12,2024,7.0
+25088675,1,03/12/2024,21/01/2025,49,Irresponsible lending,Rejected,12,2024,7.0
+20720566,1,04/12/2024,21/01/2025,48,Irresponsible lending,Rejected,12,2024,6.9
+22388250,1,04/12/2024,21/01/2025,48,Payment,Rejected,12,2024,6.9
+20324734,1,05/12/2024,21/01/2025,47,Irresponsible lending,Rejected,12,2024,6.7
+20572467,1,05/12/2024,21/01/2025,47,Payment,Rejected,12,2024,6.7
+20602049,1,08/12/2024,21/01/2025,44,Irresponsible lending,Rejected,12,2024,6.3
+25314089,1,09/12/2024,21/01/2025,43,Irresponsible lending,Rejected,12,2024,6.1
+25765695,1,09/12/2024,21/01/2025,43,Application process,Rejected,12,2024,6.1
+22795808,1,10/12/2024,21/01/2025,42,Irresponsible lending,Rejected,12,2024,6.0
+23124782,1,10/12/2024,21/01/2025,42,Irresponsible lending,Rejected,12,2024,6.0
+23420045,1,10/12/2024,24/12/2024,14,Subject Access Request,,12,2024,2.0
+23420045,1,10/12/2024,21/01/2025,42,Irresponsible lending,Rejected,12,2024,6.0
+25040626,1,10/12/2024,21/01/2025,42,Fraud,Upheld,12,2024,6.0
+24416769,1,11/12/2024,21/01/2025,41,Irresponsible lending,Rejected,12,2024,5.9
+20583137,1,16/12/2024,21/01/2025,36,Irresponsible lending,Rejected,12,2024,5.1
+21208884,1,16/12/2024,07/01/2025,22,Subject Access Request,,12,2024,3.1
+25342342,1,16/12/2024,21/01/2025,36,Service Issue,Rejected,12,2024,5.1
+20070496,1,19/12/2024,31/01/2025,43,Irresponsible lending,Rejected,12,2024,6.1
+21782779,1,19/12/2024,13/02/2025,56,Irresponsible lending,Partially upheld,12,2024,8.0
+22361586,1,19/12/2024,13/02/2025,56,Service Issue,Upheld,12,2024,8.0
+10259954,1,20/12/2024,31/01/2025,42,Irresponsible lending,Rejected,12,2024,6.0
+24972186,1,23/12/2024,07/01/2025,15,Subject Access Request,,12,2024,2.1
+25622087,1,23/12/2024,24/03/2025,91,Fraud,Upheld,12,2024,13.0
+21626985,1,25/12/2024,31/01/2025,37,Irresponsible lending,Rejected,12,2024,5.3
+25797743,1,25/12/2024,31/01/2025,37,Service Issue,Withdrawn,12,2024,5.3
+24845793,1,28/12/2024,17/02/2025,51,Service Issue,Rejected,12,2024,7.3
+25748174,1,31/12/2024,17/01/2025,17,Subject Access Request,,12,2024,2.4
+20007976,1,02/01/2025,17/02/2025,46,Irresponsible lending,Rejected,1,2025,6.6
+20331750,1,02/01/2025,17/02/2025,46,Irresponsible lending,Rejected,1,2025,6.6
+20388066,1,02/01/2025,17/02/2025,46,Irresponsible lending,Rejected,1,2025,6.6
+23645392,1,02/01/2025,17/01/2025,15,Subject Access Request,,1,2025,2.1
+24962630,1,02/01/2025,17/02/2025,46,Irresponsible lending,Rejected,1,2025,6.6
+25308636,1,03/01/2025,17/02/2025,45,Irresponsible lending,Rejected,1,2025,6.4
+20333371,1,04/01/2025,17/02/2025,44,Irresponsible lending,Rejected,1,2025,6.3
+22812156,1,05/01/2025,17/02/2025,43,Irresponsible lending,Rejected,1,2025,6.1
+20178465,1,07/01/2025,17/02/2025,41,Irresponsible lending,Rejected,1,2025,5.9
+25724845,1,07/01/2025,17/02/2025,41,Irresponsible lending,Rejected,1,2025,5.9
+10245820,1,08/01/2025,17/02/2025,40,Irresponsible lending,Rejected,1,2025,5.7
+20325276,1,08/01/2025,17/02/2025,40,Irresponsible lending,Rejected,1,2025,5.7
+20476217,1,08/01/2025,17/02/2025,40,Irresponsible lending,Rejected,1,2025,5.7
+21035351,1,08/01/2025,19/02/2025,42,Service Issue,Withdrawn,1,2025,6.0
+21648702,1,09/01/2025,03/03/2025,53,Irresponsible lending,Rejected,1,2025,7.6
+22036678,1,09/01/2025,03/03/2025,53,Irresponsible lending,Rejected,1,2025,7.6
+24836442,1,09/01/2025,17/02/2025,39,Payment,Rejected,1,2025,5.6
+20250951,1,10/01/2025,17/02/2025,38,Subject Access Request,,1,2025,5.4
+24585637,1,12/01/2025,03/03/2025,50,Irresponsible lending,Rejected,1,2025,7.1
+25170271,1,13/01/2025,03/03/2025,49,Irresponsible lending,Rejected,1,2025,7.0
+20065353,1,14/01/2025,07/03/2025,52,Service Issue,Rejected,1,2025,7.4
+25192509,1,14/01/2025,03/03/2025,48,Irresponsible lending,Rejected,1,2025,6.9
+24871278,1,15/01/2025,03/03/2025,47,Service Issue,Rejected,1,2025,6.7
+24513167,1,16/01/2025,31/01/2025,15,Irresponsible lending,Rejected,1,2025,2.1
+10143973,1,17/01/2025,04/03/2025,46,Irresponsible lending,Rejected,1,2025,6.6
+22004813,1,17/01/2025,03/03/2025,45,Irresponsible lending,Rejected,1,2025,6.4
+24995567,1,18/01/2025,04/03/2025,45,Irresponsible lending,Rejected,1,2025,6.4
+20061955,1,20/01/2025,04/03/2025,43,Irresponsible lending,Rejected,1,2025,6.1
+20077255,1,20/01/2025,04/03/2025,43,Irresponsible lending,Rejected,1,2025,6.1
+20169311,1,20/01/2025,04/03/2025,43,Irresponsible lending,Rejected,1,2025,6.1
+20410636,1,20/01/2025,04/03/2025,43,Irresponsible lending,Rejected,1,2025,6.1
+23053655,1,21/01/2025,05/02/2025,15,Subject Access Request,,1,2025,2.1
+22923407,1,22/01/2025,04/03/2025,41,Application process,Rejected,1,2025,5.9
+25618589,1,24/01/2025,07/03/2025,42,Fraud,Upheld,1,2025,6.0
+25772979,1,24/01/2025,07/03/2025,42,Irresponsible lending,Rejected,1,2025,6.0
+22744510,1,27/01/2025,07/03/2025,39,Irresponsible lending,Rejected,1,2025,5.6
+23444389,1,27/01/2025,07/03/2025,39,Irresponsible lending,Rejected,1,2025,5.6
+23862915,1,27/01/2025,07/03/2025,39,Irresponsible lending,Rejected,1,2025,5.6
+21793265,1,30/01/2025,07/03/2025,36,Irresponsible lending,Rejected,1,2025,5.1
+21020417,1,01/02/2025,07/03/2025,34,Irresponsible lending,Rejected,2,2025,4.9
+21808523,1,03/02/2025,07/03/2025,32,Irresponsible lending,Rejected,2,2025,4.6
+22185771,1,03/02/2025,07/03/2025,32,Application process,Rejected,2,2025,4.6
+24879755,1,03/02/2025,14/03/2025,39,Irresponsible lending,Rejected,2,2025,5.6
+24393788,1,04/02/2025,14/03/2025,38,Irresponsible lending,Rejected,2,2025,5.4
+10141588,1,05/02/2025,14/03/2025,37,Application process,Upheld,2,2025,5.3
+25736734,1,05/02/2025,14/03/2025,37,Irresponsible lending,Rejected,2,2025,5.3
+23114578,1,06/02/2025,14/03/2025,36,Irresponsible lending,Rejected,2,2025,5.1
+20255539,1,07/02/2025,26/02/2025,19,Subject Access Request,,2,2025,2.7
+22322069,1,07/02/2025,14/03/2025,35,Irresponsible lending,Rejected,2,2025,5.0
+24868622,1,09/02/2025,21/03/2025,40,Irresponsible lending,Rejected,2,2025,5.7
+25866811,1,09/02/2025,21/03/2025,40,Irresponsible lending,Rejected,2,2025,5.7
+23808142,1,10/02/2025,14/03/2025,32,Irresponsible lending,Rejected,2,2025,4.6
+24861571,1,11/02/2025,21/03/2025,38,Irresponsible lending,Rejected,2,2025,5.4
+24371529,1,12/02/2025,21/03/2025,37,Irresponsible lending,Rejected,2,2025,5.3
+10266255,1,13/02/2025,21/03/2025,36,Irresponsible lending,Rejected,2,2025,5.1
+20105537,1,13/02/2025,21/03/2025,36,Irresponsible lending,Rejected,2,2025,5.1
+25382932,1,13/02/2025,21/03/2025,36,Irresponsible lending,Rejected,2,2025,5.1
+24331373,1,17/02/2025,17/02/2025,0,Service Issue,Withdrawn,2,2025,0.0
+24772125,1,19/02/2025,26/02/2025,7,Subject Access Request,,2,2025,1.0
+25734218,1,19/02/2025,29/07/2025,160,Fraud,Upheld,2,2025,22.9
+20107663,1,20/02/2025,27/03/2025,35,Irresponsible lending,Rejected,2,2025,5.0
+22319857,1,20/02/2025,27/03/2025,35,Irresponsible lending,Rejected,2,2025,5.0
+20971853,1,21/02/2025,27/03/2025,34,Irresponsible lending,Rejected,2,2025,4.9
+25659530,1,21/02/2025,27/03/2025,34,Irresponsible lending,Rejected,2,2025,4.9
+22105403,1,22/02/2025,27/03/2025,33,Irresponsible lending,Rejected,2,2025,4.7
+20162682,1,23/02/2025,08/04/2025,44,Service Issue,Rejected,2,2025,6.3
+20077713,1,24/02/2025,27/03/2025,31,Irresponsible lending,Rejected,2,2025,4.4
+21417850,1,24/02/2025,08/04/2025,43,Irresponsible lending,Rejected,2,2025,6.1
+24950608,1,25/02/2025,08/04/2025,42,Application process,Rejected,2,2025,6.0
+21476518,1,26/02/2025,08/04/2025,41,Irresponsible lending,Rejected,2,2025,5.9
+10150571,1,27/02/2025,08/04/2025,40,Irresponsible lending,Rejected,2,2025,5.7
+10210974,1,27/02/2025,08/04/2025,40,Irresponsible lending,Rejected,2,2025,5.7
+23688059,1,28/02/2025,27/03/2025,27,Payment,Rejected,2,2025,3.9
+24265436,1,28/02/2025,02/04/2025,33,Subject Access Request,,2,2025,4.7
+24265436,1,28/02/2025,08/04/2025,39,Irresponsible lending,Rejected,2,2025,5.6
+23118059,1,04/03/2025,14/04/2025,41,Irresponsible lending,Rejected,3,2025,5.9
+10208737,1,05/03/2025,14/04/2025,40,Irresponsible lending,Rejected,3,2025,5.7
+23926389,1,05/03/2025,14/04/2025,40,Irresponsible lending,Rejected,3,2025,5.7
+25174573,1,06/03/2025,14/04/2025,39,Irresponsible lending,Rejected,3,2025,5.6
+25462880,1,06/03/2025,14/04/2025,39,Irresponsible lending,Rejected,3,2025,5.6
+20573750,1,08/03/2025,17/04/2025,40,Irresponsible lending,Rejected,3,2025,5.7
+24057168,1,08/03/2025,14/04/2025,37,Irresponsible lending,Rejected,3,2025,5.3
+24808164,1,08/03/2025,14/04/2025,37,Irresponsible lending,Rejected,3,2025,5.3
+22318624,1,11/03/2025,17/04/2025,37,Irresponsible lending,Rejected,3,2025,5.3
+21441234,1,12/03/2025,17/04/2025,36,Irresponsible lending,Rejected,3,2025,5.1
+20066329,1,14/03/2025,17/04/2025,34,Service Issue,Rejected,3,2025,4.9
+24645229,1,14/03/2025,28/04/2025,45,Irresponsible lending,Rejected,3,2025,6.4
+25819783,1,14/03/2025,14/03/2025,0,Fraud,Upheld,3,2025,0.0
+20782433,1,15/03/2025,17/04/2025,33,Irresponsible lending,Rejected,3,2025,4.7
+22408727,1,15/03/2025,28/04/2025,44,Irresponsible lending,Rejected,3,2025,6.3
+23088846,1,15/03/2025,17/04/2025,33,Payment,Rejected,3,2025,4.7
+20143585,1,17/03/2025,28/04/2025,42,Irresponsible lending,Rejected,3,2025,6.0
+23154759,1,18/03/2025,28/04/2025,41,Irresponsible lending,Rejected,3,2025,5.9
+25523657,1,18/03/2025,28/04/2025,41,Irresponsible lending,Rejected,3,2025,5.9
+23129970,1,19/03/2025,28/04/2025,40,Irresponsible lending,Rejected,3,2025,5.7
+25782815,1,19/03/2025,28/04/2025,40,Service Issue,Rejected,3,2025,5.7
+21252314,1,20/03/2025,28/04/2025,39,Irresponsible lending,Rejected,3,2025,5.6
+24905100,1,20/03/2025,28/04/2025,39,Application process,Rejected,3,2025,5.6
+25887365,1,20/03/2025,21/05/2025,62,Fraud,Upheld,3,2025,8.9
+10160598,1,21/03/2025,09/05/2025,49,Irresponsible lending,Rejected,3,2025,7.0
+21138810,1,21/03/2025,21/03/2025,0,Fraud,Upheld,3,2025,0.0
+24578722,1,21/03/2025,09/05/2025,49,Irresponsible lending,Rejected,3,2025,7.0
+25406789,1,21/03/2025,02/05/2025,42,Irresponsible lending,Withdrawn,3,2025,6.0
+25751006,1,21/03/2025,09/05/2025,49,Irresponsible lending,Rejected,3,2025,7.0
+25409924,1,24/03/2025,09/05/2025,46,Irresponsible lending,Rejected,3,2025,6.6
+20006104,1,25/03/2025,09/05/2025,45,Irresponsible lending,Rejected,3,2025,6.4
+25912791,1,25/03/2025,27/03/2025,2,Fraud,Upheld,3,2025,0.3
+22477434,1,26/03/2025,09/05/2025,44,Irresponsible lending,Rejected,3,2025,6.3
+20275734,1,27/03/2025,09/05/2025,43,Irresponsible lending,Rejected,3,2025,6.1
+21605907,1,27/03/2025,09/05/2025,43,Irresponsible lending,Rejected,3,2025,6.1
+23090702,1,27/03/2025,09/05/2025,43,Irresponsible lending,Rejected,3,2025,6.1
+20792275,1,28/03/2025,09/05/2025,42,Irresponsible lending,Rejected,3,2025,6.0
+20816932,1,28/03/2025,09/05/2025,42,Irresponsible lending,Rejected,3,2025,6.0
+23676720,1,28/03/2025,09/05/2025,42,Irresponsible lending,Rejected,3,2025,6.0
+25805629,1,28/03/2025,09/05/2025,42,Irresponsible lending,Rejected,3,2025,6.0
+21606714,1,29/03/2025,09/05/2025,41,Irresponsible lending,Rejected,3,2025,5.9
+21928962,1,30/03/2025,09/05/2025,40,Irresponsible lending,Rejected,3,2025,5.7
+24278362,1,01/04/2025,09/05/2025,38,Irresponsible lending,Rejected,4,2025,5.4
+24680976,1,02/04/2025,09/05/2025,37,Irresponsible lending,Rejected,4,2025,5.3
+25845763,1,02/04/2025,03/04/2025,1,Fraud,Upheld,4,2025,0.1
+24187341,1,03/04/2025,16/05/2025,43,Irresponsible lending,Rejected,4,2025,6.1
+23272383,1,04/04/2025,16/05/2025,42,Irresponsible lending,Rejected,4,2025,6.0
+22004325,1,07/04/2025,16/05/2025,39,Irresponsible lending,Rejected,4,2025,5.6
+25021619,1,07/04/2025,16/05/2025,39,Irresponsible lending,Rejected,4,2025,5.6
+20158019,1,09/04/2025,16/05/2025,37,Irresponsible lending,Rejected,4,2025,5.3
+21392697,1,09/04/2025,16/05/2025,37,Irresponsible lending,Rejected,4,2025,5.3
+21400725,1,09/04/2025,16/05/2025,37,Irresponsible lending,Rejected,4,2025,5.3
+21961624,1,09/04/2025,16/05/2025,37,Irresponsible lending,Rejected,4,2025,5.3
+24124602,1,09/04/2025,16/05/2025,37,Irresponsible lending,Rejected,4,2025,5.3
+24582936,1,11/04/2025,23/05/2025,42,Irresponsible lending,Rejected,4,2025,6.0
+25179141,1,11/04/2025,23/05/2025,42,Irresponsible lending,Rejected,4,2025,6.0
+25460842,1,11/04/2025,23/05/2025,42,Irresponsible lending,Rejected,4,2025,6.0
+21273904,1,12/04/2025,23/05/2025,41,Irresponsible lending,Rejected,4,2025,5.9
+25390357,1,12/04/2025,23/05/2025,41,Irresponsible lending,Rejected,4,2025,5.9
+20116808,1,13/04/2025,23/05/2025,40,Irresponsible lending,Rejected,4,2025,5.7
+20824923,1,14/04/2025,23/05/2025,39,Irresponsible lending,Rejected,4,2025,5.6
+23304050,1,14/04/2025,29/05/2025,45,Irresponsible lending,Rejected,4,2025,6.4
+10140087,1,15/04/2025,29/05/2025,44,Irresponsible lending,Rejected,4,2025,6.3
+26159173,1,16/04/2025,13/05/2025,27,Fraud,Upheld,4,2025,3.9
+24840167,1,18/04/2025,29/05/2025,41,Irresponsible lending,Rejected,4,2025,5.9
+24331373,1,19/04/2025,29/05/2025,40,Irresponsible lending,Rejected,4,2025,5.7
+20746714,1,21/04/2025,29/05/2025,38,Irresponsible lending,Rejected,4,2025,5.4
+23923883,1,21/04/2025,29/05/2025,38,Irresponsible lending,Rejected,4,2025,5.4
+24577121,1,21/04/2025,29/05/2025,38,Irresponsible lending,Rejected,4,2025,5.4
+21428764,1,22/04/2025,05/06/2025,44,Irresponsible lending,Rejected,4,2025,6.3
+25987555,1,22/04/2025,05/06/2025,44,Irresponsible lending,Rejected,4,2025,6.3
+24278814,1,24/04/2025,05/06/2025,42,Irresponsible lending,Rejected,4,2025,6.0
+24910589,1,24/04/2025,21/05/2025,27,Subject Access Request,,4,2025,3.9
+24910589,1,24/04/2025,05/06/2025,42,Irresponsible lending,Rejected,4,2025,6.0
+26135787,1,24/04/2025,11/06/2025,48,Irresponsible lending,Rejected,4,2025,6.9
+20413526,1,28/04/2025,05/06/2025,38,Irresponsible lending,Rejected,4,2025,5.4
+25057738,1,28/04/2025,05/06/2025,38,Service Issue,Upheld,4,2025,5.4
+21480093,1,29/04/2025,11/06/2025,43,Irresponsible lending,Rejected,4,2025,6.1
+24881735,1,02/05/2025,11/06/2025,40,Application process,Rejected,5,2025,5.7
+25739232,1,03/05/2025,11/06/2025,39,Irresponsible lending,Rejected,5,2025,5.6
+20011926,1,06/05/2025,11/06/2025,36,Irresponsible lending,Rejected,5,2025,5.1
+25989911,1,06/05/2025,11/06/2025,36,Irresponsible lending,Rejected,5,2025,5.1
+20050387,1,07/05/2025,11/06/2025,35,Irresponsible lending,Rejected,5,2025,5.0
+20960054,1,07/05/2025,11/06/2025,35,Irresponsible lending,Rejected,5,2025,5.0
+22878684,1,07/05/2025,19/06/2025,43,Irresponsible lending,Rejected,5,2025,6.1
+23379671,1,07/05/2025,08/05/2025,1,Irresponsible lending,Withdrawn,5,2025,0.1
+25303717,1,07/05/2025,19/06/2025,43,Irresponsible lending,Rejected,5,2025,6.1
+20452646,1,08/05/2025,19/06/2025,42,Irresponsible lending,Rejected,5,2025,6.0
+21183243,1,08/05/2025,19/06/2025,42,Irresponsible lending,Rejected,5,2025,6.0
+21220385,1,08/05/2025,19/06/2025,42,Irresponsible lending,Rejected,5,2025,6.0
+25525166,1,08/05/2025,19/06/2025,42,Irresponsible lending,Rejected,5,2025,6.0
+23334362,1,10/05/2025,19/06/2025,40,Irresponsible lending,Rejected,5,2025,5.7
+21707756,1,12/05/2025,30/06/2025,49,Irresponsible lending,Rejected,5,2025,7.0
+25993771,1,12/05/2025,30/06/2025,49,Irresponsible lending,Rejected,5,2025,7.0
+10216081,1,13/05/2025,30/06/2025,48,Irresponsible lending,Rejected,5,2025,6.9
+21080586,1,13/05/2025,30/06/2025,48,Irresponsible lending,Rejected,5,2025,6.9
+24396428,1,13/05/2025,30/06/2025,48,Irresponsible lending,Rejected,5,2025,6.9
+22191327,1,14/05/2025,30/06/2025,47,Irresponsible lending,Rejected,5,2025,6.7
+22915594,1,14/05/2025,30/06/2025,47,Irresponsible lending,Rejected,5,2025,6.7
+25787702,1,14/05/2025,21/05/2025,7,Subject Access Request,,5,2025,1.0
+20001816,1,15/05/2025,30/06/2025,46,Irresponsible lending,Rejected,5,2025,6.6
+25112007,1,15/05/2025,30/06/2025,46,Service Issue,Rejected,5,2025,6.6
+26036668,1,15/05/2025,21/05/2025,6,Fraud,Upheld,5,2025,0.9
+22654822,1,19/05/2025,30/06/2025,42,Irresponsible lending,Rejected,5,2025,6.0
+26077829,1,19/05/2025,18/06/2025,30,Fraud,Upheld,5,2025,4.3
+20257905,1,20/05/2025,30/06/2025,41,Irresponsible lending,Rejected,5,2025,5.9
+20618731,1,20/05/2025,30/06/2025,41,Irresponsible lending,Rejected,5,2025,5.9
+25957032,1,20/05/2025,20/06/2025,31,Fraud,Upheld,5,2025,4.4
+21614939,1,21/05/2025,04/06/2025,14,Fraud,Upheld,5,2025,2.0
+24966553,1,21/05/2025,30/06/2025,40,Irresponsible lending,Rejected,5,2025,5.7
+20512144,1,22/05/2025,30/06/2025,39,Irresponsible lending,Rejected,5,2025,5.6
+21519209,1,23/05/2025,17/06/2025,25,Fraud,Upheld,5,2025,3.6
+23442053,1,25/05/2025,11/07/2025,47,Irresponsible lending,Rejected,5,2025,6.7
+20752630,1,26/05/2025,24/06/2025,29,Subject Access Request,,5,2025,4.1
+20752630,1,26/05/2025,11/07/2025,46,Irresponsible lending,Rejected,5,2025,6.6
+20451586,1,27/05/2025,11/07/2025,45,Irresponsible lending,Rejected,5,2025,6.4
+21807740,1,27/05/2025,11/07/2025,45,Irresponsible lending,Rejected,5,2025,6.4
+22353373,1,27/05/2025,11/07/2025,45,Irresponsible lending,Rejected,5,2025,6.4
+24836426,1,27/05/2025,09/06/2025,13,Subject Access Request,,5,2025,1.9
+20839419,1,28/05/2025,11/07/2025,44,Irresponsible lending,Rejected,5,2025,6.3
+25475328,1,28/05/2025,11/07/2025,44,Service Issue,Rejected,5,2025,6.3
+26043813,1,28/05/2025,18/06/2025,21,Fraud,Upheld,5,2025,3.0
+20084286,1,29/05/2025,23/07/2025,55,Irresponsible lending,Rejected,5,2025,7.9
+22949792,1,29/05/2025,23/07/2025,55,Irresponsible lending,Rejected,5,2025,7.9
+24368024,1,29/05/2025,23/07/2025,55,Irresponsible lending,Rejected,5,2025,7.9
+24845793,1,29/05/2025,24/06/2025,26,Subject Access Request,,5,2025,3.7
+25566296,1,30/05/2025,23/07/2025,54,Irresponsible lending,Rejected,5,2025,7.7
+25829318,1,31/05/2025,23/07/2025,53,Irresponsible lending,Rejected,5,2025,7.6
+21780581,1,04/06/2025,23/07/2025,49,Irresponsible lending,Rejected,6,2025,7.0
+22534993,1,06/06/2025,23/07/2025,47,Irresponsible lending,Rejected,6,2025,6.7
+23463107,1,07/06/2025,23/07/2025,46,Irresponsible lending,Rejected,6,2025,6.6
+26258121,1,07/06/2025,23/07/2025,46,Irresponsible lending,Rejected,6,2025,6.6
+23314212,1,08/06/2025,23/07/2025,45,Application process,Rejected,6,2025,6.4
+20230031,1,09/06/2025,23/07/2025,44,Irresponsible lending,Rejected,6,2025,6.3
+23014275,1,09/06/2025,23/07/2025,44,Irresponsible lending,Rejected,6,2025,6.3
+24407269,1,09/06/2025,23/07/2025,44,Irresponsible lending,Rejected,6,2025,6.3
+24523706,1,10/06/2025,23/07/2025,43,Service Issue,Partially upheld,6,2025,6.1
+24847870,1,10/06/2025,23/07/2025,43,Irresponsible lending,Rejected,6,2025,6.1
+24933273,1,10/06/2025,30/07/2025,50,Application process,Rejected,6,2025,7.1
+26163541,1,11/06/2025,30/07/2025,49,Irresponsible lending,Rejected,6,2025,7.0
+23211262,1,14/06/2025,30/07/2025,46,Irresponsible lending,Rejected,6,2025,6.6
+20757914,1,15/06/2025,30/07/2025,45,Irresponsible lending,Rejected,6,2025,6.4
+21677096,1,16/06/2025,30/07/2025,44,Irresponsible lending,Rejected,6,2025,6.3
+20003283,1,17/06/2025,17/07/2025,30,Subject Access Request,,6,2025,4.3
+26114888,1,17/06/2025,23/06/2025,6,Fraud,Upheld,6,2025,0.9
+10143765,1,18/06/2025,30/07/2025,42,Irresponsible lending,Rejected,6,2025,6.0
+24809015,1,18/06/2025,30/07/2025,42,Application process,Rejected,6,2025,6.0
+21971745,1,19/06/2025,08/08/2025,50,Irresponsible lending,Rejected,6,2025,7.1
+25450188,1,20/06/2025,08/08/2025,49,Irresponsible lending,Rejected,6,2025,7.0
+26080029,1,20/06/2025,08/08/2025,49,Payment,Rejected,6,2025,7.0
+21496170,1,23/06/2025,08/08/2025,46,Irresponsible lending,Rejected,6,2025,6.6
+23609593,1,24/06/2025,08/08/2025,45,Irresponsible lending,Rejected,6,2025,6.4
+23017863,1,25/06/2025,08/08/2025,44,Irresponsible lending,Rejected,6,2025,6.3
+23298275,1,26/06/2025,08/08/2025,43,Irresponsible lending,Rejected,6,2025,6.1
+21697777,1,30/06/2025,19/08/2025,50,Irresponsible lending,Rejected,6,2025,7.1
+25647999,1,30/06/2025,15/07/2025,15,Subject Access Request,,6,2025,2.1
+25833423,1,30/06/2025,19/08/2025,50,Irresponsible lending,Rejected,6,2025,7.1
+10141401,1,02/07/2025,19/08/2025,48,Irresponsible lending,Rejected,7,2025,6.9
+21214711,1,02/07/2025,19/08/2025,48,Irresponsible lending,Rejected,7,2025,6.9
+22858074,1,02/07/2025,19/08/2025,48,Service Issue,Rejected,7,2025,6.9
+25230490,1,03/07/2025,19/08/2025,47,Irresponsible lending,Rejected,7,2025,6.7
+20867789,1,05/07/2025,19/08/2025,45,Irresponsible lending,Rejected,7,2025,6.4
+23612491,1,05/07/2025,19/08/2025,45,Irresponsible lending,Rejected,7,2025,6.4
+25250485,1,05/07/2025,19/08/2025,45,Irresponsible lending,Rejected,7,2025,6.4
+21556535,1,06/07/2025,19/08/2025,44,Irresponsible lending,Rejected,7,2025,6.3
+24962830,1,08/07/2025,19/08/2025,42,Irresponsible lending,Rejected,7,2025,6.0
+25821398,1,08/07/2025,14/07/2025,6,Fraud,Upheld,7,2025,0.9
+10150127,1,09/07/2025,19/08/2025,41,Irresponsible lending,Rejected,7,2025,5.9
+20171737,1,09/07/2025,19/08/2025,41,Irresponsible lending,Rejected,7,2025,5.9
+20212114,1,11/07/2025,19/08/2025,39,Irresponsible lending,Rejected,7,2025,5.6
+20599143,1,11/07/2025,19/08/2025,39,Service Issue,Rejected,7,2025,5.6
+26331400,1,13/07/2025,19/08/2025,37,Irresponsible lending,Rejected,7,2025,5.3
+10146768,1,14/07/2025,28/08/2025,45,Irresponsible lending,Rejected,7,2025,6.4
+26231606,1,15/07/2025,15/07/2025,0,Fraud,Upheld,7,2025,0.0
+20886662,1,16/07/2025,28/08/2025,43,Irresponsible lending,Rejected,7,2025,6.1
+20664242,1,17/07/2025,28/08/2025,42,Irresponsible lending,Rejected,7,2025,6.0
+22812201,1,17/07/2025,28/08/2025,42,Irresponsible lending,Rejected,7,2025,6.0
+24346668,1,17/07/2025,28/08/2025,42,Irresponsible lending,Rejected,7,2025,6.0
+24560377,1,17/07/2025,28/08/2025,42,Irresponsible lending,Rejected,7,2025,6.0
+22505449,1,21/07/2025,28/08/2025,38,Irresponsible lending,Rejected,7,2025,5.4
+24291531,1,21/07/2025,28/08/2025,38,Irresponsible lending,Rejected,7,2025,5.4
+25299818,1,22/07/2025,,,Irresponsible lending,,7,2025,0.0
+25832952,1,23/07/2025,05/08/2025,13,Subject Access Request,,7,2025,1.9
+20312325,1,24/07/2025,,,Irresponsible lending,,7,2025,0.0
+20741528,1,24/07/2025,,,Irresponsible lending,,7,2025,0.0
+21142201,1,24/07/2025,,,Irresponsible lending,,7,2025,0.0
+21771822,1,24/07/2025,,,Irresponsible lending,,7,2025,0.0
+20149634,1,25/07/2025,,,Irresponsible lending,,7,2025,0.0
+20416199,1,25/07/2025,,,Irresponsible lending,,7,2025,0.0
+22761634,1,25/07/2025,19/08/2025,25,Subject Access Request,,7,2025,3.6
+25151018,1,27/07/2025,,,Irresponsible lending,,7,2025,0.0
+24419699,1,28/07/2025,,,Irresponsible lending,,7,2025,0.0
+22506247,1,29/07/2025,,,Irresponsible lending,,7,2025,0.0
+25500248,1,29/07/2025,,,Service Issue,,7,2025,0.0
+25889456,1,30/07/2025,,,Irresponsible lending,,7,2025,0.0
+22172866,1,31/07/2025,,,Irresponsible lending,,7,2025,0.0
+20554379,1,01/08/2025,,,Irresponsible lending,,8,2025,0.0
+25685223,1,03/08/2025,,,Irresponsible lending,,8,2025,0.0
+20092003,1,04/08/2025,,,Irresponsible lending,,8,2025,0.0
+24289361,1,05/08/2025,,,Irresponsible lending,,8,2025,0.0
+26146082,1,05/08/2025,,,Irresponsible lending,,8,2025,0.0
+10160779,1,07/08/2025,,,Irresponsible lending,,8,2025,0.0
+21028898,1,07/08/2025,,,Irresponsible lending,,8,2025,0.0
+20041150,1,08/08/2025,19/08/2025,11,Subject Access Request,,8,2025,1.6
+20349669,1,10/08/2025,,,Irresponsible lending,,8,2025,0.0
+20427918,1,12/08/2025,,,Irresponsible lending,,8,2025,0.0
+20985856,1,13/08/2025,,,Irresponsible lending,,8,2025,0.0
+21388351,1,13/08/2025,,,Irresponsible lending,,8,2025,0.0
+26497569,1,13/08/2025,,,Irresponsible lending,,8,2025,0.0
+25214539,1,14/08/2025,,,Irresponsible lending,,8,2025,0.0
+24376612,1,15/08/2025,,,Irresponsible lending,,8,2025,0.0
+23384460,1,17/08/2025,,,Irresponsible lending,,8,2025,0.0
+24284791,1,18/08/2025,,,Service Issue,,8,2025,0.0
+26005004,1,18/08/2025,,,Irresponsible lending,,8,2025,0.0
+20294557,1,19/08/2025,,,Irresponsible lending,,8,2025,0.0
+22396543,1,19/08/2025,,,Irresponsible lending,,8,2025,0.0
+25864500,1,19/08/2025,,,Irresponsible lending,,8,2025,0.0
+26631805,1,19/08/2025,,,Irresponsible lending,,8,2025,0.0
+21850002,1,21/08/2025,,,Irresponsible lending,,8,2025,0.0
+23397906,1,21/08/2025,,,Irresponsible lending,,8,2025,0.0
+25516184,1,21/08/2025,21/08/2025,0,Fraud,Upheld,8,2025,0.0
+20083276,1,22/08/2025,,,Irresponsible lending,,8,2025,0.0
+20083276,1,22/08/2025,,,Subject Access Request,,8,2025,0.0
+23930107,1,22/08/2025,,,Irresponsible lending,,8,2025,0.0
+25054335,1,22/08/2025,,,Irresponsible lending,,8,2025,0.0
+22345836,1,23/08/2025,,,Irresponsible lending,,8,2025,0.0
+22703254,1,23/08/2025,,,Irresponsible lending,,8,2025,0.0
+23780599,1,23/08/2025,,,Irresponsible lending,,8,2025,0.0
+23040519,1,24/08/2025,,,Irresponsible lending,,8,2025,0.0
+23577743,1,24/08/2025,,,Irresponsible lending,,8,2025,0.0
+26074041,1,24/08/2025,,,Irresponsible lending,,8,2025,0.0
+20346927,1,25/08/2025,,,Irresponsible lending,,8,2025,0.0
+10153250,1,27/08/2025,,,Service Issue,,8,2025,0.0
+20030818,1,27/08/2025,,,Irresponsible lending,,8,2025,0.0
+20727617,1,27/08/2025,,,Irresponsible lending,,8,2025,0.0
+21698756,1,27/08/2025,,,Irresponsible lending,,8,2025,0.0
+25247320,1,27/08/2025,,,Irresponsible lending,,8,2025,0.0
+20796562,1,30/08/2025,,,Irresponsible lending,,8,2025,0.0
+26289910,1,30/08/2025,,,Irresponsible lending,,8,2025,0.0
+20003853,1,31/08/2025,,,Irresponsible lending,,8,2025,0.0
+25202494,1,01/09/2025,,,Irresponsible lending,,9,2025,0.0
+21572401,1,02/09/2025,,,Irresponsible lending,,9,2025,0.0
+22619686,1,02/09/2025,,,Irresponsible lending,,9,2025,0.0
+23620943,1,02/09/2025,,,Irresponsible lending,,9,2025,0.0
+25338432,1,02/09/2025,,,Irresponsible lending,,9,2025,0.0
+24273206,1,03/09/2025,,,Irresponsible lending,,9,2025,0.0
+24597338,1,03/09/2025,,,Irresponsible lending,,9,2025,0.0
