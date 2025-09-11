@@ -197,20 +197,34 @@ function applyFilters(type,data,cfg){
     return true;
   });
 }
+
 function groupData(data,groupField,cfg){
-  const map={};
   if(groupField==='YEAR'){
-    data.forEach(r=>{const d=toDate(r[cfg.dateField]);const k=(!d||isNaN(d))?'Unknown':String(d.getFullYear());map[k]=(map[k]||0)+1;});
+    const map={};
+    data.forEach(r=>{
+      const d=toDate(r[cfg.dateField]);
+      const k=(!d||isNaN(d))?'Unknown':String(d.getFullYear());
+      map[k]=(map[k]||0)+1;
+    });
+    const labels=Object.keys(map);
+    return {labels,values:labels.map(l=>map[l])};
   } else {
-    data.forEach(r=>{const k=r[groupField]||'Unknown';map[k]=(map[k]||0)+1;});
+    const map={};
+    data.forEach(r=>{
+      const k=r[groupField]||'Unknown';
+      map[k]=(map[k]||0)+1;
+    });
+    const labels=Object.keys(map);
+    return {labels,values:labels.map(l=>map[l])};
   }
-  const labels=Object.keys(map);
-  return {labels,values:labels.map(l=>map[l])};
 }
 
 // ---------- Charts ----------
 function drawCharts(type,ids,labels,values){
-  charts[type]?.bar?.destroy();charts[type]?.line?.destroy();charts[type]?.pie?.destroy();
+  charts[type]?.bar?.destroy();
+  charts[type]?.line?.destroy();
+  charts[type]?.pie?.destroy();
+
   const data={labels,datasets:[{label:'Count',data:values,borderWidth:1}]};
   charts[type]={};
   charts[type].bar=new Chart(document.getElementById(ids.barId),{type:'bar',data,options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
@@ -261,16 +275,16 @@ async function loadSharedData() {
     }
   }
 
+  // Build filters + render all reports + update overview
   Object.keys(reportConfigs).forEach(type => {
     buildFiltersUI(type);
     renderReport(type);
   });
   updateOverviewSummary();
 
+  // Default to overview
   showPage(null, 'overview');
 }
 
 document.addEventListener('DOMContentLoaded', loadSharedData);
 </script>
-</body>
-</html>
