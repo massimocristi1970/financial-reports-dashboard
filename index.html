@@ -16,6 +16,8 @@
     .nav-link.active { background:#eef6ff; border-left:3px solid #3b82f6; color:#3b82f6; }
     .page-header { margin-bottom:20px; }
     .page-title { font-size:24px; font-weight:bold; }
+    .filters { display:flex; gap:15px; margin-bottom:20px; }
+    .filters label { margin-right:5px; font-weight:bold; }
     .data-table { background:#fff; border:1px solid #ddd; border-radius:8px; margin-top:20px; }
     table { width:100%; border-collapse:collapse; }
     th,td { padding:10px; border-bottom:1px solid #eee; text-align:left; }
@@ -56,6 +58,23 @@
 
       <div id="lending-volume-page" class="hidden">
         <div class="page-header"><h1 class="page-title">Lending Volume Analysis</h1></div>
+
+        <!-- Filters -->
+        <div class="filters">
+          <label for="yearFilter">Year:</label>
+          <select id="yearFilter" onchange="updateReport('lending-volume')"></select>
+
+          <label for="monthFilter">Month:</label>
+          <select id="monthFilter" onchange="updateReport('lending-volume')"></select>
+
+          <label for="groupByFilter">Group By:</label>
+          <select id="groupByFilter" onchange="updateReport('lending-volume')">
+            <option value="Stage">Stage</option>
+            <option value="TierName">Tier</option>
+            <option value="PaymentStatus">Payment Status</option>
+          </select>
+        </div>
+
         <div id="lending-volume-content"></div>
       </div>
     </main>
@@ -65,12 +84,23 @@
     let reportData = { 'lending-volume': [] };
     let charts = {};
 
+    const reportConfigs = {
+      'lending-volume': {
+        dateField: 'FundedDate',
+        amountField: 'IssuedAmount',
+        defaultGroupBy: 'Stage'
+      }
+    };
+
     function showPage(event, pageId) {
       document.querySelectorAll('[id$="-page"]').forEach(p => p.classList.add('hidden'));
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       document.getElementById(pageId + '-page').classList.remove('hidden');
       event.currentTarget.classList.add('active');
-      if (pageId === 'lending-volume') renderReport('lending-volume');
+      if (pageId === 'lending-volume') {
+        populateFilters('lending-volume');
+        renderReport('lending-volume');
+      }
     }
 
     function uploadFile(fileInput, reportType) {
@@ -98,28 +128,63 @@
       });
     }
 
-    function groupBy(data, field, formatter) {
-      const map = {};
-      data.forEach(r => {
-        let key = r[field] || 'Unknown';
-        if (formatter) key = formatter(key);
-        map[key] = (map[key] || 0) + 1;
+    function populateFilters(reportType) {
+      const data = reportData[reportType];
+      if (!data.length) return;
+
+      const dateField = reportConfigs[reportType].dateField;
+      const years = [...new Set(data.map(r => {
+        const d = new Date(r[dateField]);
+        return isNaN(d) ? null : d.getFullYear();
+      }).filter(Boolean))].sort();
+
+      const yearSel = document.getElementById("yearFilter");
+      yearSel.innerHTML = '<option value="">All</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
+
+      const monthSel = document.getElementById("monthFilter");
+      monthSel.innerHTML = '<option value="">All</option>' +
+        Array.from({length:12},(_,i)=>`<option value="${String(i+1).padStart(2,'0')}">${i+1}</option>`).join('');
+
+      document.getElementById("groupByFilter").value = reportConfigs[reportType].defaultGroupBy;
+    }
+
+    function applyFilters(reportType) {
+      const year = document.getElementById("yearFilter").value;
+      const month = document.getElementById("monthFilter").value;
+
+      const data = reportData[reportType];
+      const dateField = reportConfigs[reportType].dateField;
+
+      return data.filter(r => {
+        const rawDate = r[dateField];
+        if (!rawDate) return true;
+        const dt = new Date(rawDate);
+        if (isNaN(dt)) return true;
+        if (year && dt.getFullYear().toString() !== year) return false;
+        if (month && (dt.getMonth()+1).toString().padStart(2,'0') !== month) return false;
+        return true;
       });
-      return map;
+    }
+
+    function updateReport(reportType) {
+      renderReport(reportType);
     }
 
     function renderReport(reportType) {
       const content = document.getElementById(reportType + '-content');
-      const data = reportData[reportType];
+      let data = applyFilters(reportType);
+
       if (!data.length) {
-        content.innerHTML = `<div class="chart-card"><p>No data available</p></div>`;
+        content.innerHTML = `<div class="chart-card"><p>No data for selected filters</p></div>`;
         return;
       }
+
+      const config = reportConfigs[reportType];
 
       // --- KPIs ---
       let total = data.length;
       let totalIssued = data.reduce((s,r)=> {
-        let val = (r['IssuedAmount'] || '').toString().replace(/[^0-9.-]/g,'');
+        let val = (r[config.amountField] || '').toString().replace(/[^0-9.-]/g,'');
         return s + (parseFloat(val) || 0);
       }, 0);
       let avgIssued = (totalIssued / total).toFixed(2);
@@ -132,37 +197,12 @@
         </div>
       `;
 
-      // --- Chart by Stage ---
+      // --- Chart ---
+      const groupBy = document.getElementById("groupByFilter").value;
       const chartId = reportType + '-chart';
       const chartHTML = `
-        <div class="chart-card"><h3>Lending by Stage</h3>
+        <div class="chart-card"><h3>Loans by ${groupBy}</h3>
           <canvas id="${chartId}" height="120"></canvas>
-        </div>
-      `;
-
-      // --- Breakdowns ---
-      const monthly = groupBy(data, 'FundedDate', d => {
-        if (!d) return 'Unknown';
-        const dt = new Date(d);
-        if (isNaN(dt)) return 'Invalid';
-        return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
-      });
-      const yearly = groupBy(data, 'FundedDate', d => {
-        if (!d) return 'Unknown';
-        const dt = new Date(d);
-        if (isNaN(dt)) return 'Invalid';
-        return `${dt.getFullYear()}`;
-      });
-      const byTier = groupBy(data, 'TierName');
-
-      const breakdownHTML = `
-        <div class="chart-card">
-          <h3>Breakdowns</h3>
-          <div style="display:flex; gap:20px; flex-wrap:wrap;">
-            <div><h4>By Month</h4><ul>${Object.entries(monthly).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul></div>
-            <div><h4>By Year</h4><ul>${Object.entries(yearly).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul></div>
-            <div><h4>By Tier</h4><ul>${Object.entries(byTier).map(([k,v])=>`<li>${k}: ${v}</li>`).join('')}</ul></div>
-          </div>
         </div>
       `;
 
@@ -177,14 +217,15 @@
       tableHTML += `</tbody></table></div>`;
 
       // --- Render ---
-      content.innerHTML = summaryHTML + chartHTML + breakdownHTML + tableHTML;
+      content.innerHTML = summaryHTML + chartHTML + tableHTML;
 
       // --- Draw Chart ---
       setTimeout(()=>{
         const ctx = document.getElementById(chartId).getContext('2d');
         if (charts[reportType]) charts[reportType].destroy();
-        const labels = [...new Set(data.map(r => r['Stage'] || 'Unknown'))];
-        const values = labels.map(l => data.filter(r => (r['Stage'] || 'Unknown') === l).length);
+
+        const labels = [...new Set(data.map(r => r[groupBy] || 'Unknown'))];
+        const values = labels.map(l => data.filter(r => (r[groupBy] || 'Unknown') === l).length);
 
         charts[reportType] = new Chart(ctx,{
           type:'bar',
