@@ -16,15 +16,15 @@
     .nav-link.active { background:#eef6ff; border-left:3px solid #3b82f6; color:#3b82f6; }
     .page-header { margin-bottom:20px; }
     .page-title { font-size:24px; font-weight:bold; }
-    .filters { display:flex; gap:15px; margin-bottom:20px; }
+    .filters { display:flex; flex-wrap:wrap; gap:15px; margin-bottom:20px; }
     .filters label { margin-right:5px; font-weight:bold; }
     .data-table { background:#fff; border:1px solid #ddd; border-radius:8px; margin-top:20px; }
     table { width:100%; border-collapse:collapse; }
     th,td { padding:10px; border-bottom:1px solid #eee; text-align:left; }
     tr:hover { background:#f9f9f9; }
     .chart-card, .kpi-grid { background:#fff; border:1px solid #ddd; border-radius:8px; padding:20px; margin-bottom:20px; }
-    .kpi-grid { display:flex; gap:20px; }
-    .kpi-card { flex:1; text-align:center; background:#f9fafb; border-radius:8px; padding:15px; }
+    .kpi-grid { display:flex; gap:20px; flex-wrap:wrap; }
+    .kpi-card { flex:1; text-align:center; background:#f9fafb; border-radius:8px; padding:15px; min-width:150px; }
     .kpi-title { font-size:14px; color:#666; }
     .kpi-value { font-size:22px; font-weight:bold; margin-top:5px; }
   </style>
@@ -67,12 +67,11 @@
           <label for="monthFilter">Month:</label>
           <select id="monthFilter" onchange="updateReport('lending-volume')"></select>
 
-          <label for="groupByFilter">Group By:</label>
-          <select id="groupByFilter" onchange="updateReport('lending-volume')">
-            <option value="Stage">Stage</option>
-            <option value="TierName">Tier</option>
-            <option value="PaymentStatus">Payment Status</option>
-          </select>
+          <label for="tierFilter">Tier:</label>
+          <select id="tierFilter" multiple size="4" onchange="updateReport('lending-volume')"></select>
+
+          <label for="statusFilter">Payment Status:</label>
+          <select id="statusFilter" multiple size="4" onchange="updateReport('lending-volume')"></select>
         </div>
 
         <div id="lending-volume-content"></div>
@@ -87,8 +86,7 @@
     const reportConfigs = {
       'lending-volume': {
         dateField: 'FundedDate',
-        amountField: 'IssuedAmount',
-        defaultGroupBy: 'Stage'
+        amountField: 'IssuedAmount'
       }
     };
 
@@ -121,7 +119,7 @@
       if (!lines.length) return [];
       const headers = lines[0].split(/,|\t/).map(h => h.trim());
       return lines.slice(1).map(line => {
-        const values = line.split(/,|\t/).map(v => v.trim());
+        const values = line.split(/,|\t/).map(v => v.replace(/\uFFFD/g,'').trim()); // strip “?”
         const rec = {};
         headers.forEach((h,i)=> rec[h]=values[i]);
         return rec;
@@ -133,6 +131,8 @@
       if (!data.length) return;
 
       const dateField = reportConfigs[reportType].dateField;
+
+      // Years
       const years = [...new Set(data.map(r => {
         const d = new Date(r[dateField]);
         return isNaN(d) ? null : d.getFullYear();
@@ -141,27 +141,46 @@
       const yearSel = document.getElementById("yearFilter");
       yearSel.innerHTML = '<option value="">All</option>' + years.map(y=>`<option value="${y}">${y}</option>`).join('');
 
+      // Months
       const monthSel = document.getElementById("monthFilter");
       monthSel.innerHTML = '<option value="">All</option>' +
         Array.from({length:12},(_,i)=>`<option value="${String(i+1).padStart(2,'0')}">${i+1}</option>`).join('');
 
-      document.getElementById("groupByFilter").value = reportConfigs[reportType].defaultGroupBy;
+      // Tiers
+      const tiers = [...new Set(data.map(r => r['TierName'] || 'Unknown'))].sort();
+      const tierSel = document.getElementById("tierFilter");
+      tierSel.innerHTML = tiers.map(t=>`<option value="${t}">${t}</option>`).join('');
+
+      // Payment Status
+      const statuses = [...new Set(data.map(r => r['PaymentStatus'] || 'Unknown'))].sort();
+      const statusSel = document.getElementById("statusFilter");
+      statusSel.innerHTML = statuses.map(s=>`<option value="${s}">${s}</option>`).join('');
     }
 
     function applyFilters(reportType) {
       const year = document.getElementById("yearFilter").value;
       const month = document.getElementById("monthFilter").value;
+      const tiers = Array.from(document.getElementById("tierFilter").selectedOptions).map(o => o.value);
+      const statuses = Array.from(document.getElementById("statusFilter").selectedOptions).map(o => o.value);
 
       const data = reportData[reportType];
       const dateField = reportConfigs[reportType].dateField;
 
       return data.filter(r => {
+        // Date filter
         const rawDate = r[dateField];
-        if (!rawDate) return true;
-        const dt = new Date(rawDate);
-        if (isNaN(dt)) return true;
-        if (year && dt.getFullYear().toString() !== year) return false;
-        if (month && (dt.getMonth()+1).toString().padStart(2,'0') !== month) return false;
+        if (rawDate) {
+          const dt = new Date(rawDate);
+          if (!isNaN(dt)) {
+            if (year && dt.getFullYear().toString() !== year) return false;
+            if (month && (dt.getMonth()+1).toString().padStart(2,'0') !== month) return false;
+          }
+        }
+        // Tier filter
+        if (tiers.length && !tiers.includes(r['TierName'] || 'Unknown')) return false;
+        // Payment Status filter
+        if (statuses.length && !statuses.includes(r['PaymentStatus'] || 'Unknown')) return false;
+
         return true;
       });
     }
@@ -198,10 +217,9 @@
       `;
 
       // --- Chart ---
-      const groupBy = document.getElementById("groupByFilter").value;
       const chartId = reportType + '-chart';
       const chartHTML = `
-        <div class="chart-card"><h3>Loans by ${groupBy}</h3>
+        <div class="chart-card"><h3>Loans by Stage</h3>
           <canvas id="${chartId}" height="120"></canvas>
         </div>
       `;
@@ -224,8 +242,8 @@
         const ctx = document.getElementById(chartId).getContext('2d');
         if (charts[reportType]) charts[reportType].destroy();
 
-        const labels = [...new Set(data.map(r => r[groupBy] || 'Unknown'))];
-        const values = labels.map(l => data.filter(r => (r[groupBy] || 'Unknown') === l).length);
+        const labels = [...new Set(data.map(r => r['Stage'] || 'Unknown'))];
+        const values = labels.map(l => data.filter(r => (r['Stage'] || 'Unknown') === l).length);
 
         charts[reportType] = new Chart(ctx,{
           type:'bar',
