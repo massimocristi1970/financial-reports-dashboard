@@ -382,7 +382,7 @@ function renderLiquidationsReport(){
 
   const totalIssued = sum(rows,'issuedamount');
   const totalPaid   = sum(rows,'payment');
-  const totalDue    = sum(rows,'totaldue');   // NEW
+  const totalDue    = sum(rows,'totaldue');
   const liqPct      = totalIssued ? (totalPaid/totalIssued*100) : 0;
 
   const kpiHTML = `
@@ -397,15 +397,61 @@ function renderLiquidationsReport(){
   const lineId='liq-line', barId='liq-bar';
   const chartsHTML = `
     <div class="charts">
-      <div class="chart-card"><h3>Issued vs Paid by Month</h3><canvas id="${lineId}"></canvas></div>
-      <div class="chart-card"><h3>Issued vs Paid by Stage</h3><canvas id="${barId}"></canvas></div>
+      <div class="chart-card"><h3>Issued vs Paid vs Due by Month</h3><canvas id="${lineId}"></canvas></div>
+      <div class="chart-card"><h3>Issued vs Paid vs Due by Stage</h3><canvas id="${barId}"></canvas></div>
     </div>
   `;
 
   target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
 
-  groupedLineByMonth(lineId, rows, 'issuedamount', 'payment', dateField[report], 'Issued', 'Paid', '#3b82f6', '#10b981');
-  groupedBars(barId, rows, 'issuedamount', 'payment', 'stage', 'Issued', 'Paid', '#3b82f6', '#10b981');
+  // Line: Issued, Paid, Due by month
+  const aggIssued={}, aggPaid={}, aggDue={};
+  rows.forEach(r=>{
+    const d = toDateSafe(r[dateField[report]]); if(!d) return;
+    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    aggIssued[k]=(aggIssued[k]||0)+cleanNumber(r['issuedamount']);
+    aggPaid[k]=(aggPaid[k]||0)+cleanNumber(r['payment']);
+    aggDue[k]=(aggDue[k]||0)+cleanNumber(r['totaldue']);
+  });
+  const labels = Array.from(new Set([...Object.keys(aggIssued),...Object.keys(aggPaid),...Object.keys(aggDue)])).sort();
+  const vIssued = labels.map(k=>aggIssued[k]||0);
+  const vPaid   = labels.map(k=>aggPaid[k]||0);
+  const vDue    = labels.map(k=>aggDue[k]||0);
+
+  destroyChart(lineId);
+  charts[lineId]=new Chart(document.getElementById(lineId),{
+    type:'line',
+    data:{ labels, datasets:[
+      {label:'Issued', data:vIssued, borderColor:'#3b82f6', backgroundColor:'#3b82f6', tension:.2, fill:false},
+      {label:'Paid', data:vPaid, borderColor:'#10b981', backgroundColor:'#10b981', tension:.2, fill:false},
+      {label:'Due', data:vDue, borderColor:'#f59e0b', backgroundColor:'#f59e0b', tension:.2, fill:false}
+    ]},
+    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+  });
+
+  // Bar: Issued, Paid, Due by Stage
+  const sumsIssued={}, sumsPaid={}, sumsDue={};
+  rows.forEach(r=>{
+    const k=r['stage']||'Unknown';
+    sumsIssued[k]=(sumsIssued[k]||0)+cleanNumber(r['issuedamount']);
+    sumsPaid[k]=(sumsPaid[k]||0)+cleanNumber(r['payment']);
+    sumsDue[k]=(sumsDue[k]||0)+cleanNumber(r['totaldue']);
+  });
+  const cats = Array.from(new Set([...Object.keys(sumsIssued),...Object.keys(sumsPaid),...Object.keys(sumsDue)])).sort();
+  const bIssued = cats.map(k=>sumsIssued[k]||0);
+  const bPaid   = cats.map(k=>sumsPaid[k]||0);
+  const bDue    = cats.map(k=>sumsDue[k]||0);
+
+  destroyChart(barId);
+  charts[barId]=new Chart(document.getElementById(barId),{
+    type:'bar',
+    data:{ labels:cats, datasets:[
+      {label:'Issued', data:bIssued, backgroundColor:'#3b82f6'},
+      {label:'Paid', data:bPaid, backgroundColor:'#10b981'},
+      {label:'Due', data:bDue, backgroundColor:'#f59e0b'}
+    ]},
+    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+  });
 }
 
 /* -------------------- Navigation + load -------------------- */
