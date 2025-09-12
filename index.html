@@ -7,165 +7,224 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin:0; background:#f8fafc; }
+    body { font-family: Arial, sans-serif; margin:0; background:#f8fafc; color:#0f172a; }
     .app-container { display:flex; min-height:100vh; }
-    .sidebar { width:260px; background:#fff; border-right:1px solid #ddd; }
-    .sidebar-header { padding:16px; font-weight:700; border-bottom:1px solid #eee; }
-    .nav-link { display:block; padding:10px 16px; cursor:pointer; color:#333; }
+    .sidebar { width:240px; background:#fff; border-right:1px solid #e2e8f0; }
+    .sidebar-header { padding:18px 20px; font-weight:700; border-bottom:1px solid #e2e8f0; }
+    .nav-link { cursor:pointer; padding:12px 18px; display:block; color:#334155; text-decoration:none; }
     .nav-link:hover { background:#f1f5f9; }
     .nav-link.active { background:#eef6ff; border-left:3px solid #3b82f6; color:#1d4ed8; }
-    .main-content { flex:1; padding:20px; }
+    .main-content { flex:1; padding:24px; }
     .hidden { display:none; }
-    .panel { background:#fff; border:1px solid #ddd; border-radius:8px; padding:16px; margin-bottom:16px; }
-    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+    .panel { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:16px; margin-bottom:18px; }
+    .filters { display:flex; gap:16px; flex-wrap:wrap; }
+    .filters label { font-size:12px; font-weight:700; display:block; margin-bottom:4px; }
+    .filters select { min-width:120px; padding:6px; border-radius:6px; border:1px solid #cbd5e1; }
+    .filters select[multiple]{ height:100px; }
+    .kpi-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:14px; }
     .kpi { background:#f8fafc; border:1px solid #e5e7eb; border-radius:8px; padding:12px; }
-    .kpi .label { font-size:12px; color:#555; }
-    .kpi .value { font-size:20px; font-weight:700; }
-    .filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
-    .filters label { font-size:12px; font-weight:600; display:block; margin-bottom:4px; }
-    .filters select { padding:6px; border-radius:6px; border:1px solid #ccc; }
-    .charts-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
-    .data-table { overflow:auto; max-height:400px; border:1px solid #ddd; border-radius:8px; }
-    table { width:100%; border-collapse:collapse; }
-    th, td { padding:8px 12px; border-bottom:1px solid #eee; }
-    th { background:#f1f5f9; position:sticky; top:0; }
+    .kpi .label { font-size:12px; color:#64748b; }
+    .kpi .value { font-size:20px; font-weight:700; margin-top:6px; }
+    .chart-card { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:16px; margin-bottom:18px; }
+    .data-table table { width:100%; border-collapse: collapse; }
+    th, td { padding:8px 10px; border-bottom:1px solid #e5e7eb; text-align:left; }
+    th { background:#f8fafc; }
+    .table-wrap { max-height:400px; overflow:auto; }
   </style>
 </head>
 <body>
-<div class="app-container">
-  <aside class="sidebar">
-    <div class="sidebar-header"><i class="fas fa-chart-line"></i> Financial Reports</div>
-    <nav>
-      <div class="nav-link active" onclick="showPage(event,'overview')">Overview</div>
-      <div class="nav-link" onclick="showPage(event,'lending-volume')">Lending Volume</div>
-      <div class="nav-link" onclick="showPage(event,'arrears')">Arrears</div>
-      <div class="nav-link" onclick="showPage(event,'liquidations')">Liquidations</div>
-      <div class="nav-link" onclick="showPage(event,'complaints')">Complaints</div>
-      <div class="nav-link" onclick="showPage(event,'financial-crime')">Financial Crime</div>
-    </nav>
-  </aside>
-  <main class="main-content">
-    <section id="overview-page">
-      <div class="panel"><h2>Welcome</h2><div id="overview-summary"></div></div>
-    </section>
-    <section id="lending-volume-page" class="hidden"><div class="panel"><h2>Lending Volume</h2><div id="lending-volume-filters"></div><div id="lending-volume-content"></div></div></section>
-    <section id="arrears-page" class="hidden"><div class="panel"><h2>Arrears</h2><div id="arrears-filters"></div><div id="arrears-content"></div></div></section>
-    <section id="liquidations-page" class="hidden"><div class="panel"><h2>Liquidations</h2><div id="liquidations-filters"></div><div id="liquidations-content"></div></div></section>
-    <section id="complaints-page" class="hidden"><div class="panel"><h2>Complaints</h2><div id="complaints-filters"></div><div id="complaints-content"></div></div></section>
-    <section id="financial-crime-page" class="hidden"><div class="panel"><h2>Financial Crime</h2><div id="financial-crime-filters"></div><div id="financial-crime-content"></div></div></section>
-  </main>
-</div>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header"><i class="fas fa-chart-line"></i> Reports</div>
+      <a class="nav-link active" data-page="overview">Overview</a>
+      <a class="nav-link" data-page="lending-volume">Lending Volume</a>
+      <a class="nav-link" data-page="arrears">Arrears</a>
+      <a class="nav-link" data-page="liquidations">Liquidations</a>
+      <a class="nav-link" data-page="complaints">Complaints</a>
+      <a class="nav-link" data-page="financial-crime">Financial Crime</a>
+    </aside>
+
+    <main class="main-content">
+      <section id="overview-page">
+        <div class="panel"><h2>Welcome</h2><p>Data auto-loaded from <code>/shared-data/</code>.</p></div>
+      </section>
+
+      <section id="lending-volume-page" class="hidden"><h2>Lending Volume</h2><div id="lending-volume-filters" class="panel"></div><div id="lending-volume-content"></div></section>
+      <section id="arrears-page" class="hidden"><h2>Arrears</h2><div id="arrears-filters" class="panel"></div><div id="arrears-content"></div></section>
+      <section id="liquidations-page" class="hidden"><h2>Liquidations</h2><div id="liquidations-filters" class="panel"></div><div id="liquidations-content"></div></section>
+      <section id="complaints-page" class="hidden"><h2>Complaints</h2><div id="complaints-filters" class="panel"></div><div id="complaints-content"></div></section>
+      <section id="financial-crime-page" class="hidden"><h2>Financial Crime</h2><div id="financial-crime-filters" class="panel"></div><div id="financial-crime-content"></div></section>
+    </main>
+  </div>
 
 <script>
-// ---------- Helpers ----------
-function toDate(v){
-  if (!v) return null;
-  const d=new Date(v);
-  if (!isNaN(d)) return d;
-  const m=String(v).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (m) return new Date(+m[3],+m[2]-1,+m[1]);
-  return null;
-}
-function uniqueSorted(arr){return Array.from(new Set(arr)).filter(Boolean).sort((a,b)=>(''+a).localeCompare((''+b),undefined,{numeric:true}));}
-function sumField(data,f){return data.reduce((a,r)=>a+(parseFloat(r[f])||0),0);}
-function avgField(data,f){const nums=data.map(r=>parseFloat(r[f])||0).filter(v=>v>0);return nums.length?nums.reduce((a,b)=>a+b,0)/nums.length:0;}
-function fmtMoney(n){return (n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
-
-// ---------- CSV ----------
-function detectDelimiter(line){let c=(d)=>{let cnt=0,inQ=false;for(let i=0;i<line.length;i++){if(line[i]==='"')inQ=!inQ;else if(!inQ&&line[i]===d)cnt++;}return cnt;};return c('\t')>c(',')?'\t':',';}
-function splitRow(row,delim){const out=[];let cur='',inQ=false;for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='"'){if(inQ&&row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===delim&&!inQ){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out;}
-function parseCSV(text){
-  const lines=String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
-  if(!lines.length) return [];
-  const delim=detectDelimiter(lines[0]);
-  const headers=splitRow(lines[0],delim).map(h=>h.trim().toLowerCase().replace(/\s+/g,'_'));
-  const rows=[];
-  for(let i=1;i<lines.length;i++){
-    const parts=splitRow(lines[i],delim);
-    if(!parts.length) continue;
-    const rec={};
-    headers.forEach((h,j)=>{
-      let v=(parts[j]||'').trim();
-      if(v.match(/[£€$,]/)){v=v.replace(/[£€$,]/g,'');if(!isNaN(parseFloat(v)))v=parseFloat(v);}
-      else if(!isNaN(parseFloat(v))) v=parseFloat(v);
-      rec[h]=v;
-    });
-    if(Object.values(rec).some(v=>v!=='')) rows.push(rec);
-  }
-  return rows;
-}
-
-// ---------- Data + Config ----------
-const reportData={ 'lending-volume':[], 'arrears':[], 'liquidations':[], 'complaints':[], 'financial-crime':[] };
-const reportConfigs={
-  'lending-volume':{dateField:'fundeddate',amountField:'issuedamount',filterFields:['tiername','stage'],
-    kpis:d=>[{label:'Total Issued',value:'£'+fmtMoney(sumField(d,'issuedamount'))},{label:'Average Issued',value:'£'+fmtMoney(avgField(d,'issuedamount'))}]},
-  'arrears':{dateField:'stagedate',amountField:'totaldue',filterFields:['tiername','stage'],
-    kpis:d=>[{label:'Total Due',value:'£'+fmtMoney(sumField(d,'totaldue'))},{label:'Average Due',value:'£'+fmtMoney(avgField(d,'totaldue'))}]},
-  'liquidations':{dateField:'stagedate',amountField:'totaldue',filterFields:['tiername','stage'],
-    kpis:d=>[{label:'Total Paid',value:'£'+fmtMoney(sumField(d,'payment'))},{label:'Total Issued',value:'£'+fmtMoney(sumField(d,'issuedamount'))},{label:'Recovery %',value:((sumField(d,'payment')/sumField(d,'issuedamount'))*100).toFixed(1)+'%'}]},
-  'complaints':{dateField:'receiveddate',filterFields:['category','decision'],
-    kpis:d=>[{label:'Total Complaints',value:d.length.toLocaleString()}]},
-  'financial-crime':{dateField:'date_reported',amountField:'principal',filterFields:['loan_source','appstatus','decision'],
-    kpis:d=>[{label:'Total Principal',value:'£'+fmtMoney(sumField(d,'principal'))},{label:'Average Principal',value:'£'+fmtMoney(avgField(d,'principal'))}]}
+const dataSources = {
+  "lending-volume":"shared-data/lending_volume.csv",
+  "arrears":"shared-data/lending_volume.csv",
+  "liquidations":"shared-data/lending_volume.csv",
+  "complaints":"shared-data/complaints.csv",
+  "financial-crime":"shared-data/financial_crime.csv"
 };
 
-// ---------- Navigation ----------
-function showPage(e,id){
-  document.querySelectorAll('[id$="-page"]').forEach(p=>p.classList.add('hidden'));
-  document.getElementById(id+'-page').classList.remove('hidden');
-  if(reportConfigs[id]){buildFiltersUI(id);renderReport(id);}
-}
+const reportConfigs = {
+  "lending-volume":{dateField:"fundeddate",kpis:data=>{
+    const issued=colSum(data,"issuedamount");
+    const avg=colAvg(data,"issuedamount");
+    return [
+      {label:"Total Issued",value:fmtMoney(issued)},
+      {label:"Average Issued",value:fmtMoney(avg)},
+      {label:"Loans",value:data.length}
+    ];
+  }, chart:(data)=> groupSumChart(data,"issuedamount","stage","Issued Amount")},
+  "arrears":{dateField:"stagedate",kpis:data=>{
+    return [
+      {label:"Total Issued Amount",value:fmtMoney(colSum(data,"issuedamount"))},
+      {label:"Total Due",value:fmtMoney(colSum(data,"totaldue"))}
+    ];
+  }, chart:(data)=> groupSumChart(data,"totaldue","stage","Total Due")},
+  "liquidations":{dateField:"stagedate",kpis:data=>{
+    const issued=colSum(data,"issuedamount");
+    const paid=colSum(data,"payment");
+    const pct= issued? (paid/issued*100):0;
+    return [
+      {label:"Total Issued Amount",value:fmtMoney(issued)},
+      {label:"Total Paid",value:fmtMoney(paid)},
+      {label:"Liquidation %",value:pct.toFixed(1)+"%"}
+    ];
+  }, chart:(data)=> sideBySideChart(data,"issuedamount","payment","stage")},
+  "complaints":{dateField:"receiveddate",kpis:data=>{
+    const avg=colAvg(data,"daystoresolve");
+    const open=data.filter(r=>!r.resolveddate).length;
+    return [
+      {label:"Total Complaints",value:data.length},
+      {label:"Avg Days to Resolve",value:avg.toFixed(1)},
+      {label:"Open Complaints",value:open}
+    ];
+  }, chart:(data)=> pieChart(data,"decision")},
+  "financial-crime":{dateField:"date_reported",kpis:data=>{
+    return [
+      {label:"Total Cases",value:data.length},
+      {label:"Total Principal",value:fmtMoney(colSum(data,"principal"))},
+      {label:"Average Principal",value:fmtMoney(colAvg(data,"principal"))},
+      {label:"Total Interest",value:fmtMoney(colSum(data,"interest"))}
+    ];
+  }, chart:(data)=> groupSumChart(data,"principal","loan source","Principal by Loan Source")}
+};
 
-// ---------- Filters ----------
-function buildFiltersUI(type){
-  const container=document.getElementById(`${type}-filters`);
-  const cfg=reportConfigs[type];const data=reportData[type]||[];
-  container.innerHTML='';if(!data.length)return;
-  const wrap=document.createElement('div');wrap.className='filters';
-  const years=uniqueSorted(data.map(r=>{const d=toDate(r[cfg.dateField]);return d?d.getFullYear():null;}).filter(Boolean));
-  if(years.length){const sel=document.createElement('select');sel.id=`${type}-year`;sel.onchange=()=>renderReport(type);sel.innerHTML='<option value="">All Years</option>'+years.map(y=>`<option>${y}</option>`).join('');wrap.appendChild(sel);}
-  container.appendChild(wrap);
-}
+// ---------- Utilities ----------
+function fmtMoney(n){return "£"+(n||0).toLocaleString();}
+function colSum(data,f){return data.reduce((a,r)=>a+(+r[f]||0),0);}
+function colAvg(data,f){const arr=data.map(r=>+r[f]||0).filter(x=>x);return arr.length?arr.reduce((a,b)=>a+b)/arr.length:0;}
+function toDate(v){if(!v) return null;const d=new Date(v);return isNaN(d)?null:d;}
 
-// ---------- Render ----------
-function renderReport(type){
-  const content=document.getElementById(`${type}-content`);const cfg=reportConfigs[type];const data=reportData[type]||[];
-  if(!data.length){content.innerHTML='<div class="panel">No data available.</div>';return;}
-  const kpiItems=cfg.kpis(data);
-  const kpiHtml='<div class="kpi-grid">'+kpiItems.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')+'</div>';
-  const headers=Object.keys(data[0]);const table='<div class="data-table"><table><thead><tr>'+headers.map(h=>`<th>${h}</th>`).join('')+'</tr></thead><tbody>'+data.slice(0,50).map(r=>'<tr>'+headers.map(h=>`<td>${r[h]||''}</td>`).join('')+'</tr>').join('')+'</tbody></table></div>';
-  content.innerHTML=kpiHtml+table;
-}
-
-// ---------- Load Shared Data ----------
-async function loadSharedData(){
-  const files={
-    'lending-volume':'shared-data/lending_volume.csv',
-    'arrears':'shared-data/lending_volume.csv',
-    'liquidations':'shared-data/lending_volume.csv',
-    'complaints':'shared-data/complaints.csv',
-    'financial-crime':'shared-data/financial_crime.csv'
-  };
-  for(const [type,path] of Object.entries(files)){
-    try{
-      const res=await fetch(path);const text=await res.text();reportData[type]=parseCSV(text);
-      console.log(`Loaded ${reportData[type].length} for ${type}`);buildFiltersUI(type);
-    }catch(err){console.error('Error loading',type,err);}
-  }
-  updateOverviewSummary();
-}
-function updateOverviewSummary(){
-  const c=document.getElementById("overview-summary");c.innerHTML='';
-  Object.keys(reportConfigs).forEach(t=>{
-    const d=reportData[t]||[];
-    if(!d.length){c.innerHTML+=`<div class="kpi"><div class="label">${t}</div><div class="value">No data</div></div>`;}
-    else{const kpis=reportConfigs[t].kpis(d);const top=kpis[0];c.innerHTML+=`<div class="kpi"><div class="label">${t}</div><div class="value">${top.value}</div></div>`;}
+// ---------- CSV Loader ----------
+async function fetchCSV(url){const res=await fetch(url);const txt=await res.text();return parseCSV(txt);}
+function parseCSV(txt){
+  const lines=txt.split(/\r?\n/).filter(l=>l.trim());
+  if(!lines.length) return [];
+  const headers=lines[0].split(/,|;|\t/).map(h=>h.trim().toLowerCase());
+  return lines.slice(1).map(line=>{
+    const parts=line.split(/,|;|\t/);
+    const obj={};
+    headers.forEach((h,i)=> obj[h]= (parts[i]||"").trim());
+    return obj;
   });
 }
 
-// ---------- Init ----------
-document.addEventListener('DOMContentLoaded',()=>{loadSharedData();});
+// ---------- Filters ----------
+function buildFiltersUI(report,data,dateField){
+  const container=document.getElementById(report+"-filters");
+  if(!container) return;
+  const years=[...new Set(data.map(r=>{const d=toDate(r[dateField]);return d? d.getFullYear():null;}))].filter(Boolean).sort();
+  const months=[...new Set(data.map(r=>{const d=toDate(r[dateField]);return d? d.getMonth()+1:null;}))].filter(Boolean).sort();
+  container.innerHTML=`<div class="filters">
+    <div><label>Year</label><select id="${report}-year" multiple>${years.map(y=>`<option value="${y}">${y}</option>`).join("")}</select></div>
+    <div><label>Month</label><select id="${report}-month" multiple>${months.map(m=>`<option value="${m}">${m}</option>`).join("")}</select></div>
+  </div>`;
+}
+function applyFilters(data,report){
+  const cfg=reportConfigs[report];
+  const years=[...document.getElementById(report+"-year")?.selectedOptions||[]].map(o=>o.value);
+  const months=[...document.getElementById(report+"-month")?.selectedOptions||[]].map(o=>o.value);
+  return data.filter(r=>{
+    const d=toDate(r[cfg.dateField]);
+    if(!d) return false;
+    if(years.length && !years.includes(String(d.getFullYear()))) return false;
+    if(months.length && !months.includes(String(d.getMonth()+1))) return false;
+    return true;
+  });
+}
+
+// ---------- Charts ----------
+function pieChart(data,field){
+  const counts={};
+  data.forEach(r=>{const k=r[field]||"Unknown";counts[k]=(counts[k]||0)+1;});
+  const labels=Object.keys(counts), values=Object.values(counts);
+  const id="chart-"+Math.random();
+  setTimeout(()=> new Chart(document.getElementById(id),{type:"pie",data:{labels,datasets:[{data:values}]}}));
+  return `<canvas id="${id}"></canvas>`;
+}
+function groupSumChart(data,field,groupField,label){
+  const sums={};
+  data.forEach(r=>{const k=r[groupField]||"Unknown";sums[k]=(sums[k]||0)+(+r[field]||0);});
+  const labels=Object.keys(sums), values=Object.values(sums);
+  const id="chart-"+Math.random();
+  setTimeout(()=> new Chart(document.getElementById(id),{type:"bar",data:{labels,datasets:[{label,data:values}]},options:{scales:{y:{beginAtZero:true}}}}));
+  return `<canvas id="${id}"></canvas>`;
+}
+function sideBySideChart(data,field1,field2,groupField){
+  const sums1={}, sums2={};
+  data.forEach(r=>{
+    const k=r[groupField]||"Unknown";
+    sums1[k]=(sums1[k]||0)+(+r[field1]||0);
+    sums2[k]=(sums2[k]||0)+(+r[field2]||0);
+  });
+  const labels=Object.keys(sums1);
+  const id="chart-"+Math.random();
+  setTimeout(()=> new Chart(document.getElementById(id),{
+    type:"bar",
+    data:{labels,datasets:[
+      {label:"Issued",data:labels.map(l=>sums1[l])},
+      {label:"Paid",data:labels.map(l=>sums2[l])}
+    ]},
+    options:{scales:{y:{beginAtZero:true}}}
+  }));
+  return `<canvas id="${id}"></canvas>`;
+}
+
+// ---------- Rendering ----------
+function renderReport(report,data){
+  const cfg=reportConfigs[report];
+  const filtered=applyFilters(data,report);
+  const kpis=cfg.kpis(filtered);
+  const kpiHTML=`<div class="panel kpi-grid">${kpis.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join("")}</div>`;
+  const chartHTML=`<div class="chart-card">${cfg.chart(filtered)}</div>`;
+  document.getElementById(report+"-content").innerHTML=kpiHTML+chartHTML;
+}
+
+// ---------- Nav ----------
+document.querySelectorAll(".nav-link").forEach(link=>{
+  link.addEventListener("click",e=>{
+    e.preventDefault();
+    document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"));
+    link.classList.add("active");
+    document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
+    const page=link.dataset.page;
+    document.getElementById(page+"-page").classList.remove("hidden");
+    if(page!=="overview") renderReport(page,window.dataStore[page]||[]);
+  });
+});
+
+// ---------- Load Data ----------
+window.dataStore={};
+async function loadAll(){
+  for(const [report,url] of Object.entries(dataSources)){
+    const data=await fetchCSV(url);
+    window.dataStore[report]=data;
+    buildFiltersUI(report,data,reportConfigs[report].dateField);
+  }
+}
+loadAll();
 </script>
 </body>
 </html>
