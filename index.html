@@ -127,61 +127,51 @@ const charts = {};       // chart instances per canvas id
 
 /* -------------------- Helpers -------------------- */
 function normalizeHeader(h){
-  return String(h||'')
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g,'');   // strip spaces entirely
+  return String(h||'').trim().toLowerCase().replace(/\s+/g,''); // "Funded Date" -> "fundeddate"
 }
 
 function cleanNumber(v) {
   if (v == null) return 0;
-
-  let s = String(v)
-    .trim()
-    .replace(/\u00A0/g, '')   // non-breaking space
-    .replace(/Â/g, '');       // stray 'Â' from bad encoding
-
+  let s = String(v).trim().replace(/\u00A0/g,'').replace(/Â/g,''); // strip NBSP + stray Â
   if (!s) return 0;
 
+  // Negatives like (1,234.56)
   let neg = false;
-  if (/^\(.*\)$/.test(s)) {
-    neg = true;
-    s = s.slice(1, -1).trim();
-  }
+  if (/^\(.*\)$/.test(s)) { neg = true; s = s.slice(1,-1).trim(); }
 
+  // EURO style 1.234.567,89
   if (/^\d{1,3}(\.\d{3})+,\d{2}$/.test(s)) {
-    s = s.replace(/\./g, '').replace(',', '.');
+    s = s.replace(/\./g,'').replace(',', '.');
   } else {
-    s = s.replace(/[£€$,]/g, '');
+    // Default remove currency + thousands
+    s = s.replace(/[£€$,]/g,'');
   }
 
   const n = parseFloat(s);
   return Number.isFinite(n) ? (neg ? -n : n) : 0;
 }
 
-/* --- Fixed Date Parser --- */
+/* Robust date parser: Excel serials, ISO, UK D/M/Y */
 function toDateSafe(v){
   if(!v) return null;
   if (v instanceof Date) return isNaN(v) ? null : v;
 
   let s = String(v).trim();
 
-  // Excel serial number
+  // Excel serial number (rough range 1900–2079)
   if (/^\d{4,6}$/.test(s)) {
     const n = parseInt(s, 10);
-    if (n > 20000 && n < 60000) { // Excel range ~1900–2079
-      return new Date(1899, 11, 30 + n);
-    }
+    if (n > 20000 && n < 60000) return new Date(1899, 11, 30 + n); // 1899-12-30 + n
   }
 
-  // ISO-like YYYY-MM-DD (with or without time)
+  // ISO with/without time
   if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
-    return new Date(s.split(" ")[0]);
+    return new Date(s.split('T')[0] || s.split(' ')[0]);
   }
 
-  // UK-style D/M/Y or D-M-Y
-  let m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+  // UK D/M/Y or D-M-Y
+  const uk = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (uk) return new Date(+uk[3], +uk[2]-1, +uk[1]);
 
   const d = new Date(s);
   return isNaN(d) ? null : d;
@@ -223,54 +213,43 @@ function buildFilters(report){
   const df = dateField[report];
   const years = new Set(), months = new Set();
   const tiers = new Set(), stages = new Set();
-  let hasUnknownDate = false;
 
   rows.forEach(r=>{
     const d = toDateSafe(r[df]);
-    if(d){
-      years.add(d.getFullYear());
-      months.add(String(d.getMonth()+1).padStart(2,'0')); // store as '01'..'12'
-    } else {
-      hasUnknownDate = true;
-    }
-    if(r.tiername) tiers.add(r.tiername);
-    if(r.stage) stages.add(r.stage);
+    if(d){ years.add(d.getFullYear()); months.add(String(d.getMonth()+1).padStart(2,'0')); } // store months as '01'..'12'
+    if(r.tiername) tiers.add(String(r.tiername).trim());
+    if(r.stage) stages.add(String(r.stage).trim());
   });
 
-  let yList = Array.from(years).filter(y=> y>=1990 && y<=2100).sort((a,b)=>a-b).map(String);
-  if (hasUnknownDate) yList.push('Unknown'); // add Unknown bucket
-
-  const mList = Array.from(months).sort(); // already padded strings
-  const tList = Array.from(tiers).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
-  const sList = Array.from(stages).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
+  const yList = Array.from(years).filter(y=>+y>=1990 && +y<=2100).sort((a,b)=>+a-+b);
+  const mList = Array.from(months).sort(); // '01'..'12'
+  const tList = Array.from(tiers).sort((a,b)=>(''+a).localeCompare((''+b),undefined,{numeric:true}));
+  const sList = Array.from(stages).sort((a,b)=>(''+a).localeCompare((''+b),undefined,{numeric:true}));
 
   const wrap = document.createElement('div');
   wrap.className = 'filters';
 
-  // multi-select builder: lets us control option value separately from label
-  const mkMulti = (id,label,values,valueFormatter=(x)=>x,labelFormatter=(x)=>x)=>{
+  const mkMulti = (id,label,values,formatter=(x)=>x)=> {
     const box = document.createElement('div');
-    const options = values.map(v=>{
-      const val = valueFormatter(v);
-      const lab = labelFormatter(v);
-      return `<option value="${val}">${lab}</option>`;
-    }).join('');
     box.innerHTML = `<label for="${id}">${label}</label>
-      <select id="${id}" multiple>${options}</select>`;
+      <select id="${id}" multiple>
+        ${values.map(v=>`<option value="${v}">${formatter(v)}</option>`).join('')}
+      </select>`;
     wrap.appendChild(box);
     return box.querySelector('select');
   };
 
-  const ySel = mkMulti(`${report}-year`,'Year',yList, v=>v, v=>v);
-  const mSel = mkMulti(`${report}-month`,'Month',mList, v=>v, v=>v);      // values are '01'..'12'
-  const tSel = mkMulti(`${report}-tiername`,'Tier',tList, v=>v, v=>v);
-  const sSel = mkMulti(`${report}-stage`,'Stage',sList, v=>v, v=>v);
+  const ySel = mkMulti(`${report}-year`,'Year',yList,String);
+  const mSel = mkMulti(`${report}-month`,'Month',mList,(v)=>v); // values are '01'..'12'
+  const tSel = mkMulti(`${report}-tiername`,'Tier',tList,String);
+  const sSel = mkMulti(`${report}-stage`,'Stage',sList,String);
 
-  // Ensure nothing is preselected
+  // Nothing preselected
   [ySel, mSel, tSel, sSel].forEach(sel=>{
     Array.from(sel.options).forEach(o=>o.selected = false);
   });
 
+  // Re-render on change
   [ySel,mSel,tSel,sSel].forEach(sel=> sel.addEventListener('change',()=> {
     if(report==='lending-volume') renderLendingReport();
     else if(report==='arrears') renderArrearsReport();
@@ -295,34 +274,20 @@ function buildFilters(report){
 function getFiltered(report, dfKey) {
   const rows = reportData[report] || [];
 
-  const ySel = Array.from(document.getElementById(report+'-year')?.selectedOptions||[]).map(o=>o.value);
-  const mSel = Array.from(document.getElementById(report+'-month')?.selectedOptions||[]).map(o=>o.value); // '01'..'12'
-  const tSel = Array.from(document.getElementById(report+'-tiername')?.selectedOptions||[]).map(o=>o.value);
-  const sSel = Array.from(document.getElementById(report+'-stage')?.selectedOptions||[]).map(o=>o.value);
-
-  const wantUnknown = ySel.includes('Unknown');
-  const yearsWanted = ySel.filter(v=>v!=='Unknown');
+  const ySel = Array.from(document.getElementById(report+'-year')?.selectedOptions||[]).map(o=>o.value);   // '2023'
+  const mSel = Array.from(document.getElementById(report+'-month')?.selectedOptions||[]).map(o=>o.value);  // '01'..'12'
+  const tSel = Array.from(document.getElementById(report+'-tiername')?.selectedOptions||[]).map(o=>o.value.trim());
+  const sSel = Array.from(document.getElementById(report+'-stage')?.selectedOptions||[]).map(o=>o.value.trim());
 
   return rows.filter(r=>{
     const d = toDateSafe(r[dfKey]);
+    if (ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
+    if (mSel.length && (!d || !mSel.includes(String(d.getMonth()+1).padStart(2,'0')))) return false;
 
-    if (ySel.length) {
-      if (!d) {
-        if (!wantUnknown) return false;
-      } else {
-        const y = String(d.getFullYear());
-        if (yearsWanted.length && !yearsWanted.includes(y)) return false;
-      }
-    }
-
-    if (mSel.length) {
-      if (!d) return false;
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      if (!mSel.includes(mm)) return false;
-    }
-
-    if (tSel.length && !tSel.includes(r.tiername||'')) return false;
-    if (sSel.length && !sSel.includes(r.stage||'')) return false;
+    const tierVal = String(r.tiername||'').trim();
+    const stageVal = String(r.stage||'').trim();
+    if (tSel.length && !tSel.includes(tierVal)) return false;
+    if (sSel.length && !sSel.includes(stageVal)) return false;
     return true;
   });
 }
@@ -374,7 +339,7 @@ function groupedLineByMonth(canvasId, rows, fA, fB, dfLabel, labelA, labelB, col
 function groupedBars(canvasId, rows, fieldA, fieldB, catField, labelA, labelB, colA, colB){
   const sumsA={}, sumsB={};
   rows.forEach(r=>{
-    const k=r[catField]||'Unknown';
+    const k=String(r[catField]||'Unknown').trim();
     sumsA[k]=(sumsA[k]||0)+cleanNumber(r[fieldA]);
     sumsB[k]=(sumsB[k]||0)+cleanNumber(r[fieldB]);
   });
@@ -396,7 +361,7 @@ function groupedBars(canvasId, rows, fieldA, fieldB, catField, labelA, labelB, c
 function barGroupSum(canvasId, rows, sumField, catField, label, color){
   const sums={};
   rows.forEach(r=>{
-    const k=r[catField]||'Unknown';
+    const k=String(r[catField]||'Unknown').trim();
     sums[k]=(sums[k]||0)+cleanNumber(r[sumField]);
   });
   const labels=Object.keys(sums).sort();
@@ -504,6 +469,14 @@ function renderLiquidationsReport(data=null){
   groupedBars(barId, rows, 'issuedamount', 'payment', 'stage', 'Issued', 'Paid', '#3b82f6', '#10b981');
 }
 
+/* -------------------- Simple generic -------------------- */
+function renderGeneric(report){
+  const target=document.getElementById(`${report}-content`);
+  const rows = reportData[report] || [];
+  if(!rows.length){ target.innerHTML = `<div class="panel">No data.</div>`; return; }
+  target.innerHTML = `<div class="panel">${renderTable(rows, 100)}</div>`;
+}
+
 /* -------------------- Nav -------------------- */
 document.querySelectorAll('.nav-link').forEach(link=>{
   link.addEventListener('click',e=>{
@@ -517,8 +490,8 @@ document.querySelectorAll('.nav-link').forEach(link=>{
     if(page==='lending-volume'){ buildFilters('lending-volume'); renderLendingReport(); }
     else if(page==='arrears'){ buildFilters('arrears'); renderArrearsReport(); }
     else if(page==='liquidations'){ buildFilters('liquidations'); renderLiquidationsReport(); }
-    else if(page==='complaints'){ /* keep simple */ const target=document.getElementById('complaints-content'); target.innerHTML = '<div class="panel">'+renderTable(reportData['complaints']||[],100)+'</div>'; }
-    else if(page==='financial-crime'){ const target=document.getElementById('financial-crime-content'); target.innerHTML = '<div class="panel">'+renderTable(reportData['financial-crime']||[],100)+'</div>'; }
+    else if(page==='complaints'){ renderGeneric('complaints'); }
+    else if(page==='financial-crime'){ renderGeneric('financial-crime'); }
   });
 });
 
@@ -528,10 +501,7 @@ async function loadAll(){
     try{
       const res = await fetch(url);
       const txt = await res.text();
-      const raw = parseCSV(txt);
-
-      // We keep headers as normalised keys from parseCSV
-      reportData[rep] = raw;
+      reportData[rep] = parseCSV(txt);
       console.log(`Loaded ${reportData[rep].length} rows for ${rep}`);
     }catch(err){
       console.error('Load error', rep, err);
@@ -542,7 +512,6 @@ async function loadAll(){
 
 document.addEventListener('DOMContentLoaded', async ()=>{
   await loadAll();
-  // land on lending-volume for testing
   const first = document.querySelector('.nav-link[data-page="lending-volume"]');
   if(first) first.click();
 });
