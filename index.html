@@ -37,7 +37,6 @@
     <div class="sidebar-header"><i class="fas fa-chart-line"></i> Financial Reports</div>
     <nav>
       <div class="nav-link active" onclick="showPage(event,'overview')">Overview</div>
-      <div class="nav-link" onclick="showPage(event,'data-management')">Data Management</div>
       <div class="nav-link" onclick="showPage(event,'lending-volume')">Lending Volume</div>
       <div class="nav-link" onclick="showPage(event,'arrears')">Arrears</div>
       <div class="nav-link" onclick="showPage(event,'liquidations')">Liquidations</div>
@@ -48,11 +47,6 @@
   <main class="main-content">
     <section id="overview-page">
       <div class="panel"><h2>Welcome</h2><div id="overview-summary"></div></div>
-    </section>
-    <section id="data-management-page" class="hidden">
-      <div class="panel"><h2>Data Management</h2>
-        <p>Data is auto-loaded from shared-data/*.csv</p>
-      </div>
     </section>
     <section id="lending-volume-page" class="hidden"><div class="panel"><h2>Lending Volume</h2><div id="lending-volume-filters"></div><div id="lending-volume-content"></div></div></section>
     <section id="arrears-page" class="hidden"><div class="panel"><h2>Arrears</h2><div id="arrears-filters"></div><div id="arrears-content"></div></div></section>
@@ -137,7 +131,7 @@ function buildFiltersUI(type){
 // ---------- Render ----------
 function renderReport(type){
   const content=document.getElementById(`${type}-content`);const cfg=reportConfigs[type];const data=reportData[type]||[];
-  if(!data.length){content.innerHTML='<div class="panel">No data uploaded.</div>';return;}
+  if(!data.length){content.innerHTML='<div class="panel">No data available.</div>';return;}
   const kpiItems=cfg.kpis(data);
   const kpiHtml='<div class="kpi-grid">'+kpiItems.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')+'</div>';
   const headers=Object.keys(data[0]);const table='<div class="data-table"><table><thead><tr>'+headers.map(h=>`<th>${h}</th>`).join('')+'</tr></thead><tbody>'+data.slice(0,50).map(r=>'<tr>'+headers.map(h=>`<td>${r[h]||''}</td>`).join('')+'</tr>').join('')+'</tbody></table></div>';
