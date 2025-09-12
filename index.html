@@ -224,23 +224,31 @@ function buildFilters(report){
 }
 
 function getFiltered(report){
-  const rows = store[report] || [];
-  const df = dateField[report];
+  const cfg = reportConfigs[report];
+  const rows = reportData[report] || [];
 
-  const ySel = Array.from(document.getElementById(`${report}-year`)?.selectedOptions || []).map(o=>o.value);
-  const mSel = Array.from(document.getElementById(`${report}-month`)?.selectedOptions || []).map(o=>o.value);
-  const tSel = Array.from(document.getElementById(`${report}-tiername`)?.selectedOptions || []).map(o=>o.value);
-  const sSel = Array.from(document.getElementById(`${report}-stage`)?.selectedOptions || []).map(o=>o.value);
+  // Get filter selections
+  const ySel = Array.from(document.getElementById(report+'-year')?.selectedOptions||[])
+                    .map(o=>o.value).filter(v=>v!=='');
+  const mSel = Array.from(document.getElementById(report+'-month')?.selectedOptions||[])
+                    .map(o=>o.value).filter(v=>v!=='');
+  const tSel = Array.from(document.getElementById(report+'-tier')?.selectedOptions||[])
+                    .map(o=>o.value).filter(v=>v!=='');
+  const sSel = Array.from(document.getElementById(report+'-stage')?.selectedOptions||[])
+                    .map(o=>o.value).filter(v=>v!=='');
+  
+  const df = cfg.dateField;
 
   return rows.filter(r=>{
     const d = toDateSafe(r[df]);
-    if(ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
-    if(mSel.length && (!d || !mSel.includes(String(d.getMonth()+1)))) return false;
-    if(tSel.length && !tSel.includes(r.tiername || '')) return false;
-    if(sSel.length && !sSel.includes(r.stage || '')) return false;
+    if (ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
+    if (mSel.length && (!d || !mSel.includes(String(d.getMonth()+1)))) return false;
+    if (tSel.length && !tSel.includes(String(r.tiername||''))) return false;
+    if (sSel.length && !sSel.includes(String(r.stage||''))) return false;
     return true;
   });
 }
+
 
 /* -------------------- Chart helpers -------------------- */
 function destroyChart(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
