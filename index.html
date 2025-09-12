@@ -116,8 +116,8 @@ const dataSources = {
 
 const dateField = {
   "lending-volume":"fundeddate",
-  "arrears":"stagedate",
-  "liquidations":"stagedate",
+  "arrears":"fundeddate",        // was stagedate
+  "liquidations":"fundeddate",   // was stagedate
   "complaints":"receiveddate",
   "financial-crime":"datereported"
 };
@@ -390,24 +390,36 @@ function renderLendingReport(){
 function renderArrearsReport(){
   const rep='arrears';
   const target=document.getElementById(`${rep}-content`);
-  const rows=getFiltered(rep,dateField[rep]);
-  if(!rows.length){target.innerHTML=`<div class="panel">No data.</div>`;return;}
-  const totalIssued=sum(rows,'issuedamount');
-  const totalDue=sum(rows,'totaldue');
-  const rate=totalIssued?(totalDue/totalIssued*100):0;
-  const kpi=`<div class="panel"><div class="kpis">
+  const rows=getFiltered(rep, dateField[rep]); // now 'fundeddate'
+  if(!rows.length){ target.innerHTML = `<div class="panel">No data.</div>`; return; }
+
+  // Tiles:
+  const totalIssued = sum(rows,'issuedamount');   // must now match Lending
+  const totalPaid   = sum(rows,'payment');        // use Payment instead of TotalDue
+  const arrearsRate = totalIssued ? (totalPaid / totalIssued * 100) : 0; // per your request
+
+  const kpiHTML = `
+    <div class="panel"><div class="kpis">
       <div class="kpi"><div class="label">Total Issued Amount</div><div class="value">${fmtMoney(totalIssued)}</div></div>
-      <div class="kpi"><div class="label">Total Due</div><div class="value">${fmtMoney(totalDue)}</div></div>
-      <div class="kpi"><div class="label">Arrears Rate</div><div class="value">${rate.toFixed(1)}%</div></div>
-    </div></div>`;
+      <div class="kpi"><div class="label">Total Paid</div><div class="value">${fmtMoney(totalPaid)}</div></div>
+      <div class="kpi"><div class="label">Arrears Rate</div><div class="value">${arrearsRate.toFixed(1)}%</div></div>
+    </div></div>
+  `;
+
+  // Charts (leave as-is unless you want them switched to Payment too):
   const lineId='arr-line', barId='arr-bar';
-  const chartsHTML=`<div class="charts">
+  const chartsHTML = `
+    <div class="charts">
       <div class="chart-card"><h3>Total Due by Month</h3><canvas id="${lineId}"></canvas></div>
       <div class="chart-card"><h3>Total Due by Stage</h3><canvas id="${barId}"></canvas></div>
-    </div>`;
-  target.innerHTML=kpi+chartsHTML+`<div class="panel">${renderTable(rows)}</div>`;
-  lineByMonth(lineId,rows,'totaldue',dateField[rep],'Total Due','#f59e0b');
-  barGroupSum(barId,rows,'totaldue','stage','Total Due','#f59e0b');
+    </div>
+  `;
+
+  target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
+
+  // If you prefer these charts to use Payment instead, change 'totaldue' to 'payment' below.
+  lineByMonth(lineId, rows, 'totaldue', dateField[rep], 'Total Due', '#f59e0b');
+  barGroupSum(barId, rows, 'totaldue', 'stage', 'Total Due', '#f59e0b');
 }
 
 function renderLiquidationsReport(){
