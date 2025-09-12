@@ -519,11 +519,6 @@ function renderFinancialCrimeReport(){
   const target=document.getElementById(`${report}-content`);
   const rows=reportData[report]||[];
   if(!rows.length){ target.innerHTML=`<div class="panel">No data.</div>`; return; }
-function renderFinancialCrimeReport(){
-  const report='financial-crime';
-  const target=document.getElementById(`${report}-content`);
-  const rows=reportData[report]||[];
-  if(!rows.length){ target.innerHTML=`<div class="panel">No data.</div>`; return; }
 
   const totalCases = rows.length;
   const totalPrincipal = sum(rows,'principal');
