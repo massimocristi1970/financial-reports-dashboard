@@ -484,13 +484,26 @@ function renderComplaintsReport(){
 
   target.innerHTML=kpiHTML+chartsHTML+`<div class="panel">${renderTable(rows)}</div>`;
 
-  // line by month
-  lineByMonth(lineId, rows, 'count', dateField[report], 'Complaints', '#3b82f6');
+  // --- Line: complaints over time (count rows)
+  const agg={};
+  rows.forEach(r=>{
+    const d=toDateSafe(r[dateField[report]]); if(!d) return;
+    const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    agg[k]=(agg[k]||0)+1;
+  });
+  const labels=Object.keys(agg).sort();
+  const values=labels.map(k=>agg[k]);
+  destroyChart(lineId);
+  charts[lineId]=new Chart(document.getElementById(lineId),{
+    type:'line',
+    data:{ labels, datasets:[{ label:'Complaints', data:values, borderColor:'#3b82f6', backgroundColor:'#3b82f6', tension:.2 }] },
+    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+  });
 
-  // bar by category
+  // --- Bar: complaints by category
   barGroupSum(barId, rows, 'count', 'category', 'Complaints', '#f59e0b');
 
-  // pie by decision
+  // --- Pie: complaints by decision
   const sums={};
   rows.forEach(r=>{ const k=r['decision']||'Unknown'; sums[k]=(sums[k]||0)+1; });
   destroyChart(pieId);
@@ -501,6 +514,11 @@ function renderComplaintsReport(){
   });
 }
 
+function renderFinancialCrimeReport(){
+  const report='financial-crime';
+  const target=document.getElementById(`${report}-content`);
+  const rows=reportData[report]||[];
+  if(!rows.length){ target.innerHTML=`<div class="panel">No data.</div>`; return; }
 function renderFinancialCrimeReport(){
   const report='financial-crime';
   const target=document.getElementById(`${report}-content`);
@@ -532,13 +550,26 @@ function renderFinancialCrimeReport(){
 
   target.innerHTML=kpiHTML+chartsHTML+`<div class="panel">${renderTable(rows)}</div>`;
 
-  // line by month
-  lineByMonth(lineId, rows, 'count', dateField[report], 'Cases', '#3b82f6');
+  // --- Line: cases over time (count rows)
+  const agg={};
+  rows.forEach(r=>{
+    const d=toDateSafe(r[dateField[report]]); if(!d) return;
+    const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    agg[k]=(agg[k]||0)+1;
+  });
+  const labels=Object.keys(agg).sort();
+  const values=labels.map(k=>agg[k]);
+  destroyChart(lineId);
+  charts[lineId]=new Chart(document.getElementById(lineId),{
+    type:'line',
+    data:{ labels, datasets:[{ label:'Cases', data:values, borderColor:'#3b82f6', backgroundColor:'#3b82f6', tension:.2 }] },
+    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+  });
 
-  // bar by loan source
+  // --- Bar: principal by loan source
   barGroupSum(barId, rows, 'principal', 'loansource', 'Principal', '#f59e0b');
 
-  // pie by decision
+  // --- Pie: cases by decision
   const sums={};
   rows.forEach(r=>{ const k=r['decision']||'Unknown'; sums[k]=(sums[k]||0)+1; });
   destroyChart(pieId);
@@ -548,7 +579,6 @@ function renderFinancialCrimeReport(){
     options:{ responsive:true }
   });
 }
-
 
 /* -------------------- Navigation + load -------------------- */
 document.querySelectorAll('.nav-link').forEach(link=>{
@@ -561,7 +591,6 @@ document.querySelectorAll('.nav-link').forEach(link=>{
     document.getElementById(`${page}-page`).classList.remove('hidden');
 
     if(page==='lending-volume'){ buildFilters('lending-volume'); renderLendingReport(); }
-    else if(page==='arrears'){ buildFilters('arrears'); renderArrearsReport(); }
     else if(page==='liquidations'){ buildFilters('liquidations'); renderLiquidationsReport(); }
     else if(page==='complaints'){ renderComplaintsReport(); }
     else if(page==='financial-crime'){ renderFinancialCrimeReport(); }
