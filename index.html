@@ -105,128 +105,48 @@
 </div>
 
 <script>
-/* -------------------- Data sources -------------------- */
-const dataSources = {
-  "lending-volume":"shared-data/lending_volume.csv",
-  "arrears":"shared-data/lending_volume.csv",
-  "liquidations":"shared-data/lending_volume.csv",
-  "complaints":"shared-data/complaints.csv",
-  "financial-crime":"shared-data/financial_crime.csv"
+// ---------------------- GLOBAL STATE ----------------------
+const reportData = {
+  'lending-volume': [],
+  'arrears': [],
+  'liquidations': [],
+  'complaints': [],
+  'financial-crime': []
 };
 
-const dateField = {
-  "lending-volume":"fundeddate",
-  "arrears":"stagedate",
-  "liquidations":"stagedate",
-  "complaints":"receiveddate",
-  "financial-crime":"date_reported"
+const reportConfigs = {
+  'lending-volume': { dateField: 'FundedDate' },
+  'arrears': { dateField: 'StageDate' },
+  'liquidations': { dateField: 'StageDate' },
+  'complaints': { dateField: 'ReceivedDate' },
+  'financial-crime': { dateField: 'Date Reported' }
 };
 
-const store = {};       // raw normalized data per report
-const charts = {};      // chart instances per canvas id for cleanup
-
-/* -------------------- Helpers -------------------- */
-function normalizeHeader(h){
-  return String(h||'').trim().toLowerCase().replace(/\s+/g,'_');
-}
-function cleanNumber(v){
-  if(v===null||v===undefined) return 0;
-  const n = parseFloat(String(v).replace(/[£€$,]/g,'').trim());
-  return Number.isFinite(n) ? n : 0;
-}
+// ---------------------- HELPERS ----------------------
 function toDateSafe(v){
   if(!v) return null;
   const d = new Date(v);
-  if(!isNaN(d)) return d;
-  const m = String(v).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if(m) return new Date(+m[3], +m[2]-1, +m[1]);
-  return null;
+  return isNaN(d) ? null : d;
 }
-function fmtMoney(n){ return "£"+(cleanNumber(n)).toLocaleString(undefined,{maximumFractionDigits:2}); }
-function sum(rows, key){ return rows.reduce((a,r)=>a + cleanNumber(r[key]), 0); }
-function avg(rows, key){ const vals=rows.map(r=>cleanNumber(r[key])).filter(v=>v>0); return vals.length? vals.reduce((a,b)=>a+b,0)/vals.length : 0; }
-
-function parseCSV(text){
-  const lines = String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
-  if(!lines.length) return [];
-  // delimiter detect
-  const head = lines[0];
-  const count = (s)=>{let c=0,inQ=false;for(let i=0;i<head.length;i++){const ch=head[i];if(ch==='"') inQ=!inQ; else if(!inQ && ch===s) c++;}return c;};
-  const delim = (count('\t')>count(',') && count('\t')>count(';')) ? '\t' : (count(';')>count(',')?';':',');
-  const splitRow=(row)=>{const out=[];let cur='',inQ=false;for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='"'){if(inQ && row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===delim && !inQ){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out;};
-  const headers = splitRow(lines[0]).map(normalizeHeader);
-  const data = [];
-  for(let i=1;i<lines.length;i++){
-    const parts = splitRow(lines[i]);
-    if(!parts.length) continue;
-    const rec={};
-    headers.forEach((h,idx)=>rec[h]=(parts[idx]??'').trim().replace(/\uFFFD/g,''));
-    if(Object.values(rec).some(v=>String(v).trim()!=='')) data.push(rec);
-  }
-  return data;
+function sumField(rows, field){
+  return rows.reduce((a,r)=>a+(parseFloat(r[field])||0),0);
+}
+function avgField(rows, field){
+  const vals = rows.map(r=>parseFloat(r[field])||0).filter(v=>v>0);
+  return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+}
+function fmtMoney(n){
+  return '£' + (Number(n)||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function fmtPct(n){
+  return (Number(n)||0).toFixed(1) + '%';
 }
 
-/* -------------------- Filters UI -------------------- */
-function buildFilters(report){
-  const container = document.getElementById(`${report}-filters`);
-  const rows = store[report] || [];
-  container.innerHTML = '';
-
-  const df = dateField[report];
-  const years = new Set(), months = new Set();
-  const tiers = new Set(), stages = new Set();
-
-  rows.forEach(r=>{
-    const d = toDateSafe(r[df]);
-    if(d){ years.add(d.getFullYear()); months.add(d.getMonth()+1); }
-    if(r.tiername) tiers.add(r.tiername);
-    if(r.stage) stages.add(r.stage);
-  });
-
-  const yList = Array.from(years).sort((a,b)=>a-b);
-  const mList = Array.from(months).sort((a,b)=>a-b);
-  const tList = Array.from(tiers).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
-  const sList = Array.from(stages).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
-
-  const wrap = document.createElement('div'); wrap.className='filters';
-
-  const mkMulti = (id,label,values,formatter=(x)=>x)=>{
-    const box = document.createElement('div');
-    box.innerHTML = `<label for="${id}">${label}</label><select id="${id}" multiple>${values.map(v=>`<option value="${v}">${formatter(v)}</option>`).join('')}</select>`;
-    wrap.appendChild(box);
-    return box.querySelector('select');
-  };
-
-  const ySel = mkMulti(`${report}-year`,'Year',yList,String);
-  const mSel = mkMulti(`${report}-month`,'Month',mList,v=>String(v).padStart(2,'0'));
-  const tSel = mkMulti(`${report}-tiername`,'Tier',tList,String);
-  const sSel = mkMulti(`${report}-stage`,'Stage',sList,String);
-
-  // re-render on change
-  [ySel,mSel,tSel,sSel].forEach(sel=> sel.addEventListener('change',()=> {
-    if(report==='lending-volume') renderLendingReport();
-    else if(report==='arrears') renderArrearsReport();
-    else if(report==='liquidations') renderLiquidationsReport();
-  }));
-
-  container.appendChild(wrap);
-
-  // Reset button already placed near the filters; wire it
-  const resetBtn = document.getElementById(`${report}-reset`);
-  if(resetBtn){
-    resetBtn.onclick = ()=>{
-      [ySel,mSel,tSel,sSel].forEach(sel=> Array.from(sel.options).forEach(o=>o.selected=false));
-      if(report==='lending-volume') renderLendingReport();
-      else if(report==='arrears') renderArrearsReport();
-      else if(report==='liquidations') renderLiquidationsReport();
-    };
-  }
-}
-
-function getFiltered(report, dateField) {
+// ---------------------- FILTERING ----------------------
+function getFiltered(report, dateField){
   const rows = reportData[report] || [];
 
-  // Get filter selections
+  // Grab selections
   const ySel = Array.from(document.getElementById(report+'-year')?.selectedOptions||[])
                     .map(o=>o.value).filter(v=>v!=='');
   const mSel = Array.from(document.getElementById(report+'-month')?.selectedOptions||[])
@@ -235,254 +155,147 @@ function getFiltered(report, dateField) {
                     .map(o=>o.value).filter(v=>v!=='');
   const sSel = Array.from(document.getElementById(report+'-stage')?.selectedOptions||[])
                     .map(o=>o.value).filter(v=>v!=='');
-
+  
   return rows.filter(r=>{
     const d = toDateSafe(r[dateField]);
     if (ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
     if (mSel.length && (!d || !mSel.includes(String(d.getMonth()+1)))) return false;
-    if (tSel.length && !tSel.includes(String(r.tiername||''))) return false;
-    if (sSel.length && !sSel.includes(String(r.stage||''))) return false;
+    if (tSel.length && !tSel.includes(String(r['TierName']||''))) return false;
+    if (sSel.length && !sSel.includes(String(r['Stage']||''))) return false;
     return true;
   });
 }
 
-/* -------------------- Chart helpers -------------------- */
-function destroyChart(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
-
-function lineByMonth(canvasId, rows, valField, dfLabel, label, color){
-  const agg={}; // YYYY-MM -> sum
-  rows.forEach(r=>{
-    const d = toDateSafe(r[dfLabel]); if(!d) return;
-    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    agg[k]=(agg[k]||0)+cleanNumber(r[valField]);
-  });
-  const labels = Object.keys(agg).sort();
-  const values = labels.map(k=>agg[k]);
-
-  destroyChart(canvasId);
-  charts[canvasId] = new Chart(document.getElementById(canvasId), {
-    type:'line',
-    data:{ labels, datasets:[{ label, data:values, borderColor:color, backgroundColor:color, tension:.2, fill:false }] },
-    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
-  });
-}
-
-function groupedLineByMonth(canvasId, rows, fA, fB, dfLabel, labelA, labelB, colorA, colorB){
-  const aggA={}, aggB={};
-  rows.forEach(r=>{
-    const d = toDateSafe(r[dfLabel]); if(!d) return;
-    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    aggA[k]=(aggA[k]||0)+cleanNumber(r[fA]);
-    aggB[k]=(aggB[k]||0)+cleanNumber(r[fB]);
-  });
-  const labels = Array.from(new Set([...Object.keys(aggA), ...Object.keys(aggB)])).sort();
-  const vA = labels.map(k=>aggA[k]||0);
-  const vB = labels.map(k=>aggB[k]||0);
-
-  destroyChart(canvasId);
-  charts[canvasId] = new Chart(document.getElementById(canvasId),{
-    type:'line',
-    data:{ labels, datasets:[
-      {label:labelA, data:vA, borderColor:colorA, backgroundColor:colorA, tension:.2, fill:false},
-      {label:labelB, data:vB, borderColor:colorB, backgroundColor:colorB, tension:.2, fill:false}
-    ]},
-    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
-  });
-}
-
-function barGroupSum(canvasId, rows, sumField, catField, label, color){
-  const sums={};
-  rows.forEach(r=>{
-    const k=r[catField]||'Unknown';
-    sums[k]=(sums[k]||0)+cleanNumber(r[sumField]);
-  });
-  const labels=Object.keys(sums);
-  const values=labels.map(k=>sums[k]);
-
-  destroyChart(canvasId);
-  charts[canvasId]=new Chart(document.getElementById(canvasId),{
-    type:'bar',
-    data:{ labels, datasets:[{label, data:values, backgroundColor:color}] },
-    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
-  });
-}
-
-function groupedBars(canvasId, rows, fieldA, fieldB, catField, labelA, labelB, colA, colB){
-  const sumsA={}, sumsB={};
-  rows.forEach(r=>{
-    const k=r[catField]||'Unknown';
-    sumsA[k]=(sumsA[k]||0)+cleanNumber(r[fieldA]);
-    sumsB[k]=(sumsB[k]||0)+cleanNumber(r[fieldB]);
-  });
-  const labels = Array.from(new Set([...Object.keys(sumsA), ...Object.keys(sumsB)]));
-  const vA = labels.map(l=>sumsA[l]||0);
-  const vB = labels.map(l=>sumsB[l]||0);
-
-  destroyChart(canvasId);
-  charts[canvasId]=new Chart(document.getElementById(canvasId),{
-    type:'bar',
-    data:{ labels, datasets:[
-      {label:labelA, data:vA, backgroundColor:colA},
-      {label:labelB, data:vB, backgroundColor:colB}
-    ]},
-    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
-  });
-}
-
-/* -------------------- Tables -------------------- */
-function renderTable(rows, maxRows=100){
-  if(!rows.length) return '';
-  const headers = Object.keys(rows[0]);
-  const head = `<thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>`;
-  const body = `<tbody>${rows.slice(0,maxRows).map(r=>`<tr>${headers.map(h=>`<td>${r[h]??''}</td>`).join('')}</tr>`).join('')}</tbody>`;
-  return `<div class="table-wrap"><table>${head}${body}</table></div>`;
-}
-
-/* -------------------- Dedicated renderers -------------------- */
-// Lending: KPIs + Line (Issued by month) + Bar (Issued by Tier) + Table
+// ---------------------- RENDERERS ----------------------
 function renderLendingReport(){
-  const report='lending-volume';
-  const target=document.getElementById(`${report}-content`);
-  const rows = getFiltered(report);
-  if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
+  const data = getFiltered('lending-volume','FundedDate');
+  const issued = sumField(data,'IssuedAmount');
+  const avgIssued = avgField(data,'IssuedAmount');
+  const fundedCount = data.filter(r=>r.Stage && r.Stage.toLowerCase().includes('fund')).length;
+  const activeCustomers = new Set(data.map(r=>r.CustomerID)).size;
 
-  const totalIssued = sum(rows,'issuedamount');
-  const avgIssued = avg(rows,'issuedamount');
-  const fundedCount = rows.reduce((a,r)=> a + (cleanNumber(r.count) || 1), 0); // keep Count if present, else row count
+  document.getElementById('lending-volume-content').innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Total Issued Amount</div><div class="value">${fmtMoney(issued)}</div></div>
+      <div class="kpi"><div class="label">Average Issued</div><div class="value">${fmtMoney(avgIssued)}</div></div>
+      <div class="kpi"><div class="label">Funded Applications</div><div class="value">${fundedCount}</div></div>
+      <div class="kpi"><div class="label">Active Customers</div><div class="value">${activeCustomers}</div></div>
+    </div>
+    <canvas id="lendingChart"></canvas>
+  `;
 
-  const kpiHTML = `<div class="panel"><div class="kpis">
-    <div class="kpi"><div class="label">Total Issued</div><div class="value">${fmtMoney(totalIssued)}</div></div>
-    <div class="kpi"><div class="label">Average Issued</div><div class="value">${fmtMoney(avgIssued)}</div></div>
-    <div class="kpi"><div class="label">Funded Count</div><div class="value">${fundedCount.toLocaleString()}</div></div>
-  </div></div>`;
-
-  const lineId='lv-line', barId='lv-bar';
-  const chartsHTML = `<div class="charts">
-    <div class="chart-card"><h3>Issued Amount by Month</h3><canvas id="${lineId}"></canvas></div>
-    <div class="chart-card"><h3>Issued Amount by Tier</h3><canvas id="${barId}"></canvas></div>
-  </div>`;
-
-  target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
-
-  lineByMonth(lineId, rows, 'issuedamount', dateField[report], 'Issued Amount', getColor('blue'));
-  barGroupSum(barId, rows, 'issuedamount', 'tiername', 'Issued', getColor('blue'));
-}
-
-// Arrears: KPIs + Line (Total Due by month) + Bar (Total Due by Stage) + Table
-function renderArrearsReport(){
-  const report='arrears';
-  const target=document.getElementById(`${report}-content`);
-  const rows = getFiltered(report);
-  if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
-
-  const totalIssued = sum(rows,'issuedamount');
-  const totalDue = sum(rows,'totaldue');
-  const arrearsRate = totalIssued ? (totalDue/totalIssued*100) : 0;
-
-  const kpiHTML = `<div class="panel"><div class="kpis">
-    <div class="kpi"><div class="label">Total Issued Amount</div><div class="value">${fmtMoney(totalIssued)}</div></div>
-    <div class="kpi"><div class="label">Total Due</div><div class="value">${fmtMoney(totalDue)}</div></div>
-    <div class="kpi"><div class="label">Arrears Rate</div><div class="value">${arrearsRate.toFixed(1)}%</div></div>
-  </div></div>`;
-
-  const lineId='arr-line', barId='arr-bar';
-  const chartsHTML = `<div class="charts">
-    <div class="chart-card"><h3>Total Due by Month</h3><canvas id="${lineId}"></canvas></div>
-    <div class="chart-card"><h3>Total Due by Stage</h3><canvas id="${barId}"></canvas></div>
-  </div>`;
-
-  target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
-
-  lineByMonth(lineId, rows, 'totaldue', dateField[report], 'Total Due', getColor('orange'));
-  barGroupSum(barId, rows, 'totaldue', 'stage', 'Total Due', getColor('orange'));
-}
-
-// Liquidations: KPIs + Line (Issued vs Paid by month) + Grouped Bar (Issued vs Paid by Stage) + Table
-function renderLiquidationsReport(){
-  const report='liquidations';
-  const target=document.getElementById(`${report}-content`);
-  const rows = getFiltered(report);
-  if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
-
-  const totalIssued = sum(rows,'issuedamount');
-  const totalPaid = sum(rows,'payment');
-  const liqPct = totalIssued ? (totalPaid/totalIssued*100) : 0;
-
-  const kpiHTML = `<div class="panel"><div class="kpis">
-    <div class="kpi"><div class="label">Total Issued Amount</div><div class="value">${fmtMoney(totalIssued)}</div></div>
-    <div class="kpi"><div class="label">Total Paid</div><div class="value">${fmtMoney(totalPaid)}</div></div>
-    <div class="kpi"><div class="label">Liquidation %</div><div class="value">${liqPct.toFixed(1)}%</div></div>
-  </div></div>`;
-
-  const lineId='liq-line', barId='liq-bar';
-  const chartsHTML = `<div class="charts">
-    <div class="chart-card"><h3>Issued vs Paid by Month</h3><canvas id="${lineId}"></canvas></div>
-    <div class="chart-card"><h3>Issued vs Paid by Stage</h3><canvas id="${barId}"></canvas></div>
-  </div>`;
-
-  target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
-
-  groupedLineByMonth(lineId, rows, 'issuedamount', 'payment', dateField[report], 'Issued', 'Paid', getColor('blue'), getColor('green'));
-  groupedBars(barId, rows, 'issuedamount', 'payment', 'stage', 'Issued', 'Paid', getColor('blue'), getColor('green'));
-}
-
-/* -------------------- Generic render (kept simple) -------------------- */
-function renderGeneric(report){
-  const target=document.getElementById(`${report}-content`);
-  const rows = store[report] || [];
-  if(!rows.length){ target.innerHTML = `<div class="panel">No data.</div>`; return; }
-  target.innerHTML = `<div class="panel">${renderTable(rows, 100)}</div>`;
-}
-
-/* -------------------- Colors -------------------- */
-function getColor(name){
-  switch(name){
-    case 'blue': return '#3b82f6';
-    case 'green': return '#10b981';
-    case 'orange': return '#f59e0b';
-    case 'red': return '#ef4444';
-    default: return '#3b82f6';
-  }
-}
-
-/* -------------------- Nav -------------------- */
-document.querySelectorAll('.nav-link').forEach(link=>{
-  link.addEventListener('click',e=>{
-    e.preventDefault();
-    const page=link.dataset.page;
-    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-    link.classList.add('active');
-    document.querySelectorAll('main .page').forEach(p=>p.classList.add('hidden'));
-    document.getElementById(`${page}-page`).classList.remove('hidden');
-
-    // Build filters once visible, then render
-    if(page==='lending-volume'){ buildFilters('lending-volume'); renderLendingReport(); }
-    else if(page==='arrears'){ buildFilters('arrears'); renderArrearsReport(); }
-    else if(page==='liquidations'){ buildFilters('liquidations'); renderLiquidationsReport(); }
-    else if(page==='complaints'){ renderGeneric('complaints'); }
-    else if(page==='financial-crime'){ renderGeneric('financial-crime'); }
+  // Chart: Issued by Year
+  const byYear = {};
+  data.forEach(r=>{
+    const d = toDateSafe(r.FundedDate);
+    const y = d ? d.getFullYear() : 'Unknown';
+    byYear[y] = (byYear[y]||0) + (parseFloat(r.IssuedAmount)||0);
   });
-});
+  new Chart(document.getElementById('lendingChart'),{
+    type:'bar',
+    data:{labels:Object.keys(byYear),datasets:[{label:'Issued',data:Object.values(byYear),backgroundColor:'#3b82f6'}]},
+    options:{responsive:true,scales:{y:{beginAtZero:true}}}
+  });
+}
 
-/* -------------------- Load all data -------------------- */
-async function loadAll(){
-  for(const [rep,url] of Object.entries(dataSources)){
+function renderArrearsReport(){
+  const data = getFiltered('arrears','StageDate');
+  const issued = sumField(data,'IssuedAmount');
+  const due = sumField(data,'TotalDue');
+
+  document.getElementById('arrears-content').innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Total Issued Amount</div><div class="value">${fmtMoney(issued)}</div></div>
+      <div class="kpi"><div class="label">Total Due</div><div class="value">${fmtMoney(due)}</div></div>
+    </div>
+    <canvas id="arrearsChart"></canvas>
+  `;
+
+  // Chart: Due by Stage
+  const byStage = {};
+  data.forEach(r=>{
+    const st = r.Stage||'Unknown';
+    byStage[st] = (byStage[st]||0) + (parseFloat(r.TotalDue)||0);
+  });
+  new Chart(document.getElementById('arrearsChart'),{
+    type:'bar',
+    data:{labels:Object.keys(byStage),datasets:[{label:'Total Due',data:Object.values(byStage),backgroundColor:'#f59e0b'}]},
+    options:{responsive:true,scales:{y:{beginAtZero:true}}}
+  });
+}
+
+function renderLiquidationsReport(){
+  const data = getFiltered('liquidations','StageDate');
+  const issued = sumField(data,'IssuedAmount');
+  const paid = sumField(data,'Payment');
+  const rate = issued>0 ? (paid/issued*100) : 0;
+
+  document.getElementById('liquidations-content').innerHTML = `
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Total Issued Amount</div><div class="value">${fmtMoney(issued)}</div></div>
+      <div class="kpi"><div class="label">Total Paid</div><div class="value">${fmtMoney(paid)}</div></div>
+      <div class="kpi"><div class="label">Liquidation %</div><div class="value">${fmtPct(rate)}</div></div>
+    </div>
+    <canvas id="liqChart"></canvas>
+  `;
+
+  // Chart: Issued vs Paid by Tier
+  const byTier = {};
+  data.forEach(r=>{
+    const t = r.TierName||'Unknown';
+    if(!byTier[t]) byTier[t] = {issued:0,paid:0};
+    byTier[t].issued += (parseFloat(r.IssuedAmount)||0);
+    byTier[t].paid += (parseFloat(r.Payment)||0);
+  });
+  new Chart(document.getElementById('liqChart'),{
+    type:'bar',
+    data:{
+      labels:Object.keys(byTier),
+      datasets:[
+        {label:'Issued',data:Object.values(byTier).map(v=>v.issued),backgroundColor:'#3b82f6'},
+        {label:'Paid',data:Object.values(byTier).map(v=>v.paid),backgroundColor:'#10b981'}
+      ]
+    },
+    options:{responsive:true,scales:{y:{beginAtZero:true}}}
+  });
+}
+
+// ---------------------- LOADER ----------------------
+async function loadSharedData(){
+  const files = {
+    'lending-volume':'shared-data/lending_volume.csv',
+    'arrears':'shared-data/lending_volume.csv',
+    'liquidations':'shared-data/lending_volume.csv',
+    'complaints':'shared-data/complaints.csv',
+    'financial-crime':'shared-data/financial_crime.csv'
+  };
+  for(const [key,path] of Object.entries(files)){
     try{
-      const res = await fetch(url);
-      const txt = await res.text();
-      store[rep] = parseCSV(txt);
-      console.log(`Loaded ${store[rep].length} rows for ${rep}`);
-    }catch(err){
-      console.error('Load error', rep, err);
-      store[rep] = [];
-    }
+      const text = await (await fetch(path)).text();
+      reportData[key] = parseCSV(text);
+      console.log(`Loaded ${reportData[key].length} rows for ${key}`);
+    }catch(e){console.error('Error loading',key,e);}
   }
 }
-document.addEventListener('DOMContentLoaded', async ()=>{
-  await loadAll();
-  // initial landing: lending page looks good to showcase
-  document.querySelector('.nav-link[data-page="lending-volume"]').click();
+
+// ---------------------- CSV PARSER ----------------------
+function parseCSV(text){
+  const lines = text.split(/\r?\n/).filter(l=>l.trim());
+  if(!lines.length) return [];
+  const headers = lines[0].split(',').map(h=>h.trim());
+  return lines.slice(1).map(line=>{
+    const cols = line.split(',');
+    const rec = {};
+    headers.forEach((h,i)=>rec[h] = cols[i]);
+    return rec;
+  });
+}
+
+// ---------------------- INIT ----------------------
+document.addEventListener('DOMContentLoaded',async()=>{
+  await loadSharedData();
+  renderLendingReport();
+  renderArrearsReport();
+  renderLiquidationsReport();
 });
 </script>
-</body>
-</html>
