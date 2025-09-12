@@ -132,10 +132,10 @@ function normalizeHeader(h){
     .toLowerCase()
     .replace(/\s+/g,'');   // strip spaces entirely
 }
+
 function cleanNumber(v) {
   if (v == null) return 0;
 
-  // Normalise odd characters first
   let s = String(v)
     .trim()
     .replace(/\u00A0/g, '')   // non-breaking space
@@ -143,45 +143,47 @@ function cleanNumber(v) {
 
   if (!s) return 0;
 
-  // Handle negatives like (1,234.56)
   let neg = false;
   if (/^\(.*\)$/.test(s)) {
     neg = true;
     s = s.slice(1, -1).trim();
   }
 
-  // EURO style: 1.234.567,89  ->  1234567.89
   if (/^\d{1,3}(\.\d{3})+,\d{2}$/.test(s)) {
     s = s.replace(/\./g, '').replace(',', '.');
   } else {
-    // Default: remove currency + thousands, keep dot decimal
-    // Handles: £1,234.56  $1,234  1,234.56  €1,234.56
     s = s.replace(/[£€$,]/g, '');
   }
 
   const n = parseFloat(s);
   return Number.isFinite(n) ? (neg ? -n : n) : 0;
 }
- 
+
+function toDateSafe(v){
+  if(!v) return null;
+  const s = String(v).trim();
+
   // ISO-like YYYY-MM-DD or YYYY/MM/DD
   let m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
   if (m) return new Date(+m[1], +m[2]-1, +m[3]);
 
-  // D/M/Y or M/D/Y -> infer by which side exceeds 12; fallback to D/M/Y
+  // D/M/Y or M/D/Y
   m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
   if (m) {
     const a = +m[1], b = +m[2], y = +m[3] < 100 ? 2000 + (+m[3]) : +m[3];
-    if (a > 12 && b <= 12) return new Date(y, b-1, a); // D/M/Y
-    if (b > 12 && a <= 12) return new Date(y, a-1, b); // M/D/Y
-    return new Date(y, b-1, a);                         // default D/M/Y
+    if (a > 12 && b <= 12) return new Date(y, b-1, a);
+    if (b > 12 && a <= 12) return new Date(y, a-1, b);
+    return new Date(y, b-1, a);
   }
 
   const d = new Date(s);
   return isNaN(d) ? null : d;
 }
+
 function fmtMoney(n){ return "£"+(cleanNumber(n)).toLocaleString(undefined,{maximumFractionDigits:2}); }
 function sum(rows, key){ return rows.reduce((a,r)=>a + cleanNumber(r[key]), 0); }
 function avg(rows, key){ const vals=rows.map(r=>cleanNumber(r[key])).filter(v=>v>0); return vals.length? vals.reduce((a,b)=>a+b,0)/vals.length : 0; }
+
 
 /* -------------------- CSV Parser (robust, consistent headers) -------------------- */
 function parseCSV(text){
