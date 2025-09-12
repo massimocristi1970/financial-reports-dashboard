@@ -130,7 +130,7 @@ function normalizeHeader(h){
   return String(h||'')
     .trim()
     .toLowerCase()
-    .replace(/\s+/g,'');   // strip spaces entirely (Issued Amount -> issuedamount)
+    .replace(/\s+/g,'');   // strip spaces entirely
 }
 
 function cleanNumber(v) {
@@ -143,18 +143,15 @@ function cleanNumber(v) {
 
   if (!s) return 0;
 
-  // Handle negatives like (1,234.56)
   let neg = false;
   if (/^\(.*\)$/.test(s)) {
     neg = true;
     s = s.slice(1, -1).trim();
   }
 
-  // EURO style: 1.234.567,89  -> 1234567.89
-  if (/^\d{1,3}(\.\d{3})+,\d{1,2}$/.test(s)) {
+  if (/^\d{1,3}(\.\d{3})+,\d{2}$/.test(s)) {
     s = s.replace(/\./g, '').replace(',', '.');
   } else {
-    // remove currency + thousands, keep dot decimal
     s = s.replace(/[£€$,]/g, '');
   }
 
@@ -162,44 +159,29 @@ function cleanNumber(v) {
   return Number.isFinite(n) ? (neg ? -n : n) : 0;
 }
 
+/* --- Fixed Date Parser --- */
 function toDateSafe(v){
   if(!v) return null;
   if (v instanceof Date) return isNaN(v) ? null : v;
 
-  let s = String(v).trim().replace(/\u00A0/g,'').replace(/Â/g,'');
+  let s = String(v).trim();
 
-  // Strip time if present (e.g., "2023-05-31 00:00:00")
-  s = s.replace(/[T ]\d{1,2}:\d{2}(:\d{2})?.*$/,'');
-
-  // Excel serial date (rough range 1900-based)
+  // Excel serial number
   if (/^\d{4,6}$/.test(s)) {
     const n = parseInt(s, 10);
-    if (n > 25000 && n < 60000) { // ~1968..2064
-      const epoch = new Date(1899, 11, 30); // Excel epoch
-      return new Date(epoch.getTime() + n * 86400000);
+    if (n > 20000 && n < 60000) { // Excel range ~1900–2079
+      return new Date(1899, 11, 30 + n);
     }
   }
 
-  // ISO-like YYYY-MM-DD or YYYY/MM/DD or YYYY.MM.DD
-  let m = s.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})$/);
-  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
-
-  // D/M/Y or M/D/Y (also allow dots)
-  m = s.match(/^(\d{1,2})[\/\.\-](\d{1,2})[\/\.\-](\d{2,4})$/);
-  if (m) {
-    const a = +m[1], b = +m[2], y = +m[3] < 100 ? 2000 + (+m[3]) : +m[3];
-    if (a > 12 && b <= 12) return new Date(y, b-1, a); // D/M/Y
-    if (b > 12 && a <= 12) return new Date(y, a-1, b); // M/D/Y
-    return new Date(y, b-1, a);                         // default D/M/Y
+  // ISO-like YYYY-MM-DD (with or without time)
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+    return new Date(s.split(" ")[0]);
   }
 
-  // 12 Jan 2023
-  m = s.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);
-  if (m) {
-    const months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-    const mm = months[m[2].slice(0,3).toLowerCase()];
-    if (mm != null) return new Date(+m[3], mm, +m[1]);
-  }
+  // UK-style D/M/Y or D-M-Y
+  let m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
 
   const d = new Date(s);
   return isNaN(d) ? null : d;
@@ -214,8 +196,6 @@ function parseCSV(text){
   const lines = String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/);
   const rows = lines.filter((l,i)=> i===0 || l.trim() !== '');
   if(!rows.length) return [];
-
-  // delimiter detection with quotes
   const head = rows[0];
   const count = (s)=>{let c=0,inQ=false;for(let i=0;i<head.length;i++){const ch=head[i];if(ch==='"') inQ=!inQ; else if(!inQ && ch===s) c++;}return c;};
   const delim = (count('\t')>count(',') && count('\t')>count(';')) ? '\t' : (count(';')>count(',')?';':',');
