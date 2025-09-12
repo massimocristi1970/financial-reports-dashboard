@@ -122,7 +122,7 @@ const dateField = {
   "financial-crime":"datereported"
 };
 
-const reportData = {};   // raw normalized data per report
+const reportData = {};   // raw normalised data per report
 const charts = {};       // chart instances per canvas id
 
 /* -------------------- Helpers -------------------- */
@@ -130,7 +130,7 @@ function normalizeHeader(h){
   return String(h||'')
     .trim()
     .toLowerCase()
-    .replace(/\s+/g,'');   // strip spaces
+    .replace(/\s+/g,'');   // strip spaces entirely
 }
 function cleanNumber(v){
   if(v===null||v===undefined) return 0;
@@ -149,21 +149,27 @@ function fmtMoney(n){ return "£"+(cleanNumber(n)).toLocaleString(undefined,{max
 function sum(rows, key){ return rows.reduce((a,r)=>a + cleanNumber(r[key]), 0); }
 function avg(rows, key){ const vals=rows.map(r=>cleanNumber(r[key])).filter(v=>v>0); return vals.length? vals.reduce((a,b)=>a+b,0)/vals.length : 0; }
 
+/* -------------------- CSV Parser (robust, consistent headers) -------------------- */
 function parseCSV(text){
-  const lines = String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
-  if(!lines.length) return [];
-  // delimiter detect
-  const head = lines[0];
+  const lines = String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/);
+  // remove trailing blank lines but keep empty fields
+  const rows = lines.filter((l,i)=> i===0 || l.trim() !== '');
+  if(!rows.length) return [];
+  // delimiter detection with quotes
+  const head = rows[0];
   const count = (s)=>{let c=0,inQ=false;for(let i=0;i<head.length;i++){const ch=head[i];if(ch==='"') inQ=!inQ; else if(!inQ && ch===s) c++;}return c;};
   const delim = (count('\t')>count(',') && count('\t')>count(';')) ? '\t' : (count(';')>count(',')?';':',');
+
   const splitRow=(row)=>{const out=[];let cur='',inQ=false;for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='"'){if(inQ && row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===delim && !inQ){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out;};
-  const headers = splitRow(lines[0]).map(normalizeHeader);
+
+  const headers = splitRow(rows[0]).map(normalizeHeader);
   const data = [];
-  for(let i=1;i<lines.length;i++){
-    const parts = splitRow(lines[i]);
+  for(let i=1;i<rows.length;i++){
+    const parts = splitRow(rows[i]);
     if(!parts.length) continue;
     const rec={};
-    headers.forEach((h,idx)=>rec[h]=(parts[idx]??'').trim().replace(/\uFFFD/g,''));
+    headers.forEach((h,idx)=> rec[h]=(parts[idx]??'').trim().replace(/\uFFFD/g,'')); // strip �
+    // only push if something non-empty
     if(Object.values(rec).some(v=>String(v).trim()!=='')) data.push(rec);
   }
   return data;
@@ -188,16 +194,17 @@ function buildFilters(report){
 
   const yList = Array.from(years).sort((a,b)=>a-b);
   const mList = Array.from(months).sort((a,b)=>a-b);
-  const tList = Array.from(tiers).sort();
-  const sList = Array.from(stages).sort();
+  const tList = Array.from(tiers).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
+  const sList = Array.from(stages).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
 
   const wrap = document.createElement('div'); wrap.className='filters';
 
-  const mkMulti = (id,label,values,formatter=(x)=>x)=>{
+  const mkMulti = (id,label,values,formatter=(x)=>x)=> {
     const box = document.createElement('div');
-    box.innerHTML = `<label for="${id}">${label}</label><select id="${id}" multiple>
-      ${values.map(v=>`<option value="${v}">${formatter(v)}</option>`).join('')}
-    </select>`;
+    box.innerHTML = `<label for="${id}">${label}</label>
+      <select id="${id}" multiple>
+        ${values.map(v=>`<option value="${v}">${formatter(v)}</option>`).join('')}
+      </select>`;
     wrap.appendChild(box);
     return box.querySelector('select');
   };
@@ -207,23 +214,22 @@ function buildFilters(report){
   const tSel = mkMulti(`${report}-tiername`,'Tier',tList,String);
   const sSel = mkMulti(`${report}-stage`,'Stage',sList,String);
 
-  [ySel,mSel,tSel,sSel].forEach(sel=> sel.addEventListener('change',()=> {
+  const onChange = ()=>{
     if(report==='lending-volume') renderLendingReport();
     else if(report==='arrears') renderArrearsReport();
     else if(report==='liquidations') renderLiquidationsReport();
-  }));
+  };
+  [ySel,mSel,tSel,sSel].forEach(sel=> sel.addEventListener('change', onChange));
 
-  // Reset button
+  // Reset button that truly resets to full dataset
   const resetBtn = document.createElement('button');
   resetBtn.textContent = "Reset Filters";
   resetBtn.className = "btn btn-outline";
   resetBtn.onclick = ()=>{
-    [ySel,mSel,tSel,sSel].forEach(sel=>{
-      Array.from(sel.options).forEach(o=>o.selected=false);
-    });
-    if(report==='lending-volume') renderLendingReport();
-    else if(report==='arrears') renderArrearsReport();
-    else if(report==='liquidations') renderLiquidationsReport();
+    [ySel,mSel,tSel,sSel].forEach(sel=> Array.from(sel.options).forEach(o=>o.selected=false));
+    if(report==='lending-volume') renderLendingReport(reportData['lending-volume']);
+    else if(report==='arrears') renderArrearsReport(reportData['arrears']);
+    else if(report==='liquidations') renderLiquidationsReport(reportData['liquidations']);
   };
 
   container.appendChild(wrap);
@@ -264,8 +270,8 @@ function lineByMonth(canvasId, rows, valField, dfLabel, label, color){
   destroyChart(canvasId);
   charts[canvasId] = new Chart(document.getElementById(canvasId), {
     type:'line',
-    data:{ labels, datasets:[{ label, data:values, borderColor:color, backgroundColor:color, tension:.2, fill:false }] },
-    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+    data:{ labels, datasets:[{ label, data:values, borderWidth:2, borderColor:color, backgroundColor:color, tension:.2, fill:false }] },
+    options:{ responsive:true, plugins:{legend:{display:true}}, scales:{ y:{ beginAtZero:true } } }
   });
 }
 
@@ -285,27 +291,10 @@ function groupedLineByMonth(canvasId, rows, fA, fB, dfLabel, labelA, labelB, col
   charts[canvasId] = new Chart(document.getElementById(canvasId),{
     type:'line',
     data:{ labels, datasets:[
-      {label:labelA, data:vA, borderColor:colorA, backgroundColor:colorA, tension:.2, fill:false},
-      {label:labelB, data:vB, borderColor:colorB, backgroundColor:colorB, tension:.2, fill:false}
+      {label:labelA, data:vA, borderWidth:2, borderColor:colorA, backgroundColor:colorA, tension:.2, fill:false},
+      {label:labelB, data:vB, borderWidth:2, borderColor:colorB, backgroundColor:colorB, tension:.2, fill:false}
     ]},
-    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
-  });
-}
-
-function barGroupSum(canvasId, rows, sumField, catField, label, color){
-  const sums={};
-  rows.forEach(r=>{
-    const k=r[catField]||'Unknown';
-    sums[k]=(sums[k]||0)+cleanNumber(r[sumField]);
-  });
-  const labels=Object.keys(sums);
-  const values=labels.map(k=>sums[k]);
-
-  destroyChart(canvasId);
-  charts[canvasId]=new Chart(document.getElementById(canvasId),{
-    type:'bar',
-    data:{ labels, datasets:[{label, data:values, backgroundColor:color}] },
-    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+    options:{ responsive:true, plugins:{legend:{display:true}}, scales:{ y:{ beginAtZero:true } } }
   });
 }
 
@@ -316,7 +305,7 @@ function groupedBars(canvasId, rows, fieldA, fieldB, catField, labelA, labelB, c
     sumsA[k]=(sumsA[k]||0)+cleanNumber(r[fieldA]);
     sumsB[k]=(sumsB[k]||0)+cleanNumber(r[fieldB]);
   });
-  const labels = Array.from(new Set([...Object.keys(sumsA), ...Object.keys(sumsB)]));
+  const labels = Array.from(new Set([...Object.keys(sumsA), ...Object.keys(sumsB)])).sort();
   const vA = labels.map(l=>sumsA[l]||0);
   const vB = labels.map(l=>sumsB[l]||0);
 
@@ -327,7 +316,24 @@ function groupedBars(canvasId, rows, fieldA, fieldB, catField, labelA, labelB, c
       {label:labelA, data:vA, backgroundColor:colA},
       {label:labelB, data:vB, backgroundColor:colB}
     ]},
-    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+    options:{ responsive:true, plugins:{legend:{display:true}}, scales:{ y:{ beginAtZero:true } } }
+  });
+}
+
+function barGroupSum(canvasId, rows, sumField, catField, label, color){
+  const sums={};
+  rows.forEach(r=>{
+    const k=r[catField]||'Unknown';
+    sums[k]=(sums[k]||0)+cleanNumber(r[sumField]);
+  });
+  const labels=Object.keys(sums).sort();
+  const values=labels.map(k=>sums[k]);
+
+  destroyChart(canvasId);
+  charts[canvasId]=new Chart(document.getElementById(canvasId),{
+    type:'bar',
+    data:{ labels, datasets:[{label, data:values, backgroundColor:color}] },
+    options:{ responsive:true, plugins:{legend:{display:true}}, scales:{ y:{ beginAtZero:true } } }
   });
 }
 
@@ -336,19 +342,15 @@ function renderTable(rows, maxRows=100){
   if(!rows.length) return '';
   const headers = Object.keys(rows[0]);
   const head = `<thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>`;
-  const body = `<tbody>${
-    rows.slice(0,maxRows).map(r=>
-      `<tr>${headers.map(h=>`<td>${r[h]??''}</td>`).join('')}</tr>`
-    ).join('')
-  }</tbody>`;
+  const body = `<tbody>${rows.slice(0,maxRows).map(r=>`<tr>${headers.map(h=>`<td>${r[h]??''}</td>`).join('')}</tr>`).join('')}</tbody>`;
   return `<div class="table-wrap"><table>${head}${body}</table></div>`;
 }
 
 /* -------------------- Dedicated renderers -------------------- */
-function renderLendingReport(){
+function renderLendingReport(data=null){
   const report='lending-volume';
   const target=document.getElementById(`${report}-content`);
-  const rows = getFiltered(report, dateField[report]);
+  const rows = data || getFiltered(report, dateField[report]);
   if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
 
   const totalIssued = sum(rows,'issuedamount');
@@ -369,14 +371,14 @@ function renderLendingReport(){
 
   target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
 
-  lineByMonth(lineId, rows, 'issuedamount', dateField[report], 'Issued Amount', getColor('blue'));
-  barGroupSum(barId, rows, 'issuedamount', 'tiername', 'Issued', getColor('blue'));
+  lineByMonth(lineId, rows, 'issuedamount', dateField[report], 'Issued Amount', '#3b82f6');
+  barGroupSum(barId, rows, 'issuedamount', 'tiername', 'Issued', '#3b82f6');
 }
 
-function renderArrearsReport(){
+function renderArrearsReport(data=null){
   const report='arrears';
   const target=document.getElementById(`${report}-content`);
-  const rows = getFiltered(report, dateField[report]);
+  const rows = data || getFiltered(report, dateField[report]);
   if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
 
   const totalIssued = sum(rows,'issuedamount');
@@ -397,14 +399,14 @@ function renderArrearsReport(){
 
   target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
 
-  lineByMonth(lineId, rows, 'totaldue', dateField[report], 'Total Due', getColor('orange'));
-  barGroupSum(barId, rows, 'totaldue', 'stage', 'Total Due', getColor('orange'));
+  lineByMonth(lineId, rows, 'totaldue', dateField[report], 'Total Due', '#f59e0b');
+  barGroupSum(barId, rows, 'totaldue', 'stage', 'Total Due', '#f59e0b');
 }
 
-function renderLiquidationsReport(){
+function renderLiquidationsReport(data=null){
   const report='liquidations';
   const target=document.getElementById(`${report}-content`);
-  const rows = getFiltered(report, dateField[report]);
+  const rows = data || getFiltered(report, dateField[report]);
   if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
 
   const totalIssued = sum(rows,'issuedamount');
@@ -425,27 +427,16 @@ function renderLiquidationsReport(){
 
   target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
 
-  groupedLineByMonth(lineId, rows, 'issuedamount', 'payment', dateField[report], 'Issued', 'Paid', getColor('blue'), getColor('green'));
-  groupedBars(barId, rows, 'issuedamount', 'payment', 'stage', 'Issued', 'Paid', getColor('blue'), getColor('green'));
+  groupedLineByMonth(lineId, rows, 'issuedamount', 'payment', dateField[report], 'Issued', 'Paid', '#3b82f6', '#10b981');
+  groupedBars(barId, rows, 'issuedamount', 'payment', 'stage', 'Issued', 'Paid', '#3b82f6', '#10b981');
 }
 
-/* -------------------- Generic reports -------------------- */
+/* -------------------- Simple generic for other tabs (kept) -------------------- */
 function renderGeneric(report){
   const target=document.getElementById(`${report}-content`);
   const rows = reportData[report] || [];
   if(!rows.length){ target.innerHTML = `<div class="panel">No data.</div>`; return; }
   target.innerHTML = `<div class="panel">${renderTable(rows, 100)}</div>`;
-}
-
-/* -------------------- Colors -------------------- */
-function getColor(name){
-  switch(name){
-    case 'blue': return '#3b82f6';
-    case 'green': return '#10b981';
-    case 'orange': return '#f59e0b';
-    case 'red': return '#ef4444';
-    default: return '#3b82f6';
-  }
 }
 
 /* -------------------- Nav -------------------- */
@@ -466,7 +457,7 @@ document.querySelectorAll('.nav-link').forEach(link=>{
   });
 });
 
-/* -------------------- Load all data -------------------- */
+/* -------------------- Load all data once -------------------- */
 async function loadAll(){
   for(const [rep,url] of Object.entries(dataSources)){
     try{
@@ -480,9 +471,11 @@ async function loadAll(){
     }
   }
 }
+
 document.addEventListener('DOMContentLoaded', async ()=>{
   await loadAll();
-  document.querySelector('.nav-link[data-page="lending-volume"]').click();
+  // land on lending-volume for testing
+  const first = document.querySelector('.nav-link[data-page="lending-volume"]');
+  if(first) first.click();
 });
 </script>
-
