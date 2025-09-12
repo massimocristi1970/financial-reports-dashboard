@@ -454,6 +454,102 @@ function renderLiquidationsReport(){
   });
 }
 
+function renderComplaintsReport(){
+  const report='complaints';
+  const target=document.getElementById(`${report}-content`);
+  const rows=reportData[report]||[];
+  if(!rows.length){ target.innerHTML=`<div class="panel">No data.</div>`; return; }
+
+  const totalComplaints = rows.length;
+  const avgResolve = avg(rows,'daystoresolve');
+  const pctResolved8w = totalComplaints ? 
+    (rows.filter(r=>cleanNumber(r.daystoresolve) <= 56).length / totalComplaints * 100) : 0;
+
+  const kpiHTML = `
+    <div class="panel"><div class="kpis">
+      <div class="kpi"><div class="label">Total Complaints</div><div class="value">${totalComplaints}</div></div>
+      <div class="kpi"><div class="label">Avg Days to Resolve</div><div class="value">${avgResolve.toFixed(1)}</div></div>
+      <div class="kpi"><div class="label">% Resolved ≤ 8 Weeks</div><div class="value">${pctResolved8w.toFixed(1)}%</div></div>
+    </div></div>
+  `;
+
+  const lineId='comp-line', barId='comp-bar', pieId='comp-pie';
+  const chartsHTML=`
+    <div class="charts">
+      <div class="chart-card"><h3>Complaints Over Time</h3><canvas id="${lineId}"></canvas></div>
+      <div class="chart-card"><h3>By Category</h3><canvas id="${barId}"></canvas></div>
+      <div class="chart-card"><h3>By Decision</h3><canvas id="${pieId}"></canvas></div>
+    </div>
+  `;
+
+  target.innerHTML=kpiHTML+chartsHTML+`<div class="panel">${renderTable(rows)}</div>`;
+
+  // line by month
+  lineByMonth(lineId, rows, 'count', dateField[report], 'Complaints', '#3b82f6');
+
+  // bar by category
+  barGroupSum(barId, rows, 'count', 'category', 'Complaints', '#f59e0b');
+
+  // pie by decision
+  const sums={};
+  rows.forEach(r=>{ const k=r['decision']||'Unknown'; sums[k]=(sums[k]||0)+1; });
+  destroyChart(pieId);
+  charts[pieId]=new Chart(document.getElementById(pieId),{
+    type:'pie',
+    data:{ labels:Object.keys(sums), datasets:[{data:Object.values(sums), backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444']}] },
+    options:{ responsive:true }
+  });
+}
+
+function renderFinancialCrimeReport(){
+  const report='financial-crime';
+  const target=document.getElementById(`${report}-content`);
+  const rows=reportData[report]||[];
+  if(!rows.length){ target.innerHTML=`<div class="panel">No data.</div>`; return; }
+
+  const totalCases = rows.length;
+  const totalPrincipal = sum(rows,'principal');
+  const avgPrincipal = avg(rows,'principal');
+  const totalInterest = sum(rows,'interest');
+
+  const kpiHTML = `
+    <div class="panel"><div class="kpis">
+      <div class="kpi"><div class="label">Total Cases</div><div class="value">${totalCases}</div></div>
+      <div class="kpi"><div class="label">Total Principal</div><div class="value">${fmtMoney(totalPrincipal)}</div></div>
+      <div class="kpi"><div class="label">Avg Principal</div><div class="value">${fmtMoney(avgPrincipal)}</div></div>
+      <div class="kpi"><div class="label">Total Interest</div><div class="value">${fmtMoney(totalInterest)}</div></div>
+    </div></div>
+  `;
+
+  const lineId='fc-line', barId='fc-bar', pieId='fc-pie';
+  const chartsHTML=`
+    <div class="charts">
+      <div class="chart-card"><h3>Cases Over Time</h3><canvas id="${lineId}"></canvas></div>
+      <div class="chart-card"><h3>Principal by Loan Source</h3><canvas id="${barId}"></canvas></div>
+      <div class="chart-card"><h3>By Decision</h3><canvas id="${pieId}"></canvas></div>
+    </div>
+  `;
+
+  target.innerHTML=kpiHTML+chartsHTML+`<div class="panel">${renderTable(rows)}</div>`;
+
+  // line by month
+  lineByMonth(lineId, rows, 'count', dateField[report], 'Cases', '#3b82f6');
+
+  // bar by loan source
+  barGroupSum(barId, rows, 'principal', 'loansource', 'Principal', '#f59e0b');
+
+  // pie by decision
+  const sums={};
+  rows.forEach(r=>{ const k=r['decision']||'Unknown'; sums[k]=(sums[k]||0)+1; });
+  destroyChart(pieId);
+  charts[pieId]=new Chart(document.getElementById(pieId),{
+    type:'pie',
+    data:{ labels:Object.keys(sums), datasets:[{data:Object.values(sums), backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444']}] },
+    options:{ responsive:true }
+  });
+}
+
+
 /* -------------------- Navigation + load -------------------- */
 document.querySelectorAll('.nav-link').forEach(link=>{
   link.addEventListener('click',e=>{
@@ -467,8 +563,8 @@ document.querySelectorAll('.nav-link').forEach(link=>{
     if(page==='lending-volume'){ buildFilters('lending-volume'); renderLendingReport(); }
     else if(page==='arrears'){ buildFilters('arrears'); renderArrearsReport(); }
     else if(page==='liquidations'){ buildFilters('liquidations'); renderLiquidationsReport(); }
-    else if(page==='complaints'){ /* render complaints as needed */ }
-    else if(page==='financial-crime'){ /* render FC as needed */ }
+    else if(page==='complaints'){ renderComplaintsReport(); }
+    else if(page==='financial-crime'){ renderFinancialCrimeReport(); }
   });
 });
 
