@@ -127,51 +127,62 @@ const charts = {};       // chart instances per canvas id
 
 /* -------------------- Helpers -------------------- */
 function normalizeHeader(h){
-  return String(h||'').trim().toLowerCase().replace(/\s+/g,''); // "Funded Date" -> "fundeddate"
+  return String(h||'')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g,'');   // strip spaces entirely
 }
 
 function cleanNumber(v) {
   if (v == null) return 0;
-  let s = String(v).trim().replace(/\u00A0/g,'').replace(/Â/g,''); // strip NBSP + stray Â
+
+  let s = String(v)
+    .trim()
+    .replace(/\u00A0/g, '')   // non-breaking space
+    .replace(/Â/g, '');       // stray 'Â' from bad encoding
+
   if (!s) return 0;
 
-  // Negatives like (1,234.56)
   let neg = false;
-  if (/^\(.*\)$/.test(s)) { neg = true; s = s.slice(1,-1).trim(); }
+  if (/^\(.*\)$/.test(s)) {
+    neg = true;
+    s = s.slice(1, -1).trim();
+  }
 
-  // EURO style 1.234.567,89
   if (/^\d{1,3}(\.\d{3})+,\d{2}$/.test(s)) {
-    s = s.replace(/\./g,'').replace(',', '.');
+    s = s.replace(/\./g, '').replace(',', '.');
   } else {
-    // Default remove currency + thousands
-    s = s.replace(/[£€$,]/g,'');
+    s = s.replace(/[£€$,]/g, '');
   }
 
   const n = parseFloat(s);
   return Number.isFinite(n) ? (neg ? -n : n) : 0;
 }
 
-/* Robust date parser: Excel serials, ISO, UK D/M/Y */
+/* --- Debug Date Parser --- */
 function toDateSafe(v){
   if(!v) return null;
   if (v instanceof Date) return isNaN(v) ? null : v;
 
   let s = String(v).trim();
 
-  // Excel serial number (rough range 1900–2079)
+  // Excel serial number
   if (/^\d{4,6}$/.test(s)) {
     const n = parseInt(s, 10);
-    if (n > 20000 && n < 60000) return new Date(1899, 11, 30 + n); // 1899-12-30 + n
+    if (n > 20000 && n < 60000) {
+      const d = new Date(1899, 11, 30 + n);
+      return d;
+    }
   }
 
-  // ISO with/without time
+  // ISO-like YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
-    return new Date(s.split('T')[0] || s.split(' ')[0]);
+    return new Date(s.split(" ")[0]);
   }
 
-  // UK D/M/Y or D-M-Y
-  const uk = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (uk) return new Date(+uk[3], +uk[2]-1, +uk[1]);
+  // UK-style D/M/Y or D-M-Y
+  let m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
 
   const d = new Date(s);
   return isNaN(d) ? null : d;
@@ -181,198 +192,57 @@ function fmtMoney(n){ return "£"+(cleanNumber(n)).toLocaleString(undefined,{max
 function sum(rows, key){ return rows.reduce((a,r)=>a + cleanNumber(r[key]), 0); }
 function avg(rows, key){ const vals=rows.map(r=>cleanNumber(r[key])).filter(v=>v>0); return vals.length? vals.reduce((a,b)=>a+b,0)/vals.length : 0; }
 
-/* -------------------- CSV Parser -------------------- */
-function parseCSV(text){
-  const lines = String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/);
-  const rows = lines.filter((l,i)=> i===0 || l.trim() !== '');
-  if(!rows.length) return [];
-  const head = rows[0];
-  const count = (s)=>{let c=0,inQ=false;for(let i=0;i<head.length;i++){const ch=head[i];if(ch==='"') inQ=!inQ; else if(!inQ && ch===s) c++;}return c;};
-  const delim = (count('\t')>count(',') && count('\t')>count(';')) ? '\t' : (count(';')>count(',')?';':',');
-
-  const splitRow=(row)=>{const out=[];let cur='',inQ=false;for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='"'){if(inQ && row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}else if(ch===delim && !inQ){out.push(cur);cur='';}else cur+=ch;}out.push(cur);return out;};
-
-  const headers = splitRow(rows[0]).map(normalizeHeader);
-  const data = [];
-  for(let i=1;i<rows.length;i++){
-    const parts = splitRow(rows[i]);
-    if(!parts.length) continue;
-    const rec={};
-    headers.forEach((h,idx)=> rec[h]=(parts[idx]??'').trim().replace(/\uFFFD/g,''));
-    if(Object.values(rec).some(v=>String(v).trim()!=='')) data.push(rec);
-  }
-  return data;
-}
-
 /* -------------------- Filters UI -------------------- */
-function buildFilters(report){
-  const container = document.getElementById(`${report}-filters`);
-  const rows = reportData[report] || [];
-  container.innerHTML = '';
-
-  const df = dateField[report];
-  const years = new Set(), months = new Set();
-  const tiers = new Set(), stages = new Set();
-
-  rows.forEach(r=>{
-    const d = toDateSafe(r[df]);
-    if(d){ years.add(d.getFullYear()); months.add(String(d.getMonth()+1).padStart(2,'0')); } // store months as '01'..'12'
-    if(r.tiername) tiers.add(String(r.tiername).trim());
-    if(r.stage) stages.add(String(r.stage).trim());
-  });
-
-  const yList = Array.from(years).filter(y=>+y>=1990 && +y<=2100).sort((a,b)=>+a-+b);
-  const mList = Array.from(months).sort(); // '01'..'12'
-  const tList = Array.from(tiers).sort((a,b)=>(''+a).localeCompare((''+b),undefined,{numeric:true}));
-  const sList = Array.from(stages).sort((a,b)=>(''+a).localeCompare((''+b),undefined,{numeric:true}));
-
-  const wrap = document.createElement('div');
-  wrap.className = 'filters';
-
-  const mkMulti = (id,label,values,formatter=(x)=>x)=> {
-    const box = document.createElement('div');
-    box.innerHTML = `<label for="${id}">${label}</label>
-      <select id="${id}" multiple>
-        ${values.map(v=>`<option value="${v}">${formatter(v)}</option>`).join('')}
-      </select>`;
-    wrap.appendChild(box);
-    return box.querySelector('select');
-  };
-
-  const ySel = mkMulti(`${report}-year`,'Year',yList,String);
-  const mSel = mkMulti(`${report}-month`,'Month',mList,(v)=>v); // values are '01'..'12'
-  const tSel = mkMulti(`${report}-tiername`,'Tier',tList,String);
-  const sSel = mkMulti(`${report}-stage`,'Stage',sList,String);
-
-  // Nothing preselected
-  [ySel, mSel, tSel, sSel].forEach(sel=>{
-    Array.from(sel.options).forEach(o=>o.selected = false);
-  });
-
-  // Re-render on change
-  [ySel,mSel,tSel,sSel].forEach(sel=> sel.addEventListener('change',()=> {
-    if(report==='lending-volume') renderLendingReport();
-    else if(report==='arrears') renderArrearsReport();
-    else if(report==='liquidations') renderLiquidationsReport();
-  }));
-
-  // Reset button
-  const resetBtn = document.createElement('button');
-  resetBtn.textContent = "Reset Filters";
-  resetBtn.className = "btn btn-outline";
-  resetBtn.onclick = ()=>{
-    [ySel,mSel,tSel,sSel].forEach(sel=> Array.from(sel.options).forEach(o=>o.selected=false));
-    if(report==='lending-volume') renderLendingReport();
-    else if(report==='arrears') renderArrearsReport();
-    else if(report==='liquidations') renderLiquidationsReport();
-  };
-
-  container.appendChild(wrap);
-  container.appendChild(resetBtn);
-}
-
 function getFiltered(report, dfKey) {
   const rows = reportData[report] || [];
 
-  const ySel = Array.from(document.getElementById(report+'-year')?.selectedOptions||[]).map(o=>o.value);   // '2023'
-  const mSel = Array.from(document.getElementById(report+'-month')?.selectedOptions||[]).map(o=>o.value);  // '01'..'12'
-  const tSel = Array.from(document.getElementById(report+'-tiername')?.selectedOptions||[]).map(o=>o.value.trim());
-  const sSel = Array.from(document.getElementById(report+'-stage')?.selectedOptions||[]).map(o=>o.value.trim());
+  const ySel = Array.from(document.getElementById(report+'-year')?.selectedOptions||[]).map(o=>o.value);
+  const mSel = Array.from(document.getElementById(report+'-month')?.selectedOptions||[]).map(o=>o.value);
+  const tSel = Array.from(document.getElementById(report+'-tiername')?.selectedOptions||[]).map(o=>o.value);
+  const sSel = Array.from(document.getElementById(report+'-stage')?.selectedOptions||[]).map(o=>o.value);
 
   return rows.filter(r=>{
-    const d = toDateSafe(r[dfKey]);
-    if (ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
-    if (mSel.length && (!d || !mSel.includes(String(d.getMonth()+1).padStart(2,'0')))) return false;
+    const raw = r[dfKey];
+    const d = toDateSafe(raw);
 
-    const tierVal = String(r.tiername||'').trim();
-    const stageVal = String(r.stage||'').trim();
-    if (tSel.length && !tSel.includes(tierVal)) return false;
-    if (sSel.length && !sSel.includes(stageVal)) return false;
+    if (!d && raw) {
+      console.warn(`Unparsed date for ${report}:`, raw);
+    }
+
+    if (ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
+    if (mSel.length && (!d || !mSel.includes(String((d.getMonth()+1)).padStart(2,'0')))) return false;
+    if (tSel.length && !tSel.includes(r.tiername||'')) return false;
+    if (sSel.length && !sSel.includes(r.stage||'')) return false;
+
     return true;
   });
 }
 
-/* -------------------- Chart helpers -------------------- */
-function destroyChart(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
+/* -------------------- Lending Report (with debug) -------------------- */
+function renderLendingReport(){
+  const report='lending-volume';
+  const target=document.getElementById(`${report}-content`);
+  const rows = getFiltered(report, dateField[report]);
+  if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
 
-function lineByMonth(canvasId, rows, valField, dfLabel, label, color){
-  const agg={};
-  rows.forEach(r=>{
-    const d = toDateSafe(r[dfLabel]); if(!d) return;
-    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    agg[k]=(agg[k]||0)+cleanNumber(r[valField]);
-  });
-  const labels = Object.keys(agg).sort();
-  const values = labels.map(k=>agg[k]);
+  // Debug: log sample values
+  console.log("Sample FundedDate values:", rows.slice(0,10).map(r=>r[dateField[report]]));
+  console.log("Sample IssuedAmount raw:", rows.slice(0,10).map(r=>r.issuedamount));
+  console.log("Sample IssuedAmount cleaned:", rows.slice(0,10).map(r=>cleanNumber(r.issuedamount)));
 
-  destroyChart(canvasId);
-  charts[canvasId] = new Chart(document.getElementById(canvasId), {
-    type:'line',
-    data:{ labels, datasets:[{ label, data:values, borderWidth:2, borderColor:color, backgroundColor:color, tension:.2, fill:false }] },
-    options:{ responsive:true, plugins:{legend:{display:true}}, scales:{ y:{ beginAtZero:true } } }
-  });
-}
+  const totalIssued = sum(rows,'issuedamount');
+  const avgIssued = avg(rows,'issuedamount');
+  const fundedCount = rows.reduce((a,r)=> a + (cleanNumber(r.count) || 1), 0);
 
-function groupedLineByMonth(canvasId, rows, fA, fB, dfLabel, labelA, labelB, colorA, colorB){
-  const aggA={}, aggB={};
-  rows.forEach(r=>{
-    const d = toDateSafe(r[dfLabel]); if(!d) return;
-    const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    aggA[k]=(aggA[k]||0)+cleanNumber(r[fA]);
-    aggB[k]=(aggB[k]||0)+cleanNumber(r[fB]);
-  });
-  const labels = Array.from(new Set([...Object.keys(aggA), ...Object.keys(aggB)])).sort();
-  const vA = labels.map(k=>aggA[k]||0);
-  const vB = labels.map(k=>aggB[k]||0);
+  console.log("Lending totals:", {totalIssued, avgIssued, fundedCount, filteredRows: rows.length});
 
-  destroyChart(canvasId);
-  charts[canvasId] = new Chart(document.getElementById(canvasId),{
-    type:'line',
-    data:{ labels, datasets:[
-      {label:labelA, data:vA, borderWidth:2, borderColor:colorA, backgroundColor:colorA, tension:.2, fill:false},
-      {label:labelB, data:vB, borderWidth:2, borderColor:colorB, backgroundColor:colorB, tension:.2, fill:false}
-    ]},
-    options:{ responsive:true, plugins:{legend:{display:true}}, scales:{ y:{ beginAtZero:true } } }
-  });
-}
+  const kpiHTML = `<div class="panel"><div class="kpis">
+    <div class="kpi"><div class="label">Total Issued</div><div class="value">${fmtMoney(totalIssued)}</div></div>
+    <div class="kpi"><div class="label">Average Issued</div><div class="value">${fmtMoney(avgIssued)}</div></div>
+    <div class="kpi"><div class="label">Funded Count</div><div class="value">${fundedCount.toLocaleString()}</div></div>
+  </div></div>`;
 
-function groupedBars(canvasId, rows, fieldA, fieldB, catField, labelA, labelB, colA, colB){
-  const sumsA={}, sumsB={};
-  rows.forEach(r=>{
-    const k=String(r[catField]||'Unknown').trim();
-    sumsA[k]=(sumsA[k]||0)+cleanNumber(r[fieldA]);
-    sumsB[k]=(sumsB[k]||0)+cleanNumber(r[fieldB]);
-  });
-  const labels = Array.from(new Set([...Object.keys(sumsA), ...Object.keys(sumsB)])).sort();
-  const vA = labels.map(l=>sumsA[l]||0);
-  const vB = labels.map(l=>sumsB[l]||0);
-
-  destroyChart(canvasId);
-  charts[canvasId]=new Chart(document.getElementById(canvasId),{
-    type:'bar',
-    data:{ labels, datasets:[
-      {label:labelA, data:vA, backgroundColor:colA},
-      {label:labelB, data:vB, backgroundColor:colB}
-    ]},
-    options:{ responsive:true, plugins:{legend:{display:true}}, scales:{ y:{ beginAtZero:true } } }
-  });
-}
-
-function barGroupSum(canvasId, rows, sumField, catField, label, color){
-  const sums={};
-  rows.forEach(r=>{
-    const k=String(r[catField]||'Unknown').trim();
-    sums[k]=(sums[k]||0)+cleanNumber(r[sumField]);
-  });
-  const labels=Object.keys(sums).sort();
-  const values=labels.map(k=>sums[k]);
-
-  destroyChart(canvasId);
-  charts[canvasId]=new Chart(document.getElementById(canvasId),{
-    type:'bar',
-    data:{ labels, datasets:[{label, data:values, backgroundColor:color}] },
-    options:{ responsive:true, plugins:{legend:{display:true}}, scales:{ y:{ beginAtZero:true } } }
-  });
+  target.innerHTML = kpiHTML + `<div class="panel">${renderTable(rows)}</div>`;
 }
 
 /* -------------------- Tables -------------------- */
@@ -384,118 +254,7 @@ function renderTable(rows, maxRows=100){
   return `<div class="table-wrap"><table>${head}${body}</table></div>`;
 }
 
-/* -------------------- Dedicated renderers -------------------- */
-function renderLendingReport(data=null){
-  const report='lending-volume';
-  const target=document.getElementById(`${report}-content`);
-  const rows = data || getFiltered(report, dateField[report]);
-  if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
-
-  const totalIssued = sum(rows,'issuedamount');
-  const avgIssued = avg(rows,'issuedamount');
-  const fundedCount = rows.reduce((a,r)=> a + (cleanNumber(r.count) || 1), 0);
-
-  const kpiHTML = `<div class="panel"><div class="kpis">
-    <div class="kpi"><div class="label">Total Issued</div><div class="value">${fmtMoney(totalIssued)}</div></div>
-    <div class="kpi"><div class="label">Average Issued</div><div class="value">${fmtMoney(avgIssued)}</div></div>
-    <div class="kpi"><div class="label">Funded Count</div><div class="value">${fundedCount.toLocaleString()}</div></div>
-  </div></div>`;
-
-  const lineId='lv-line', barId='lv-bar';
-  const chartsHTML = `<div class="charts">
-    <div class="chart-card"><h3>Issued Amount by Month</h3><canvas id="${lineId}"></canvas></div>
-    <div class="chart-card"><h3>Issued Amount by Tier</h3><canvas id="${barId}"></canvas></div>
-  </div>`;
-
-  target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
-
-  lineByMonth(lineId, rows, 'issuedamount', dateField[report], 'Issued Amount', '#3b82f6');
-  barGroupSum(barId, rows, 'issuedamount', 'tiername', 'Issued', '#3b82f6');
-}
-
-function renderArrearsReport(data=null){
-  const report='arrears';
-  const target=document.getElementById(`${report}-content`);
-  const rows = data || getFiltered(report, dateField[report]);
-  if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
-
-  const totalIssued = sum(rows,'issuedamount');
-  const totalDue = sum(rows,'totaldue');
-  const arrearsRate = totalIssued ? (totalDue/totalIssued*100) : 0;
-
-  const kpiHTML = `<div class="panel"><div class="kpis">
-    <div class="kpi"><div class="label">Total Issued Amount</div><div class="value">${fmtMoney(totalIssued)}</div></div>
-    <div class="kpi"><div class="label">Total Due</div><div class="value">${fmtMoney(totalDue)}</div></div>
-    <div class="kpi"><div class="label">Arrears Rate</div><div class="value">${arrearsRate.toFixed(1)}%</div></div>
-  </div></div>`;
-
-  const lineId='arr-line', barId='arr-bar';
-  const chartsHTML = `<div class="charts">
-    <div class="chart-card"><h3>Total Due by Month</h3><canvas id="${lineId}"></canvas></div>
-    <div class="chart-card"><h3>Total Due by Stage</h3><canvas id="${barId}"></canvas></div>
-  </div>`;
-
-  target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
-
-  lineByMonth(lineId, rows, 'totaldue', dateField[report], 'Total Due', '#f59e0b');
-  barGroupSum(barId, rows, 'totaldue', 'stage', 'Total Due', '#f59e0b');
-}
-
-function renderLiquidationsReport(data=null){
-  const report='liquidations';
-  const target=document.getElementById(`${report}-content`);
-  const rows = data || getFiltered(report, dateField[report]);
-  if(!rows.length){ target.innerHTML = `<div class="panel">No data for current filters.</div>`; return; }
-
-  const totalIssued = sum(rows,'issuedamount');
-  const totalPaid = sum(rows,'payment');
-  const liqPct = totalIssued ? (totalPaid/totalIssued*100) : 0;
-
-  const kpiHTML = `<div class="panel"><div class="kpis">
-    <div class="kpi"><div class="label">Total Issued Amount</div><div class="value">${fmtMoney(totalIssued)}</div></div>
-    <div class="kpi"><div class="label">Total Paid</div><div class="value">${fmtMoney(totalPaid)}</div></div>
-    <div class="kpi"><div class="label">Liquidation %</div><div class="value">${liqPct.toFixed(1)}%</div></div>
-  </div></div>`;
-
-  const lineId='liq-line', barId='liq-bar';
-  const chartsHTML = `<div class="charts">
-    <div class="chart-card"><h3>Issued vs Paid by Month</h3><canvas id="${lineId}"></canvas></div>
-    <div class="chart-card"><h3>Issued vs Paid by Stage</h3><canvas id="${barId}"></canvas></div>
-  </div>`;
-
-  target.innerHTML = kpiHTML + chartsHTML + `<div class="panel">${renderTable(rows)}</div>`;
-
-  groupedLineByMonth(lineId, rows, 'issuedamount', 'payment', dateField[report], 'Issued', 'Paid', '#3b82f6', '#10b981');
-  groupedBars(barId, rows, 'issuedamount', 'payment', 'stage', 'Issued', 'Paid', '#3b82f6', '#10b981');
-}
-
-/* -------------------- Simple generic -------------------- */
-function renderGeneric(report){
-  const target=document.getElementById(`${report}-content`);
-  const rows = reportData[report] || [];
-  if(!rows.length){ target.innerHTML = `<div class="panel">No data.</div>`; return; }
-  target.innerHTML = `<div class="panel">${renderTable(rows, 100)}</div>`;
-}
-
-/* -------------------- Nav -------------------- */
-document.querySelectorAll('.nav-link').forEach(link=>{
-  link.addEventListener('click',e=>{
-    e.preventDefault();
-    const page=link.dataset.page;
-    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-    link.classList.add('active');
-    document.querySelectorAll('main .page').forEach(p=>p.classList.add('hidden'));
-    document.getElementById(`${page}-page`).classList.remove('hidden');
-
-    if(page==='lending-volume'){ buildFilters('lending-volume'); renderLendingReport(); }
-    else if(page==='arrears'){ buildFilters('arrears'); renderArrearsReport(); }
-    else if(page==='liquidations'){ buildFilters('liquidations'); renderLiquidationsReport(); }
-    else if(page==='complaints'){ renderGeneric('complaints'); }
-    else if(page==='financial-crime'){ renderGeneric('financial-crime'); }
-  });
-});
-
-/* -------------------- Load all data once -------------------- */
+/* -------------------- Load all data -------------------- */
 async function loadAll(){
   for(const [rep,url] of Object.entries(dataSources)){
     try{
@@ -512,7 +271,6 @@ async function loadAll(){
 
 document.addEventListener('DOMContentLoaded', async ()=>{
   await loadAll();
-  const first = document.querySelector('.nav-link[data-page="lending-volume"]');
-  if(first) first.click();
+  renderLendingReport(); // just test lending for now
 });
 </script>
