@@ -223,8 +223,7 @@ function buildFilters(report){
   }
 }
 
-function getFiltered(report){
-  const cfg = reportConfigs[report];
+function getFiltered(report, dateField) {
   const rows = reportData[report] || [];
 
   // Get filter selections
@@ -236,11 +235,9 @@ function getFiltered(report){
                     .map(o=>o.value).filter(v=>v!=='');
   const sSel = Array.from(document.getElementById(report+'-stage')?.selectedOptions||[])
                     .map(o=>o.value).filter(v=>v!=='');
-  
-  const df = cfg.dateField;
 
   return rows.filter(r=>{
-    const d = toDateSafe(r[df]);
+    const d = toDateSafe(r[dateField]);
     if (ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
     if (mSel.length && (!d || !mSel.includes(String(d.getMonth()+1)))) return false;
     if (tSel.length && !tSel.includes(String(r.tiername||''))) return false;
@@ -248,7 +245,6 @@ function getFiltered(report){
     return true;
   });
 }
-
 
 /* -------------------- Chart helpers -------------------- */
 function destroyChart(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
