@@ -132,7 +132,7 @@ function normalizeHeader(h){
     .toLowerCase()
     .replace(/\s+/g,'');   // strip spaces entirely
 }
-function cleanNumber(v){
+function cleanNumber(v) {
   if (v == null) return 0;
 
   // Normalise odd characters first
@@ -145,9 +145,9 @@ function cleanNumber(v){
 
   // Handle negatives like (1,234.56)
   let neg = false;
-  if (/^\(.*\)$/.test(s)) { 
-    neg = true; 
-    s = s.slice(1, -1).trim(); 
+  if (/^\(.*\)$/.test(s)) {
+    neg = true;
+    s = s.slice(1, -1).trim();
   }
 
   // EURO style: 1.234.567,89  ->  1234567.89
@@ -162,7 +162,6 @@ function cleanNumber(v){
   const n = parseFloat(s);
   return Number.isFinite(n) ? (neg ? -n : n) : 0;
 }
-
  
   // ISO-like YYYY-MM-DD or YYYY/MM/DD
   let m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
