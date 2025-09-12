@@ -119,23 +119,18 @@ const dateField = {
   "arrears":"stagedate",
   "liquidations":"stagedate",
   "complaints":"receiveddate",
-  "financial-crime":"date_reported"
+  "financial-crime":"datereported"
 };
 
-/* -------------------- Global state -------------------- */
-const reportData = {       // parsed CSVs live here
-  "lending-volume": [],
-  "arrears": [],
-  "liquidations": [],
-  "complaints": [],
-  "financial-crime": []
-};
-
-const charts = {};         // chart instances for cleanup
+const reportData = {};   // raw normalized data per report
+const charts = {};       // chart instances per canvas id
 
 /* -------------------- Helpers -------------------- */
 function normalizeHeader(h){
-  return String(h||'').trim().toLowerCase().replace(/\s+/g,'_');
+  return String(h||'')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g,'');   // strip spaces
 }
 function cleanNumber(v){
   if(v===null||v===undefined) return 0;
@@ -193,21 +188,23 @@ function buildFilters(report){
 
   const yList = Array.from(years).sort((a,b)=>a-b);
   const mList = Array.from(months).sort((a,b)=>a-b);
-  const tList = Array.from(tiers).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
-  const sList = Array.from(stages).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
+  const tList = Array.from(tiers).sort();
+  const sList = Array.from(stages).sort();
 
   const wrap = document.createElement('div'); wrap.className='filters';
 
-  const mkMulti = (id,label,values,formatter=(x)=>x)=> {
+  const mkMulti = (id,label,values,formatter=(x)=>x)=>{
     const box = document.createElement('div');
-    box.innerHTML = `<label for="${id}">${label}</label><select id="${id}" multiple>${values.map(v=>`<option value="${v}">${formatter(v)}</option>`).join('')}</select>`;
+    box.innerHTML = `<label for="${id}">${label}</label><select id="${id}" multiple>
+      ${values.map(v=>`<option value="${v}">${formatter(v)}</option>`).join('')}
+    </select>`;
     wrap.appendChild(box);
     return box.querySelector('select');
   };
 
   const ySel = mkMulti(`${report}-year`,'Year',yList,String);
   const mSel = mkMulti(`${report}-month`,'Month',mList,v=>String(v).padStart(2,'0'));
-  const tSel = mkMulti(`${report}-tier`,'Tier',tList,String);
+  const tSel = mkMulti(`${report}-tiername`,'Tier',tList,String);
   const sSel = mkMulti(`${report}-stage`,'Stage',sList,String);
 
   [ySel,mSel,tSel,sSel].forEach(sel=> sel.addEventListener('change',()=> {
@@ -216,23 +213,37 @@ function buildFilters(report){
     else if(report==='liquidations') renderLiquidationsReport();
   }));
 
+  // Reset button
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = "Reset Filters";
+  resetBtn.className = "btn btn-outline";
+  resetBtn.onclick = ()=>{
+    [ySel,mSel,tSel,sSel].forEach(sel=>{
+      Array.from(sel.options).forEach(o=>o.selected=false);
+    });
+    if(report==='lending-volume') renderLendingReport();
+    else if(report==='arrears') renderArrearsReport();
+    else if(report==='liquidations') renderLiquidationsReport();
+  };
+
   container.appendChild(wrap);
+  container.appendChild(resetBtn);
 }
 
-function getFiltered(report, df) {
+function getFiltered(report, dfKey) {
   const rows = reportData[report] || [];
 
   const ySel = Array.from(document.getElementById(report+'-year')?.selectedOptions||[]).map(o=>o.value);
   const mSel = Array.from(document.getElementById(report+'-month')?.selectedOptions||[]).map(o=>o.value);
-  const tSel = Array.from(document.getElementById(report+'-tier')?.selectedOptions||[]).map(o=>o.value);
+  const tSel = Array.from(document.getElementById(report+'-tiername')?.selectedOptions||[]).map(o=>o.value);
   const sSel = Array.from(document.getElementById(report+'-stage')?.selectedOptions||[]).map(o=>o.value);
 
   return rows.filter(r=>{
-    const d = toDateSafe(r[df]);
+    const d = toDateSafe(r[dfKey]);
     if (ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
     if (mSel.length && (!d || !mSel.includes(String(d.getMonth()+1)))) return false;
-    if (tSel.length && !tSel.includes(String(r.tiername||''))) return false;
-    if (sSel.length && !sSel.includes(String(r.stage||''))) return false;
+    if (tSel.length && !tSel.includes(r.tiername||'')) return false;
+    if (sSel.length && !sSel.includes(r.stage||'')) return false;
     return true;
   });
 }
@@ -338,7 +349,7 @@ function renderLendingReport(){
 
   const totalIssued = sum(rows,'issuedamount');
   const avgIssued = avg(rows,'issuedamount');
-  const fundedCount = rows.length;
+  const fundedCount = rows.reduce((a,r)=> a + (cleanNumber(r.count) || 1), 0);
 
   const kpiHTML = `<div class="panel"><div class="kpis">
     <div class="kpi"><div class="label">Total Issued</div><div class="value">${fmtMoney(totalIssued)}</div></div>
