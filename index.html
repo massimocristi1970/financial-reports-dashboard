@@ -4,60 +4,81 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Financial Reports Dashboard</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin:0; background:#f8fafc; color:#0f172a; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin:0; background:#f8fafc; color:#0f172a; }
     .app-container { display:flex; min-height:100vh; }
     .sidebar { width:240px; background:#fff; border-right:1px solid #e2e8f0; }
-    .sidebar-header { padding:18px 20px; font-weight:700; border-bottom:1px solid #e2e8f0; }
-    .nav-link { cursor:pointer; padding:12px 18px; display:block; color:#334155; text-decoration:none; }
+    .sidebar-header { padding:18px; font-weight:700; border-bottom:1px solid #e2e8f0; }
+    .nav-link { display:block; padding:12px 18px; color:#334155; text-decoration:none; cursor:pointer; }
     .nav-link:hover { background:#f1f5f9; }
     .nav-link.active { background:#eef6ff; border-left:3px solid #3b82f6; color:#1d4ed8; }
     .main-content { flex:1; padding:24px; }
     .hidden { display:none; }
-    .panel { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:16px; margin-bottom:18px; }
+    .panel { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px; margin-bottom:18px; }
     .filters { display:flex; gap:16px; flex-wrap:wrap; }
     .filters label { font-size:12px; font-weight:700; display:block; margin-bottom:4px; }
-    .filters select { min-width:120px; padding:6px; border-radius:6px; border:1px solid #cbd5e1; }
-    .filters select[multiple]{ height:100px; }
+    .filters select { min-width:140px; padding:6px; border-radius:8px; border:1px solid #cbd5e1; }
+    .filters select[multiple]{ height:110px; }
     .kpi-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:14px; }
-    .kpi { background:#f8fafc; border:1px solid #e5e7eb; border-radius:8px; padding:12px; }
+    .kpi { background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; padding:12px; }
     .kpi .label { font-size:12px; color:#64748b; }
-    .kpi .value { font-size:20px; font-weight:700; margin-top:6px; }
-    .chart-card { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:16px; margin-bottom:18px; }
-    .data-table table { width:100%; border-collapse: collapse; }
-    th, td { padding:8px 10px; border-bottom:1px solid #e5e7eb; text-align:left; }
-    th { background:#f8fafc; }
-    .table-wrap { max-height:400px; overflow:auto; }
+    .kpi .value { font-size:20px; font-weight:800; margin-top:6px; }
+    .chart-card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px; margin-bottom:18px; }
+    .chart-card h3 { margin:0 0 8px; font-size:14px; color:#334155; }
+    .table-wrap { max-height:420px; overflow:auto; border:1px solid #e5e7eb; border-radius:12px; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding:10px 12px; border-bottom:1px solid #e5e7eb; text-align:left; white-space:nowrap; }
+    th { background:#f8fafc; position:sticky; top:0; z-index:1; }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <aside class="sidebar">
-      <div class="sidebar-header"><i class="fas fa-chart-line"></i> Reports</div>
-      <a class="nav-link active" data-page="overview">Overview</a>
-      <a class="nav-link" data-page="lending-volume">Lending Volume</a>
-      <a class="nav-link" data-page="arrears">Arrears</a>
-      <a class="nav-link" data-page="liquidations">Liquidations</a>
-      <a class="nav-link" data-page="complaints">Complaints</a>
-      <a class="nav-link" data-page="financial-crime">Financial Crime</a>
-    </aside>
+<div class="app-container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><i class="fas fa-chart-line"></i> Financial Reports</div>
+    <a class="nav-link active" data-page="overview">Overview</a>
+    <a class="nav-link" data-page="lending-volume">Lending Volume</a>
+    <a class="nav-link" data-page="arrears">Arrears</a>
+    <a class="nav-link" data-page="liquidations">Liquidations</a>
+    <a class="nav-link" data-page="complaints">Complaints</a>
+    <a class="nav-link" data-page="financial-crime">Financial Crime</a>
+  </aside>
 
-    <main class="main-content">
-      <section id="overview-page">
-        <div class="panel"><h2>Welcome</h2><p>Data auto-loaded from <code>/shared-data/</code>.</p></div>
-      </section>
+  <main class="main-content">
+    <section id="overview-page">
+      <div class="panel"><h2>Welcome</h2><p>Data auto-loaded from <code>/shared-data/</code> CSVs.</p></div>
+    </section>
 
-      <section id="lending-volume-page" class="hidden"><h2>Lending Volume</h2><div id="lending-volume-filters" class="panel"></div><div id="lending-volume-content"></div></section>
-      <section id="arrears-page" class="hidden"><h2>Arrears</h2><div id="arrears-filters" class="panel"></div><div id="arrears-content"></div></section>
-      <section id="liquidations-page" class="hidden"><h2>Liquidations</h2><div id="liquidations-filters" class="panel"></div><div id="liquidations-content"></div></section>
-      <section id="complaints-page" class="hidden"><h2>Complaints</h2><div id="complaints-filters" class="panel"></div><div id="complaints-content"></div></section>
-      <section id="financial-crime-page" class="hidden"><h2>Financial Crime</h2><div id="financial-crime-filters" class="panel"></div><div id="financial-crime-content"></div></section>
-    </main>
-  </div>
+    <section id="lending-volume-page" class="hidden">
+      <div class="panel"><h2>Lending Volume</h2><div id="lending-volume-filters" class="filters"></div></div>
+      <div id="lending-volume-content"></div>
+    </section>
+
+    <section id="arrears-page" class="hidden">
+      <div class="panel"><h2>Arrears</h2><div id="arrears-filters" class="filters"></div></div>
+      <div id="arrears-content"></div>
+    </section>
+
+    <section id="liquidations-page" class="hidden">
+      <div class="panel"><h2>Liquidations</h2><div id="liquidations-filters" class="filters"></div></div>
+      <div id="liquidations-content"></div>
+    </section>
+
+    <section id="complaints-page" class="hidden">
+      <div class="panel"><h2>Complaints</h2><div id="complaints-filters" class="filters"></div></div>
+      <div id="complaints-content"></div>
+    </section>
+
+    <section id="financial-crime-page" class="hidden">
+      <div class="panel"><h2>Financial Crime</h2><div id="financial-crime-filters" class="filters"></div></div>
+      <div id="financial-crime-content"></div>
+    </section>
+  </main>
+</div>
 
 <script>
+// --------------------- Config ---------------------
 const dataSources = {
   "lending-volume":"shared-data/lending_volume.csv",
   "arrears":"shared-data/lending_volume.csv",
@@ -65,166 +86,352 @@ const dataSources = {
   "complaints":"shared-data/complaints.csv",
   "financial-crime":"shared-data/financial_crime.csv"
 };
-
-const reportConfigs = {
-  "lending-volume":{dateField:"fundeddate",kpis:data=>{
-    const issued=colSum(data,"issuedamount");
-    const avg=colAvg(data,"issuedamount");
-    return [
-      {label:"Total Issued",value:fmtMoney(issued)},
-      {label:"Average Issued",value:fmtMoney(avg)},
-      {label:"Loans",value:data.length}
-    ];
-  }, chart:(data)=> groupSumChart(data,"issuedamount","stage","Issued Amount")},
-  "arrears":{dateField:"stagedate",kpis:data=>{
-    return [
-      {label:"Total Issued Amount",value:fmtMoney(colSum(data,"issuedamount"))},
-      {label:"Total Due",value:fmtMoney(colSum(data,"totaldue"))}
-    ];
-  }, chart:(data)=> groupSumChart(data,"totaldue","stage","Total Due")},
-  "liquidations":{dateField:"stagedate",kpis:data=>{
-    const issued=colSum(data,"issuedamount");
-    const paid=colSum(data,"payment");
-    const pct= issued? (paid/issued*100):0;
-    return [
-      {label:"Total Issued Amount",value:fmtMoney(issued)},
-      {label:"Total Paid",value:fmtMoney(paid)},
-      {label:"Liquidation %",value:pct.toFixed(1)+"%"}
-    ];
-  }, chart:(data)=> sideBySideChart(data,"issuedamount","payment","stage")},
-  "complaints":{dateField:"receiveddate",kpis:data=>{
-    const avg=colAvg(data,"daystoresolve");
-    const open=data.filter(r=>!r.resolveddate).length;
-    return [
-      {label:"Total Complaints",value:data.length},
-      {label:"Avg Days to Resolve",value:avg.toFixed(1)},
-      {label:"Open Complaints",value:open}
-    ];
-  }, chart:(data)=> pieChart(data,"decision")},
-  "financial-crime":{dateField:"date_reported",kpis:data=>{
-    return [
-      {label:"Total Cases",value:data.length},
-      {label:"Total Principal",value:fmtMoney(colSum(data,"principal"))},
-      {label:"Average Principal",value:fmtMoney(colAvg(data,"principal"))},
-      {label:"Total Interest",value:fmtMoney(colSum(data,"interest"))}
-    ];
-  }, chart:(data)=> groupSumChart(data,"principal","loan source","Principal by Loan Source")}
+// date field per report (normalized to lowercase_with_underscores)
+const dateField = {
+  "lending-volume":"fundeddate",
+  "arrears":"stagedate",
+  "liquidations":"stagedate",
+  "complaints":"receiveddate",
+  "financial-crime":"date_reported"
 };
 
-// ---------- Utilities ----------
-function fmtMoney(n){return "£"+(n||0).toLocaleString();}
-function colSum(data,f){return data.reduce((a,r)=>a+(+r[f]||0),0);}
-function colAvg(data,f){const arr=data.map(r=>+r[f]||0).filter(x=>x);return arr.length?arr.reduce((a,b)=>a+b)/arr.length:0;}
-function toDate(v){if(!v) return null;const d=new Date(v);return isNaN(d)?null:d;}
+const charts = {}; // to destroy/recreate safely
+const store = {};  // data per report
 
-// ---------- CSV Loader ----------
-async function fetchCSV(url){const res=await fetch(url);const txt=await res.text();return parseCSV(txt);}
-function parseCSV(txt){
-  const lines=txt.split(/\r?\n/).filter(l=>l.trim());
+// --------------------- Utils ---------------------
+function normalizeHeader(h){
+  return String(h || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g,'_'); // spaces -> underscores
+}
+function cleanNumber(v){
+  if(v===null || v===undefined) return 0;
+  const n = parseFloat(String(v).replace(/[£€$,]/g,'').trim());
+  return Number.isFinite(n) ? n : 0;
+}
+function toDateSafe(v){
+  if(!v) return null;
+  const d = new Date(v);
+  if(!isNaN(d)) return d;
+  const m = String(v).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m) return new Date(+m[3], +m[2]-1, +m[1]);
+  return null;
+}
+function fmtMoney(n){ return "£"+(cleanNumber(n)).toLocaleString(undefined,{maximumFractionDigits:2}); }
+
+function colSum(rows, key){ return rows.reduce((a,r)=>a + cleanNumber(r[key]), 0); }
+function colAvg(rows, key){
+  const vals = rows.map(r=>cleanNumber(r[key])).filter(v=>v>0);
+  return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+}
+
+// CSV parse with delimiter auto-detect + header normalization
+function parseCSV(text){
+  const lines = String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(l=>l.trim());
   if(!lines.length) return [];
-  const headers=lines[0].split(/,|;|\t/).map(h=>h.trim().toLowerCase());
-  return lines.slice(1).map(line=>{
-    const parts=line.split(/,|;|\t/);
-    const obj={};
-    headers.forEach((h,i)=> obj[h]= (parts[i]||"").trim());
-    return obj;
-  });
+  // detect delimiter from header line
+  const headLine = lines[0];
+  const delim = (()=>{
+    const c = s => { let cnt=0,inQ=false; for(let i=0;i<headLine.length;i++){const ch=headLine[i]; if(ch==='"') inQ=!inQ; else if(!inQ && ch===s) cnt++; } return cnt; };
+    const counts = [{d:',',c:c(',')},{d:'\t',c:c('\t')},{d:';',c:c(';')}].sort((a,b)=>b.c-a.c);
+    return (counts[0]?.c>0 ? counts[0].d : ',');
+  })();
+
+  const splitRow = (row)=>{
+    const out=[]; let cur='', inQ=false;
+    for(let i=0;i<row.length;i++){
+      const ch=row[i];
+      if(ch==='"'){
+        if(inQ && row[i+1]==='"'){ cur+='"'; i++; }
+        else inQ=!inQ;
+      }else if(ch===delim && !inQ){ out.push(cur); cur=''; }
+      else cur+=ch;
+    }
+    out.push(cur);
+    return out;
+  };
+
+  const headers = splitRow(lines[0]).map(h=>normalizeHeader(h));
+  const data = [];
+  for(let i=1;i<lines.length;i++){
+    const parts = splitRow(lines[i]);
+    if(!parts.length) continue;
+    const rec={};
+    headers.forEach((h,idx)=>{ rec[h] = (parts[idx]??'').trim(); });
+    // strip weird replacement chars
+    Object.keys(rec).forEach(k=> rec[k] = String(rec[k]).replace(/\uFFFD/g,''));
+    // keep if not entirely empty
+    if(Object.values(rec).some(v=>String(v).trim()!=='')) data.push(rec);
+  }
+  return data;
 }
 
-// ---------- Filters ----------
-function buildFiltersUI(report,data,dateField){
-  const container=document.getElementById(report+"-filters");
-  if(!container) return;
-  const years=[...new Set(data.map(r=>{const d=toDate(r[dateField]);return d? d.getFullYear():null;}))].filter(Boolean).sort();
-  const months=[...new Set(data.map(r=>{const d=toDate(r[dateField]);return d? d.getMonth()+1:null;}))].filter(Boolean).sort();
-  container.innerHTML=`<div class="filters">
-    <div><label>Year</label><select id="${report}-year" multiple>${years.map(y=>`<option value="${y}">${y}</option>`).join("")}</select></div>
-    <div><label>Month</label><select id="${report}-month" multiple>${months.map(m=>`<option value="${m}">${m}</option>`).join("")}</select></div>
-  </div>`;
+// --------------------- Filters ---------------------
+function buildFiltersUI(report){
+  const cont = document.getElementById(`${report}-filters`);
+  const rows = store[report] || [];
+  cont.innerHTML = '';
+  const df = dateField[report];
+  const years = new Set(), months = new Set();
+  rows.forEach(r=>{
+    const d = toDateSafe(r[df]);
+    if(d){ years.add(d.getFullYear()); months.add(d.getMonth()+1); }
+  });
+  const yList = Array.from(years).sort((a,b)=>a-b);
+  const mList = Array.from(months).sort((a,b)=>a-b);
+
+  const wrap = document.createElement('div'); wrap.className='filters';
+  const y = document.createElement('div'); y.innerHTML = `<label>Year</label><select id="${report}-year" multiple>${
+    yList.map(v=>`<option value="${v}">${v}</option>`).join('')
+  }</select>`;
+  const m = document.createElement('div'); m.innerHTML = `<label>Month</label><select id="${report}-month" multiple>${
+    mList.map(v=>`<option value="${v}">${String(v).padStart(2,'0')}</option>`).join('')
+  }</select>`;
+  wrap.appendChild(y); wrap.appendChild(m);
+  cont.appendChild(wrap);
+
+  // re-render on change
+  y.querySelector('select').addEventListener('change', ()=>renderReport(report));
+  m.querySelector('select').addEventListener('change', ()=>renderReport(report));
 }
-function applyFilters(data,report){
-  const cfg=reportConfigs[report];
-  const years=[...document.getElementById(report+"-year")?.selectedOptions||[]].map(o=>o.value);
-  const months=[...document.getElementById(report+"-month")?.selectedOptions||[]].map(o=>o.value);
-  return data.filter(r=>{
-    const d=toDate(r[cfg.dateField]);
+
+function applyFilters(report){
+  const rows = store[report] || [];
+  const df = dateField[report];
+  const ySel = Array.from(document.getElementById(`${report}-year`)?.selectedOptions || []).map(o=>o.value);
+  const mSel = Array.from(document.getElementById(`${report}-month`)?.selectedOptions || []).map(o=>o.value);
+  if(!ySel.length && !mSel.length) return rows;
+
+  return rows.filter(r=>{
+    const d = toDateSafe(r[df]);
     if(!d) return false;
-    if(years.length && !years.includes(String(d.getFullYear()))) return false;
-    if(months.length && !months.includes(String(d.getMonth()+1))) return false;
+    if(ySel.length && !ySel.includes(String(d.getFullYear()))) return false;
+    if(mSel.length && !mSel.includes(String(d.getMonth()+1))) return false;
     return true;
   });
 }
 
-// ---------- Charts ----------
-function pieChart(data,field){
-  const counts={};
-  data.forEach(r=>{const k=r[field]||"Unknown";counts[k]=(counts[k]||0)+1;});
-  const labels=Object.keys(counts), values=Object.values(counts);
-  const id="chart-"+Math.random();
-  setTimeout(()=> new Chart(document.getElementById(id),{type:"pie",data:{labels,datasets:[{data:values}]}}));
-  return `<canvas id="${id}"></canvas>`;
-}
-function groupSumChart(data,field,groupField,label){
-  const sums={};
-  data.forEach(r=>{const k=r[groupField]||"Unknown";sums[k]=(sums[k]||0)+(+r[field]||0);});
-  const labels=Object.keys(sums), values=Object.values(sums);
-  const id="chart-"+Math.random();
-  setTimeout(()=> new Chart(document.getElementById(id),{type:"bar",data:{labels,datasets:[{label,data:values}]},options:{scales:{y:{beginAtZero:true}}}}));
-  return `<canvas id="${id}"></canvas>`;
-}
-function sideBySideChart(data,field1,field2,groupField){
-  const sums1={}, sums2={};
-  data.forEach(r=>{
-    const k=r[groupField]||"Unknown";
-    sums1[k]=(sums1[k]||0)+(+r[field1]||0);
-    sums2[k]=(sums2[k]||0)+(+r[field2]||0);
+// --------------------- Charts ---------------------
+function destroyChart(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
+
+function drawLineByMonth(containerId, rows, valueField, dateFieldLabel, label){
+  const agg = {}; // 'YYYY-MM' => sum
+  rows.forEach(r=>{
+    const d = toDateSafe(r[dateFieldLabel]);
+    if(!d) return;
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    agg[key] = (agg[key]||0) + cleanNumber(r[valueField]);
   });
-  const labels=Object.keys(sums1);
-  const id="chart-"+Math.random();
-  setTimeout(()=> new Chart(document.getElementById(id),{
-    type:"bar",
-    data:{labels,datasets:[
-      {label:"Issued",data:labels.map(l=>sums1[l])},
-      {label:"Paid",data:labels.map(l=>sums2[l])}
+  const labels = Object.keys(agg).sort();
+  const values = labels.map(k=>agg[k]);
+
+  destroyChart(containerId);
+  charts[containerId] = new Chart(document.getElementById(containerId), {
+    type:'line',
+    data:{ labels, datasets:[{label, data:values}] },
+    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+  });
+}
+
+function drawBarGroupSum(containerId, rows, sumField, groupField, label){
+  const sums = {};
+  rows.forEach(r=>{
+    const k = r[groupField] || 'Unknown';
+    sums[k] = (sums[k]||0) + cleanNumber(r[sumField]);
+  });
+  const labels = Object.keys(sums);
+  const values = labels.map(k=>sums[k]);
+
+  destroyChart(containerId);
+  charts[containerId] = new Chart(document.getElementById(containerId), {
+    type:'bar',
+    data:{ labels, datasets:[{ label, data: values }] },
+    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+  });
+}
+
+function drawGroupedBars(containerId, rows, fieldA, fieldB, groupField, labelA='Issued', labelB='Paid'){
+  const sumsA={}, sumsB={};
+  rows.forEach(r=>{
+    const k = r[groupField] || 'Unknown';
+    sumsA[k] = (sumsA[k]||0) + cleanNumber(r[fieldA]);
+    sumsB[k] = (sumsB[k]||0) + cleanNumber(r[fieldB]);
+  });
+  const labels = Array.from(new Set([...Object.keys(sumsA), ...Object.keys(sumsB)]));
+
+  destroyChart(containerId);
+  charts[containerId] = new Chart(document.getElementById(containerId), {
+    type:'bar',
+    data:{ labels, datasets:[
+      { label: labelA, data: labels.map(l=>sumsA[l]||0) },
+      { label: labelB, data: labels.map(l=>sumsB[l]||0) }
     ]},
-    options:{scales:{y:{beginAtZero:true}}}
-  }));
-  return `<canvas id="${id}"></canvas>`;
+    options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+  });
 }
 
-// ---------- Rendering ----------
-function renderReport(report,data){
-  const cfg=reportConfigs[report];
-  const filtered=applyFilters(data,report);
-  const kpis=cfg.kpis(filtered);
-  const kpiHTML=`<div class="panel kpi-grid">${kpis.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join("")}</div>`;
-  const chartHTML=`<div class="chart-card">${cfg.chart(filtered)}</div>`;
-  document.getElementById(report+"-content").innerHTML=kpiHTML+chartHTML;
+function drawPieCounts(containerId, rows, catField, weightField=null){
+  const counts = {};
+  rows.forEach(r=>{
+    const k = r[catField] || 'Unknown';
+    const w = weightField ? cleanNumber(r[weightField]) : 1;
+    counts[k] = (counts[k]||0) + (weightField ? w : 1);
+  });
+  const labels = Object.keys(counts);
+  const values = labels.map(l=>counts[l]);
+
+  destroyChart(containerId);
+  charts[containerId] = new Chart(document.getElementById(containerId), {
+    type:'pie',
+    data:{ labels, datasets:[{ data: values }] },
+    options:{ responsive:true, plugins:{ legend:{ position:'bottom' } } }
+  });
 }
 
-// ---------- Nav ----------
+// --------------------- Renderers ---------------------
+function renderReport(report){
+  const cont = document.getElementById(`${report}-content`);
+  const rowsFiltered = applyFilters(report);
+
+  if(!rowsFiltered.length){
+    cont.innerHTML = `<div class="panel">No data for current filters.</div>`;
+    return;
+  }
+
+  let kpis = [];
+  let chartBlock = '';
+
+  if(report === 'lending-volume'){
+    const totalIssued = colSum(rowsFiltered,'issuedamount');
+    const avgIssued   = colAvg(rowsFiltered,'issuedamount');
+    const loansCount  = rowsFiltered.length;
+
+    kpis = [
+      {label:'Total Issued', value: fmtMoney(totalIssued)},
+      {label:'Average Issued', value: fmtMoney(avgIssued)},
+      {label:'Loans', value: loansCount.toLocaleString()}
+    ];
+
+    const canvasId = 'lv-chart';
+    chartBlock = `<div class="chart-card"><h3>Issued Amount by Month</h3><canvas id="${canvasId}"></canvas></div>`;
+    cont.innerHTML = `<div class="panel"><div class="kpi-grid">${
+      kpis.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')
+    }</div></div>${chartBlock}`;
+    drawLineByMonth(canvasId, rowsFiltered, 'issuedamount', dateField['lending-volume'], 'Issued Amount');
+  }
+
+  if(report === 'arrears'){
+    const totalIssued = colSum(rowsFiltered,'issuedamount');
+    const totalDue    = colSum(rowsFiltered,'totaldue');
+
+    kpis = [
+      {label:'Total Issued Amount', value: fmtMoney(totalIssued)},
+      {label:'Total Due', value: fmtMoney(totalDue)}
+    ];
+
+    const canvasId = 'arr-chart';
+    chartBlock = `<div class="chart-card"><h3>Total Due by Stage</h3><canvas id="${canvasId}"></canvas></div>`;
+    cont.innerHTML = `<div class="panel"><div class="kpi-grid">${
+      kpis.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')
+    }</div></div>${chartBlock}`;
+    drawBarGroupSum(canvasId, rowsFiltered, 'totaldue', 'stage', 'Total Due');
+  }
+
+  if(report === 'liquidations'){
+    const totalIssued = colSum(rowsFiltered,'issuedamount');
+    const totalPaid   = colSum(rowsFiltered,'payment');
+    const pct         = totalIssued ? (totalPaid/totalIssued*100) : 0;
+
+    kpis = [
+      {label:'Total Issued Amount', value: fmtMoney(totalIssued)},
+      {label:'Total Paid', value: fmtMoney(totalPaid)},
+      {label:'Liquidation %', value: `${pct.toFixed(1)}%`}
+    ];
+
+    const canvasId = 'liq-chart';
+    chartBlock = `<div class="chart-card"><h3>Issued vs Paid by Stage</h3><canvas id="${canvasId}"></canvas></div>`;
+    cont.innerHTML = `<div class="panel"><div class="kpi-grid">${
+      kpis.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')
+    }</div></div>${chartBlock}`;
+    drawGroupedBars(canvasId, rowsFiltered, 'issuedamount', 'payment', 'stage', 'Issued', 'Paid');
+  }
+
+  if(report === 'complaints'){
+    // KPIs use Count column
+    const totalComplaints = colSum(rowsFiltered,'count');
+    const avgDays = colAvg(rowsFiltered,'daystoresolve');
+
+    kpis = [
+      {label:'Total Complaints', value: totalComplaints.toLocaleString()},
+      {label:'Avg Days to Resolve', value: avgDays.toFixed(1)}
+    ];
+
+    const canvasId = 'comp-chart';
+    chartBlock = `<div class="chart-card"><h3>Decision Breakdown</h3><canvas id="${canvasId}"></canvas></div>`;
+    cont.innerHTML = `<div class="panel"><div class="kpi-grid">${
+      kpis.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')
+    }</div></div>${chartBlock}`;
+    // Weight the pie by Count (sum of count per decision)
+    drawPieCounts(canvasId, rowsFiltered, 'decision', 'count');
+  }
+
+  if(report === 'financial-crime'){
+    const totalCases   = colSum(rowsFiltered,'count'); // as requested: keep count
+    const totalPrin    = colSum(rowsFiltered,'principal');
+    const avgPrin      = colAvg(rowsFiltered,'principal');
+    const totalInt     = colSum(rowsFiltered,'interest');
+
+    kpis = [
+      {label:'Total Cases', value: totalCases.toLocaleString()},
+      {label:'Total Principal', value: fmtMoney(totalPrin)},
+      {label:'Average Principal', value: fmtMoney(avgPrin)},
+      {label:'Total Interest', value: fmtMoney(totalInt)}
+    ];
+
+    const canvasId = 'fc-chart';
+    chartBlock = `<div class="chart-card"><h3>Principal by Loan Source</h3><canvas id="${canvasId}"></canvas></div>`;
+    cont.innerHTML = `<div class="panel"><div class="kpi-grid">${
+      kpis.map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${k.value}</div></div>`).join('')
+    }</div></div>${chartBlock}`;
+    drawBarGroupSum(canvasId, rowsFiltered, 'principal', 'loan_source', 'Principal');
+  }
+}
+
+// --------------------- Nav + Load ---------------------
 document.querySelectorAll(".nav-link").forEach(link=>{
-  link.addEventListener("click",e=>{
+  link.addEventListener("click", e=>{
     e.preventDefault();
     document.querySelectorAll(".nav-link").forEach(l=>l.classList.remove("active"));
     link.classList.add("active");
+    const page = link.dataset.page;
     document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
-    const page=link.dataset.page;
-    document.getElementById(page+"-page").classList.remove("hidden");
-    if(page!=="overview") renderReport(page,window.dataStore[page]||[]);
+    document.getElementById(`${page}-page`).classList.remove("hidden");
+    if(page!=="overview"){
+      buildFiltersUI(page);
+      renderReport(page);
+    }
   });
 });
 
-// ---------- Load Data ----------
-window.dataStore={};
 async function loadAll(){
-  for(const [report,url] of Object.entries(dataSources)){
-    const data=await fetchCSV(url);
-    window.dataStore[report]=data;
-    buildFiltersUI(report,data,reportConfigs[report].dateField);
+  for(const [rep,url] of Object.entries(dataSources)){
+    try{
+      const res = await fetch(url);
+      const txt = await res.text();
+      store[rep] = parseCSV(txt);
+      // build filters once data is in
+      buildFiltersUI(rep);
+      console.log(`Loaded ${store[rep].length} rows for ${rep}`);
+    }catch(err){
+      console.error("Load error:", rep, err);
+      store[rep] = [];
+    }
   }
+  // initial render for first report link (lending-volume)
+  renderReport('lending-volume');
 }
-loadAll();
+document.addEventListener('DOMContentLoaded', loadAll);
 </script>
 </body>
 </html>
