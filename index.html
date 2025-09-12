@@ -138,12 +138,36 @@ function cleanNumber(v){
   return Number.isFinite(n) ? n : 0;
 }
 function toDateSafe(v){
-  if(!v) return null;
-  const d = new Date(v);
-  if(!isNaN(d)) return d;
-  const m = String(v).match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if(m) return new Date(+m[3], +m[2]-1, +m[1]);
-  return null;
+  if (v == null) return null;
+  if (v instanceof Date) return isNaN(v) ? null : v;
+
+  let s = String(v).trim();
+  if (!s) return null;
+
+  // Excel serial date (days since 1899-12-30). Typical modern range ~ 30k–60k
+  if (/^\d{4,6}$/.test(s)) {
+    const n = Number(s);
+    if (n >= 25569 && n <= 70000) { // 1970-01-01..mid-century-ish
+      const baseUTC = Date.UTC(1899, 11, 30);
+      return new Date(baseUTC + n * 86400000);
+    }
+  }
+
+  // ISO-like YYYY-MM-DD or YYYY/MM/DD
+  let m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+
+  // D/M/Y or M/D/Y -> infer by which side exceeds 12; fallback to D/M/Y
+  m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (m) {
+    const a = +m[1], b = +m[2], y = +m[3] < 100 ? 2000 + (+m[3]) : +m[3];
+    if (a > 12 && b <= 12) return new Date(y, b-1, a); // D/M/Y
+    if (b > 12 && a <= 12) return new Date(y, a-1, b); // M/D/Y
+    return new Date(y, b-1, a);                         // default D/M/Y
+  }
+
+  const d = new Date(s);
+  return isNaN(d) ? null : d;
 }
 function fmtMoney(n){ return "£"+(cleanNumber(n)).toLocaleString(undefined,{maximumFractionDigits:2}); }
 function sum(rows, key){ return rows.reduce((a,r)=>a + cleanNumber(r[key]), 0); }
@@ -192,14 +216,17 @@ function buildFilters(report){
     if(r.stage) stages.add(r.stage);
   });
 
-  const yList = Array.from(years).sort((a,b)=>a-b);
+  const yList = Array.from(years)
+    .filter(y => y >= 1990 && y <= 2100) // only keep real years
+    .sort((a,b)=>a-b);
   const mList = Array.from(months).sort((a,b)=>a-b);
   const tList = Array.from(tiers).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
   const sList = Array.from(stages).sort((a,b)=>(''+a).localeCompare(''+b,undefined,{numeric:true}));
 
-  const wrap = document.createElement('div'); wrap.className='filters';
+  const wrap = document.createElement('div');
+  wrap.className = 'filters';
 
-  const mkMulti = (id,label,values,formatter=(x)=>x)=> {
+  const mkMulti = (id,label,values,formatter=(x)=>x)=>{
     const box = document.createElement('div');
     box.innerHTML = `<label for="${id}">${label}</label>
       <select id="${id}" multiple>
@@ -214,22 +241,26 @@ function buildFilters(report){
   const tSel = mkMulti(`${report}-tiername`,'Tier',tList,String);
   const sSel = mkMulti(`${report}-stage`,'Stage',sList,String);
 
-  const onChange = ()=>{
+  // Ensure nothing is preselected
+  [ySel, mSel, tSel, sSel].forEach(sel=>{
+    Array.from(sel.options).forEach(o=>o.selected = false);
+  });
+
+  [ySel,mSel,tSel,sSel].forEach(sel=> sel.addEventListener('change',()=> {
     if(report==='lending-volume') renderLendingReport();
     else if(report==='arrears') renderArrearsReport();
     else if(report==='liquidations') renderLiquidationsReport();
-  };
-  [ySel,mSel,tSel,sSel].forEach(sel=> sel.addEventListener('change', onChange));
+  }));
 
-  // Reset button that truly resets to full dataset
+  // Reset button
   const resetBtn = document.createElement('button');
   resetBtn.textContent = "Reset Filters";
   resetBtn.className = "btn btn-outline";
   resetBtn.onclick = ()=>{
     [ySel,mSel,tSel,sSel].forEach(sel=> Array.from(sel.options).forEach(o=>o.selected=false));
-    if(report==='lending-volume') renderLendingReport(reportData['lending-volume']);
-    else if(report==='arrears') renderArrearsReport(reportData['arrears']);
-    else if(report==='liquidations') renderLiquidationsReport(reportData['liquidations']);
+    if(report==='lending-volume') renderLendingReport();
+    else if(report==='arrears') renderArrearsReport();
+    else if(report==='liquidations') renderLiquidationsReport();
   };
 
   container.appendChild(wrap);
@@ -247,7 +278,8 @@ function getFiltered(report, dfKey) {
   return rows.filter(r=>{
     const d = toDateSafe(r[dfKey]);
     if (ySel.length && (!d || !ySel.includes(String(d.getFullYear())))) return false;
-    if (mSel.length && (!d || !mSel.includes(String(d.getMonth()+1)))) return false;
+    if (mSel.length && (!d || !mSel.includes(String(d.getMonth()+1).padStart(2,'0')))) return false;
+
     if (tSel.length && !tSel.includes(r.tiername||'')) return false;
     if (sSel.length && !sSel.includes(r.stage||'')) return false;
     return true;
